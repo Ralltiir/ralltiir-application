@@ -1,0 +1,22 @@
+{
+  "name": "ralltiir-application",
+  "version": "1.0.0",
+  "description": "A common service implement",
+  "main": "ralltiir.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ralltiir/ralltiir-application.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Ralltiir/ralltiir-application/issues"
+  },
+  "homepage": "https://github.com/Ralltiir/ralltiir-application#readme",
+  "dependencies": {
+    "ralltiir": "^2.7.0-0"
+  }
+}

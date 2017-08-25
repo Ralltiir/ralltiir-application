@@ -1,0 +1,397 @@
+/* csshint-disable */
+/*
+ * 所有superframe的公共父容器
+ */
+#super-frame {
+    font: 14px/22px Arial,Helvetica,sans-serif;
+    word-break: break-word;
+    word-wrap: break-word;
+}
+
+/*
+ * 单一场景容器
+ */
+.sfa-view {
+    z-index: 501;
+    width: 100%;
+    min-height: 100%;
+    background-color: #f2f2f2;
+    overflow: auto;
+}
+.sfa-view .sfa-body {
+    overflow: hidden;
+    text-align: left;
+    padding-top: 44px;
+}
+/*
+ * 场景头部样式
+ */
+.sfa-view .sfa-head {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 501;
+    width: 100%;
+    height: 44px;
+    line-height: 44px;
+    text-align: center;
+    font-size: 18px;
+    background-color: #ffffff;
+    color: #333;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+
+.sfa-view .sfa-back,
+.sfa-view .sfa-close {
+    width: 50px;
+    height: 44px;
+    float: left;
+    text-align: center;
+    padding-left: 2px;
+}
+
+.sfa-view .sfa-back i{
+    font-size: 21px;
+}
+
+.sfa-view .sfa-close {
+    width: 43px;
+}
+
+.sfa-view .sfa-close span,
+.sfa-view .sfa-back span {
+    font-size: 16px;
+    vertical-align: middle;
+}
+.sfa-tool .sfa-action-more {
+    overflow: hidden;
+    display: inline-block;
+    font-size: 21px;
+    width: 44px;
+}
+.active .sfa-tool .sfa-action-more:active,
+.active .sfa-tool .sfa-action-item:active {
+    background: rgba(51,51,51, 0.4);
+}
+.sfa-action-item .sfa-tool-text {
+    color: #666;
+    font-size: 14px;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+}
+.sfa-view .sfa-tool {
+    min-width: 44px;
+    height: 44px;
+    float: right;
+    text-align: center;
+    padding-right: 4px;
+}
+.sfa-head .sfa-tool .sfa-action-item i{
+    font-size: 21px;
+}
+.sfa-view .sfa-title {
+    width: 100%;
+    padding: 0 98px;
+    box-sizing: border-box;
+}
+.sfa-view .sfa-head-border {
+    border-bottom: 1px solid #f1f1f1;
+}
+.sfa-view .sfa-title .c-line-clamp1 {
+    padding: 0 8px;
+}
+.active .sfa-head .sfa-back:active {
+    background: rgba(51,51,51, 0.4);
+}
+
+/* 工具栏 */
+.sfa-tool .sfa-action-item {
+    display: inline-block;
+    width: 44px;
+    overflow: hidden;
+}
+.sfa-head .sfa-action-menus {
+    display: none;
+    float: right;
+    width: auto;
+    background-color: #fff;
+    margin-right: 5px;
+    text-align: left;
+    overflow: auto;
+    box-shadow: 0 2px 6px #d6d6d6;
+}
+.sfa-action-menus .sfa-action-item {
+    color: #666;
+    font-size: 16px;
+    line-height: 44px;
+    padding: 0 17px;
+    border-bottom: 1px solid #f1f1f1;
+}
+.active .sfa-action-menus .sfa-action-item:active{
+    background: rgba(51,51,51, 0.4);
+}
+.sfa-action-menus .sfa-action-item .sfa-head-menu-icon {
+    color: #666;
+    font-size: 16px;
+    display: block;
+    line-height: 44px;
+    width: 16px;
+    overflow: hidden;
+    text-align: left;
+}
+.sfa-action-menus .sfa-action-item .sfa-tool-text {
+    color: #666;
+    font-size: 16px;
+    width: auto;
+}
+.sfa-action-menus :last-child {
+    border-bottom: none;
+}
+.sfa-head .sfa-action-menus i {
+    float: left;
+    padding-right: 14px;
+}
+
+/* 搜索框 */
+.sfa-head .search-box {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    background-color: #fff;
+    font-size: 14px;
+    // margin: 6px 16px;
+    padding: 5px 10px 6px 17px;
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+}
+.sfa-head .search-box .search-box-input-area {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    height: 34px;
+    line-height: 34px;
+    color: #333333;
+    margin-right: 7px;
+    padding-right: 3px;
+    border-radius: 16px;
+    background: #f5f5f5;
+}
+.sfa-head .search-box .search-box-button-area {
+    width: 46px;
+    height: 34px;
+    line-height: 34px;
+    color: #333333;
+}
+.active .sfa-head .search-box .search-box-button-area:active {
+    background: rgba(51,51,51, 0.4);
+}
+
+.search-box .search-icon {
+    color: #c3c3c3;
+    line-height: 35px;
+    padding-right: 6px;
+    padding-left: 13px;
+    font-size: 14px;
+}
+.search-box .search-action {
+    line-height: 34px;
+    font-size: 14px;
+    outline: none;
+}
+.search-action-cancel-icon {
+    width: 34px;
+    color: #e0e0e0;
+    font-size: 14px;
+}
+.search-box .search-box-input-container {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    left: 0;
+}
+.search-box .search-box-input-container input{
+    width: 100%;
+    height: 100%;
+    font-size: 14px;
+    vertical-align: top;
+    outline: none;
+    color: #333333;
+}
+.search-box-input::-webkit-input-placeholder {
+    vertical-align: top;
+    font-size: 14px;
+}
+
+/* Loading 效果 */
+.sfa-view .sfa-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: #fff;
+    width: 161px;
+    height: 49px;
+    line-height: 49px;
+    margin-top: -24px;
+    margin-left: -80px;
+    border-radius: 1px;
+    text-align: center;
+}
+.sfa-loading .sfa-loading-icon {
+    display: inline-block;
+    width: 37px;
+    height: 23px;
+    margin-top: -4px;
+    vertical-align: middle;
+}
+/* tab下的loading */
+.sfa-view .sfa-loading.sfa-loading-tab {
+    width: 147px;
+    height: 48px;
+    margin-left: -73px;
+    margin-top: 6px;
+}
+.sfa-view .sfa-loading .sfa-loading-icon-tab {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    margin: 0 auto;
+}
+.sfa-view .sfa-loading .sfa-loading-tab-bglogo{
+    display: inline-block;
+    background: url(//m.baidu.com/se/static/img/iphone/tab_loading__bg_logo.png) no-repeat;
+    background-size: 147px 48px;
+    height: 48px;
+    width: 147px;
+}
+.sfa-view .sfa-loading .sfa-loading-tab-toplight{
+    display: inline-block;
+    position: relative;
+    height: 60px;
+    width: 12px;
+    top: -60px;
+    left: -78px;
+    background-color: rgba(255,255,255,.5);
+    transform: skew(20deg);
+    -webkit-transform: skew(20deg);
+    animation: 1s lodingframe infinite;
+    -webkit-animation: 1s lodingframe infinite;
+}
+@keyframes lodingframe {
+  0% { left: -78px; }
+  100% { left: 73px; }
+}
+/* 兼容性 */
+@-webkit-keyframes lodingframe {
+  0% { left: -78px; }
+  100% { left: 73px; }
+}
+/* end */
+.sfa-view .sfa-loading i{
+    height: 23px;
+    width: 23px;
+    background-size: 23px;
+    background-repeat: no-repeat;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEUAAABFCAMAAAArU9sbAAAAllBMVEUAAAA5kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv85kv98v3f9AAAAMXRSTlMA+u4H8xwSDeG7KBapjYhP28EE9jfmpJoxItOALLFuQcxrZOrXdnPHVDyVe11aSIN5drPNPgAAAx5JREFUWMOlmOl2qlAMhbcyySCiBUFRUazzVXve/+Vuk2NZTgwHvx+uVjBk2MmJopxRkvvecBn0gqXt+ecZ1DEW8654ZO3lLhTQznZHvKNj70dohrWNRDm9rYZ6Rqsiki/7uBhkiZNkg208LLyL/qGOcCkk39eD9hhm5veEZDirdsS/eRGHby9nY+lRZ1VVmJ200XfLb4mlnbmJEhzpsWegCseWEZfcFXJau3vUkX9xsZy3RvjaboJ6Zt/8vNmbK+zJWGsmKZvF/PJEg3PSb6zuMd0emE/v7hSMMGxmjgf6HI5Sr3FQC9yRsSI1qGBNSX7OnSbpjbUBNRydHo2CDbkygCo5faxoTVfnpKgzpA7XIKEW1F2oM6OeWoExyZUr2hBTJ4xALFq5wkzIGdl40xe9qWlvzsFRph20IyPNUBzp7x9LtGRE7ZcD2LGQW8L19QCLEjRBWw6keuBCxUJrRjTbZliwS+0Zchccf19PaA1/3ofNumnPimMJfl9DtGfA46HLJWpPSGcTqNAmKnCT6r7mGpP+raqG64qxW2uFxoKBcjw6vxYjlJHQiYKophfngliGVeJdgg7LqsgtXy4JsVlRI9beoMmSsM7L9cJDb1OniUAQO+nz63mYYttk/msnnVeo/ms1ydEzLpzjWgxPENH5uad1zqspuNT1ZFNB2M5LibojObxzNN9hO/59WOltfPtcqka4sVyci5pKH1bcTgr9mOzkhvl3f1LkI+BaNeVfxMtsqhWHow3ihxJkoSlWn8UcXCjEr2JrcPVX4TURs2fAv1sa+uSMCQWkmPUrubIFI/06QgXtxNvxQy58+vcAFVjMj/uhFZEKTKhxJiNT7WFIkATVMH396fgYqy7NjHk9PYqAvx/84EMc7rQNPiT8kkF9yKBTfJP73EzvgM/IuoKI3Wq5pW5NiqfyzNhY5cVNdbHe17RHfGuO1MA7Jn1dtrNWk5zo73eJ3Hg2sRgKSZA1G0JMMN4MQscwzUm4//F64oZ+0lCPS26X0k2basHcTEtsLFcWFEj86auJ1IEy5mUbD4NIF3r0bR+3lwov/gPz4J/MfidXggAAAABJRU5ErkJggg==);
+}
+.sfa-view .sfa-loading span {
+    display: inline-block;
+    color: #6b6b6b;
+    font-size: 18px;
+    padding-right: 3px;
+    vertical-align: middle;
+}
+
+/*简单搜索下双球Loading*/
+.body-secr .sfa-view {
+    .sfa-loading.sfa-loading-tab{
+        height: 40px;
+        text-align: center;
+        z-index: 302;
+        position: fixed;
+        width: 100%;
+        top: 36%;
+        margin: 0 auto;
+        margin-top: -20px;
+        left:0;
+    }
+    .sfa-loading .sfa-loading-icon-tab {
+        width: 40px;
+    }
+    .sfa-loading-tab .loading-spinner {
+        width: 40px;
+        height: 40px; 
+        position: relative;
+        margin: 0 auto;
+    }   
+    .loading-double-bounce1, .loading-double-bounce2 {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background-color: #0071FF;
+        opacity: 0.2;
+        position: absolute;
+        top: 0;
+        left: 0;
+        -webkit-animation: loading-bounce 2.0s infinite ease-in-out;
+        animation: loading-bounce 2.0s infinite ease-in-out;
+    }
+    .loading-double-bounce2 {
+        -webkit-animation-delay: -1.0s;
+        animation-delay: -1.0s;
+    }
+    @-webkit-keyframes loading-bounce {
+        0%, 100% {
+            -webkit-transform: scale(0.0) 
+        } 50% {
+            -webkit-transform: scale(1.0) 
+        }
+    }
+    @keyframes loading-bounce {
+        0%, 100% {
+            transform: scale(0.0);
+            -webkit-transform: scale(0.0);
+        } 50% {
+            transform: scale(1.0);
+            -webkit-transform: scale(1.0);
+        }
+    }
+}
+
+/* 特殊头部定制样式*/
+.sfa-view-no-head .sfa-head {
+    display: none;
+}
+.sfa-view-no-head .sfa-body {
+    padding-top: 0px;
+}
+.sfa-view-transparent-head .sfa-head {
+    background: -moz-linear-gradient(top, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0) 100%);
+    background: -webkit-linear-gradient(top, rgba(0,0,0,0.3) 0%,rgba(0,0,0,0.2) 25%,rgba(0,0,0,0) 100%);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%,rgba(0,0,0,0.2) 25%,rgba(0,0,0,0) 100%);
+    color: #fff;
+    text-shadow: 0 0 1px rgba(0,0,0,0.4);
+}
+.sfa-view-transparent-head .sfa-body {
+    padding-top: 0px;
+}
+
+/* 消除第一个元素的上间距 */
+.sfa-results .c-result:first-of-type .c-container:first-of-type {
+    margin-top: 0;
+}
+
+/* 清除顶部通栏内元素的间距 */
+.sfa-top-results .c-result .c-container:first-of-type {
+    margin: 0;
+    padding: 0;
+}
