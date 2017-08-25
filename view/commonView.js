@@ -7,7 +7,7 @@ define(function (require) {
 
     require('../utils/animation');
 
-    var superFrame = require('sfr');
+    var superFrame = require('ralltiir');
     var Naboo = require('../../fusion/deps/naboo');
     var Renderer = require('./render');
     var windowGuard = require('../window-guard');

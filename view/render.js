@@ -19,7 +19,7 @@
  *   console.log(this.global.scope);
  * });
  */
-define(['sfr'], function (superFrame) {
+define(['ralltiir'], function (superFrame) {
     var _ = superFrame._;
     var Promise = superFrame.promise;
     // reference: https://github.com/jquery/jquery/blob/master/src/manipulation/var/rscriptType.js

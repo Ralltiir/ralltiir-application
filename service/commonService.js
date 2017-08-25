@@ -5,7 +5,7 @@
  * @author  lizhaoming
  */
 define(function (require) {
-    var superFrame = require('sfr');
+    var superFrame = require('ralltiir');
     var CommonView = require('../view/commonView');
     var BaseService = superFrame.service;
     var Cache = superFrame.cache;
