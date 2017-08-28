@@ -98,14 +98,18 @@ define(function (require) {
         // 渲染 stream
         return this.streamRenderPromise = this.resourceQueryPromise.then(function (xhr) {
             view.vw.emit('beforeRender');
+            var html = xhr.data || ''
+            var el = document.createElement('div');
+            el.innerHTML = html;
             // 手百&浏览器 内核渲染数据标记
-            var html = xhr.data + '<rendermark></rendermark>';
-            var $parser = $('<div>').html(html);
-            $parser.find('[data-sfr-omit]').remove(); // 移除不需要在 sf 中渲染的 dom
-            $parser.find('title, meta').remove(); // 移除无用 head 标记
+            html += '<rendermark></rendermark>';
+            _.forEach(el.querySelectorAll('[data-sfr-omit]'), function (el) {
+                // 移除不需要在 sf 中渲染的 dom
+                el.remove()
+            });
             return view.renderer.render({
                 type: 'template/body',
-                innerHTML: $parser.html()
+                innerHTML: el.innerHTML
             });
         });
     };
