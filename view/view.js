@@ -7,21 +7,17 @@ define(function (require) {
 
     require('../utils/animation');
 
-    var superFrame = require('ralltiir');
+    var rt = require('ralltiir');
     var Naboo = require('../../fusion/deps/naboo');
     var Renderer = require('./render');
     var windowGuard = require('../window-guard');
-    var _ = superFrame._;
-    var View = superFrame.view;
-    var action = superFrame.action;
-    var Promise = superFrame.promise;
+    var _ = rt._;
+    var View = rt.view;
+    var action = rt.action;
+    var Promise = rt.promise;
     var animationTimeMs = 300;
     var animationDelayMs = 0;
     var animationEase = 'ease';
-
-    var $viewStyle = $('<style data-for="sf25/view/commonView"></style>');
-    $viewStyle.text(__inline('./sfview.css'));
-    $('head').append($viewStyle);
 
     function addEventListener(target, eventName, handler, attach) {
         target.addEventListener(eventName, handler, attach);
@@ -37,29 +33,35 @@ define(function (require) {
         fn.apply(this, arguments);
     }
 
+    /**
+     * CommonView
+     *
+     * @class
+     */
     var CommonView = function () {
         View.apply(this, arguments);
         // 初始化 virtual window
         var view = this;
         var vw = Object.create({
-            performance: {}
+            performance: {},
+            view: this
         }, {
             head: {
                 writeable: false,
                 get: function () {
-                    return view.$sfHead && view.$sfHead[0];
+                    return view.$head && view.$head[0];
                 }
             },
             body: {
                 writeable: false,
                 get: function () {
-                    return view.$sfBody && view.$sfBody[0];
+                    return view.$body && view.$body[0];
                 }
             },
             container: {
                 writeable: false,
                 get: function () {
-                    return view.$container && view.$container[0];
+                    return view.$view && view.$view[0];
                 }
             },
             render: {
@@ -76,8 +78,14 @@ define(function (require) {
             }
         });
         this.vw = vw;
-        superFrame.emitter.mixin(this.vw);
+        rt.emitter.mixin(this.vw);
     };
+
+    /**
+     * Parent
+     *
+     * @class
+     */
     var Parent = function () {};
     Parent.prototype = View.prototype;
     CommonView.prototype = new Parent();
@@ -98,20 +106,61 @@ define(function (require) {
         // 渲染 stream
         return this.streamRenderPromise = this.resourceQueryPromise.then(function (xhr) {
             view.vw.emit('beforeRender');
-            var html = xhr.data || ''
+            var html = xhr.data || '';
             var el = document.createElement('div');
             el.innerHTML = html;
             // 手百&浏览器 内核渲染数据标记
             html += '<rendermark></rendermark>';
             _.forEach(el.querySelectorAll('[data-sfr-omit]'), function (el) {
-                // 移除不需要在 sf 中渲染的 dom
-                el.remove()
+                el.remove();
             });
             return view.renderer.render({
                 type: 'template/body',
                 innerHTML: el.innerHTML
             });
         });
+    };
+
+    CommonView.prototype.setHead = function (desc) {
+        this.headConfig = desc;
+        var $back = this.$head.find('.rt-back');
+        var $title = this.$head.find('.rt-title>div');
+        var $tool = this.$head.find('.rt-tool');
+
+        if (_.has(desc, 'back.html')) {
+            $back.html(desc.back.html);
+        }
+        if (_.has(desc, 'back.onClick')) {
+            $back.off('click').on('click', function () {
+                if (false !== desc.back.onClick()) {
+                    action.back();
+                }
+            });
+        }
+        else {
+            $back.off('click').on('click', function () {
+                action.back();
+            });
+        }
+
+        if (_.has(desc, 'title')) {
+            $title.text(desc.title);
+        }
+        var $icons = _.map(desc && desc.icons, function (icon) {
+            var $icon = $(icon.html);
+            if (icon.onClick) {
+                $icon.on('click', icon.onClick);
+            }
+            return $icon;
+        });
+        $tool.empty().append($icons);
+    };
+
+    CommonView.prototype.parse = function ($el) {
+        this.$view = $el;
+        this.$head = $el.find('.rt-head');
+        this.$body = $el.find('.rt-body');
+        this.setHead();
     };
 
     CommonView.prototype.renderFrame = function (opts) {
@@ -122,64 +171,48 @@ define(function (require) {
         }
         this.frameRendered = true;
 
-        var backHtml = '<i class="c-icon">&#xe750;</i>';
-        if (opts.hasOwnProperty('backHtml')) {
-            backHtml = opts.backHtml;
-        }
-        this.$sfHead = $([
-            '<div class="sfa-head">',
-                '<div class="sfa-back">' + backHtml + '</div>',
-                '<div class="sfa-tool"></div>',
-                '<div class="sfa-title">',
-                    '<div class="c-line-clamp1">' + (opts.headTitle || '') + '</div>',
+        this.$head = $([
+            '<div class="rt-head">',
+                '<div class="rt-back"><i class="c-icon">&#xe750;</i></div>',
+                '<div class="rt-tool"></div>',
+                '<div class="rt-title">',
+                    '<div class="c-line-clamp1"></div>',
                 '</div>',
             '</div>'
         ].join(''));
-        // 设置头部 css
-        var headCss = {};
-        // 短路运算
-        opts.headHeight && (headCss.height = opts.headHeight);
-        opts.headBackground && (headCss.background = opts.headBackground);
-        opts.headColor && (headCss.color = opts.headColor);
-        this.$sfHead.css(headCss);
+        this.setHead(opts.head);
 
-        this.$sfBody = $('<div class="sfa-body">');
+        this.$body = $('<div class="rt-body">');
+        this.$view = $('<div class="rt-view">');
+        this.$view.append(this.$head).append(this.$body);
 
-        this.$container = $('<div class="sfa-view">');
-
-        if (opts.customClassName) {
-            this.$container.addClass(opts.customClassName);
-        }
-        this.$container.append(this.$sfHead).append(this.$sfBody);
-
-        $(superFrame.doc).append(this.$container);
+        $(rt.doc).append(this.$view);
     };
 
     CommonView.prototype.startEnterAnimate = function () {
-        // console.log('startEnterAnimate');
-        var dtd = new $.Deferred();
-        // 入场动画
-        if (this.enterAnimate) {
-            var dom = this.$container[0];
-            Naboo.enter(dom, animationTimeMs, animationEase, animationDelayMs).start(function () {
-                dtd.resolve();
-            });
-        }
-        else {
-            this.$container.css({
-                'opacity': 1,
-                '-webkit-transform': 'none',
-                'transform': 'none'
-            }).show();
-            dtd.resolve();
-        }
-        return dtd.promise();
+        var self = this;
+        return new Promise(function (resolve) {
+            if (self.enterAnimate) {
+                var dom = self.$view[0];
+                Naboo.enter(dom, animationTimeMs, animationEase, animationDelayMs).start(function () {
+                    resolve();
+                });
+            }
+            else {
+                self.$view.css({
+                    'opacity': 1,
+                    '-webkit-transform': 'none',
+                    'transform': 'none'
+                }).show();
+                resolve();
+            }
+        });
     };
 
     CommonView.prototype.prepareRender = function () {
         // 设为 static 的动作必须在动画结束后、原页面已销毁时进行操作
         // 否则会导致页面滚动位置的跳动
-        this.$container.css({
+        this.$view.css({
             'position': 'static',
             'overflow': 'auto',
             'height': 'auto',
@@ -187,11 +220,6 @@ define(function (require) {
             'transform': 'none',
             'min-height': $(window).height()
         });
-        this.$container.find('.sfa-back').on('click', function (e) {
-            action.back();
-            e.preventDefault();
-        });
-        // console.log('prepareRender');
         if (!this.renderer) {
             this.renderer = new Renderer(this.vw);
         }
@@ -202,67 +230,59 @@ define(function (require) {
     };
 
     CommonView.prototype.renderStream = function () {
-        console.warn('view.renderStream is deprecated, use view.render() instead.');
+        // eslint-disable-next-line
+        console.warn('view.renderStream deprecated, use view.render() instead.');
         return this.render();
     };
 
     CommonView.prototype.attach = function () {
-        var view = this;
-        return new Promise(function (done) {
-            view.vw.emit('attach');
-            done();
-        });
+        this.vw.emit('attach');
+        return Promise.resolve();
     };
 
     CommonView.prototype.detach = function () {
-        var dtd = new $.Deferred();
-        this.$container && this.$container.find('.sfa-back').off('click');
+        this.$view && this.$view.find('.rt-back').off('click');
         this.vw.emit('detach');
-        dtd.resolve();
         var view = this;
-        return dtd.promise().then(function () {
-            // 试图分析 window 中的全局变量变化
+        return Promise.resolve().then(function () {
             var changeList = windowGuard.checkContext(view.guardContext);
             if (changeList.totalChanges > 1) {
-                console.warn('You have some changes leaved on window!', changeList);
+                // eslint-disable-next-line
+                console.warn('side effects detected:', changeList);
             }
-            else {
-                console.log('guard pass');
-            }
-            // 试图还原修改
-            // windowGuard.revertChanges(changeList);
         });
     };
 
     CommonView.prototype.startExitAnimate = function () {
-        var dtd = new $.Deferred();
-        if (this.exitAnimate) {
-            var dom = this.$container[0];
-            Naboo.exit(dom, animationTimeMs, animationEase, animationDelayMs).start(function () {
-                dtd.resolve();
-            });
-        }
-        else {
-            this.$container.css({
-                'display': 'none',
-                'position': 'static',
-                '-webkit-transform': 'none',
-                'transform': 'none'
-            });
-            dtd.resolve();
-        }
-        return dtd.promise();
+        var self = this;
+        return new Promise(function (resolve) {
+            if (self.exitAnimate) {
+                var dom = self.$view[0];
+                Naboo.exit(dom, animationTimeMs, animationEase, animationDelayMs).start(function () {
+                    resolve();
+                });
+            }
+            else {
+                self.$view.css({
+                    'display': 'none',
+                    'position': 'static',
+                    '-webkit-transform': 'none',
+                    'transform': 'none'
+                });
+                resolve();
+            }
+        });
     };
 
     CommonView.prototype.hideView = function () {
-        this.$container.hide();
+        this.$view.hide();
     };
 
     CommonView.prototype.removeDom = function () {
-        this.$container.remove();
-        delete this.$container;
-        delete this.$sfHead;
-        delete this.$sfBody;
+        this.$view.remove();
+        delete this.$view;
+        delete this.$head;
+        delete this.$body;
     };
 
     return CommonView;

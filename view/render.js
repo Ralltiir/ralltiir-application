@@ -85,16 +85,8 @@ define(['ralltiir'], function (superFrame) {
      * @return {Promise<HTMLElement|HTMLFragment>} return a promise resolves the rendered DOM
      */
     Render.prototype.renderer = function (template) {
-        var head = this.global.virtualWindow.head;
         var body = this.global.virtualWindow.body;
-        switch (template.type) {
-            case 'template/head':
-                return this.renderPartial(head, template);
-            case 'template/body':
-                return this.renderPartial(body, template);
-            default:
-                return this.renderPartial(body, template);
-        }
+        return this.renderPartial(body, template);
     };
 
     /**

@@ -1,51 +1,50 @@
 /**
  * 通用 service
  *
- * @file    commonService.js
+ * @file    service.js
  * @author  lizhaoming
  */
 define(function (require) {
-    var superFrame = require('ralltiir');
-    var CommonView = require('../view/commonView');
-    var BaseService = superFrame.service;
-    var Cache = superFrame.cache;
-    var commonViews = Cache.create('commonViews');
+    var rt = require('ralltiir');
+    var CommonView = require('./view/view');
+    var BaseService = rt.service;
+    var Cache = rt.cache;
+    var viewCache = Cache.create('viewCache');
     var commonService = new BaseService();
-    var http = superFrame.http;
+    var http = rt.http;
+    var _ = rt._;
 
     commonService.createTemplateStream = function (state) {
-        return http.ajax(state.url, {
+        var url = state.url;
+        var i = url.indexOf('#');
+        if (i > -1) {
+            url = url.substr(0, i);
+        }
+        url += url.indexOf('?') > -1 ? '&' : '?';
+        url += 'async=true';
+
+        return http.ajax(url, {
             xhrFields: {
                 withCredentials: true
             }
         });
     };
 
-    commonService.createView = function (state) {
-        return new CommonView();
-    };
-
     commonService.create = function (current, prev, extra) {
+        // 获取 view 实例
+        var view = viewCache.get(current.url);
+        if (!view) {
+            view = new CommonView();
+            viewCache.set(current.url, view);
+        }
         // 同步页首次加载，首屏dom放入sfview
         if (current.options && current.options.src === 'sync') {
             this.syncPageUrl = current.url;
-            $('#sfr-app .sfr-sync-page').css({'display': 'block'});
+            view.parse($('#sfr-app .rt-view'));
+            view.prepareRender();
             return;
         }
-        if (current.url === this.syncPageUrl) {
-            $('#sfr-app .sfr-sync-page').css({'display': 'block'});
-            return;
-        }
-        // 获取 view 实例
-        var view = commonViews.get(current.url);
-        if (!view) {
-            view = this.createView(current, prev, extra);
-            commonViews.set(current.url, view);
-        }
-        // 设置 options
-        // TODO
-        // remove zepto dep
-        var opt = $.extend({}, this.commonViewOptions, current.options && current.options.view);
+        var opt = _.assign({}, this.commonViewOptions, current.options && current.options.view);
         // 渲染框架
         view.renderFrame(opt);
         view.vw.performance.requestStart = Date.now();
@@ -83,10 +82,7 @@ define(function (require) {
         if (current.options && current.options.src === 'sync') {
             return;
         }
-        if (current.url === this.syncPageUrl) {
-            return;
-        }
-        var view = commonViews.get(current.url);
+        var view = viewCache.get(current.url);
         // 修复 iOS 下动画闪烁的问题，在 renderStream 前 scroll
         scrollTo(0, 0);
         // 此处没有 return promise，因为这样会阻塞生命周期导致无法回退，故让 render 不受生命周期控制
@@ -99,6 +95,7 @@ define(function (require) {
             if ((typeof code) !== 'number') {
                 code = err.code || 901;
             }
+            // eslint-disable-next-line
             console.error('RenderError, redirecting...', err);
             if (current.options.src !== 'sync') {
                 var query = location.search + (location.search ? '&' : '?');
@@ -112,12 +109,12 @@ define(function (require) {
     };
 
     commonService.update = function (state, trans) {
-        var view = commonViews.get(state.url);
+        var view = viewCache.get(state.url);
         return view.update(state, trans);
     };
 
     commonService.detach = function (current, prev, extra) {
-        var view = commonViews.get(prev.url);
+        var view = viewCache.get(prev.url);
         // 容器页
         if (!view) {
             return;
@@ -126,7 +123,7 @@ define(function (require) {
     };
 
     commonService.destroy = function (current, prev, extra) {
-        var view = commonViews.get(prev.url);
+        var view = viewCache.get(prev.url);
         // 容器页
         if (!view) {
             $('#sfr-app .sfr-sync-page').hide();
@@ -148,7 +145,7 @@ define(function (require) {
         .then(function () {
             if (!useDOMCache) {
                 view.removeDom();
-                commonViews.remove(prev.url);
+                viewCache.remove(prev.url);
             }
             else {
                 view.hideView();
@@ -157,10 +154,15 @@ define(function (require) {
     };
 
     commonService.getContainer = function (current) {
-        var view = commonViews.get(current.url);
+        var view = viewCache.get(current.url);
         return view.$container;
     };
 
+    /**
+     * CommonService wrapper
+     *
+     * @class
+     */
     var CommonService = function () {};
     CommonService.prototype = commonService;
     CommonService.prototype.constructor = CommonService;
