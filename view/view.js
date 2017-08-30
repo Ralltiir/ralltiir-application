@@ -146,14 +146,14 @@ define(function (require) {
         if (_.has(desc, 'title')) {
             $title.text(desc.title);
         }
-        var $icons = _.map(desc && desc.icons, function (icon) {
+        $tool.empty();
+        _.forEach(desc && desc.tool, function (icon) {
             var $icon = $(icon.html);
             if (icon.onClick) {
                 $icon.on('click', icon.onClick);
             }
-            return $icon;
+            $tool.append($icon);
         });
-        $tool.empty().append($icons);
     };
 
     CommonView.prototype.parse = function ($el) {

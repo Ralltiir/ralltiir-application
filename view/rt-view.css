@@ -42,8 +42,13 @@
     padding-left: 2px;
 }
 
-.rt-view .rt-back i{
+.rt-view .rt-head .c-icon {
+    margin-left: 15px;
+    cursor: pointer;
     font-size: 21px;
+}
+.rt-view .rt-head .c-icon:first-child {
+    margin-left: 0;
 }
 
 .rt-view .rt-close {
