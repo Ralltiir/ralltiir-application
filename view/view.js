@@ -126,18 +126,14 @@ define(function (require) {
         if (_.has(desc, 'back.html')) {
             $back.html(desc.back.html);
         }
-        if (_.has(desc, 'back.onClick')) {
-            $back.off('click').on('click', function () {
-                if (false !== desc.back.onClick()) {
-                    action.back();
-                }
-            });
-        }
-        else {
-            $back.off('click').on('click', function () {
+        $back.off('click').on('click', function () {
+            if (_.has(desc, 'back.onClick')) {
+                desc.back.onClick()
+            }
+            else {
                 action.back();
-            });
-        }
+            }
+        });
 
         if (_.has(desc, 'title')) {
             $title.text(desc.title);
