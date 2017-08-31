@@ -4,13 +4,10 @@
  */
 
 define(function (require) {
-
     require('../utils/animation');
-
     var rt = require('ralltiir');
     var Naboo = require('../../fusion/deps/naboo');
     var Renderer = require('./render');
-    var windowGuard = require('../window-guard');
     var _ = rt._;
     var View = rt.view;
     var action = rt.action;
@@ -101,7 +98,6 @@ define(function (require) {
         if (this.streamRenderPromise) {
             return this.streamRenderPromise;
         }
-        this.guardContext = windowGuard.createContext();
         var view = this;
         // 渲染 stream
         return this.streamRenderPromise = this.resourceQueryPromise.then(function (xhr) {
@@ -243,14 +239,6 @@ define(function (require) {
     CommonView.prototype.detach = function () {
         this.$view && this.$view.find('.rt-back').off('click');
         this.vw.emit('detach');
-        var view = this;
-        return Promise.resolve().then(function () {
-            var changeList = windowGuard.checkContext(view.guardContext);
-            if (changeList.totalChanges > 1) {
-                // eslint-disable-next-line
-                console.warn('side effects detected:', changeList);
-            }
-        });
     };
 
     CommonView.prototype.startExitAnimate = function () {
