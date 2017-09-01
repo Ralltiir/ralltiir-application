@@ -126,26 +126,33 @@ define(function (require) {
         if (_.has(desc, 'back.html')) {
             $back.html(desc.back.html);
         }
-        $back.off('click').on('click', function () {
-            if (_.has(desc, 'back.onClick')) {
-                desc.back.onClick()
-            }
-            else {
+        if (_.has(desc, 'back.onClick')) {
+            $back.off('click').on('click', function () {
+                if (false !== desc.back.onClick()) {
+                    action.back();
+                }
+            });
+        }
+        else {
+            $back.off('click').on('click', function () {
                 action.back();
-            }
-        });
+            });
+        }
 
         if (_.has(desc, 'title')) {
             $title.text(desc.title);
         }
-        $tool.empty();
-        _.forEach(desc && desc.tool, function (icon) {
-            var $icon = $(icon.html);
-            if (icon.onClick) {
-                $icon.on('click', icon.onClick);
-            }
-            $tool.append($icon);
-        });
+
+        if (_.has(desc, 'tool')) {
+            $tool.empty();
+            _.forEach(desc && desc.tool, function (icon) {
+                var $icon = $(icon.html);
+                if (icon.onClick) {
+                    $icon.on('click', icon.onClick);
+                }
+                $tool.append($icon);
+            });
+        }
     };
 
     CommonView.prototype.parse = function ($el) {
