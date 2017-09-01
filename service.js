@@ -14,8 +14,7 @@ define(function (require) {
     var http = rt.http;
     var _ = rt._;
 
-    commonService.createTemplateStream = function (state) {
-        var url = state.url;
+    commonService.createTemplateStream = function (url) {
         var i = url.indexOf('#');
         if (i > -1) {
             url = url.substr(0, i);
@@ -37,6 +36,7 @@ define(function (require) {
             view = new CommonView();
             viewCache.set(current.url, view);
         }
+        current.page.view = view;
         // 同步页首次加载，首屏dom放入sfview
         if (current.options && current.options.src === 'sync') {
             this.syncPageUrl = current.url;
@@ -48,7 +48,7 @@ define(function (require) {
         // 渲染框架
         view.renderFrame(opt);
         view.vw.performance.requestStart = Date.now();
-        view.setTemplateStream(this.createTemplateStream(current, extra));
+        view.setTemplateStream(this.createTemplateStream(current.url));
         // 检查动画
         view.enterAnimate = false;
         var skipAllAnimation = current && current.options && current.options.skipAllAnimation;
@@ -108,9 +108,10 @@ define(function (require) {
         });
     };
 
-    commonService.update = function (state, trans) {
-        var view = viewCache.get(state.url);
-        return view.update(state, trans);
+    commonService.partialUpdate = function (url, options) {
+        var view = options.page.view;
+        var resource = this.createTemplateStream(url);
+        return view.partialUpdate(resource, options);
     };
 
     commonService.detach = function (current, prev, extra) {

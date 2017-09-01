@@ -99,23 +99,34 @@ define(function (require) {
             return this.streamRenderPromise;
         }
         var view = this;
-        // 渲染 stream
         return this.streamRenderPromise = this.resourceQueryPromise.then(function (xhr) {
             view.vw.emit('beforeRender');
-            var html = xhr.data || '';
-            var el = document.createElement('div');
-            el.innerHTML = html;
-            // 手百&浏览器 内核渲染数据标记
-            html += '<rendermark></rendermark>';
-            _.forEach(el.querySelectorAll('[data-sfr-omit]'), function (el) {
-                el.remove();
-            });
-            return view.renderer.render({
-                type: 'template/body',
-                innerHTML: el.innerHTML
-            });
+            return render(view.renderer, xhr.data || '', view.vw.body)
         });
     };
+
+    CommonView.prototype.partialUpdate = function (resource, options) {
+        var renderer = this.renderer;
+        var body = this.vw.body;
+        return resource.then(function (xhr) {
+            var to = options.to ? body.querySelector(options.to) : body;
+            return render(renderer, xhr.data || '', to);
+        });
+    };
+
+    function render (renderer, html, to) {
+        var el = document.createElement('div');
+        el.innerHTML = html;
+        // 手百&浏览器 内核渲染数据标记
+        html += '<rendermark></rendermark>';
+        _.forEach(el.querySelectorAll('[data-sfr-omit]'), function (el) {
+            el.remove();
+        });
+        return renderer.renderPartial(to, {
+            type: 'template/body',
+            innerHTML: el.innerHTML
+        });
+    }
 
     CommonView.prototype.setHead = function (desc) {
         this.headConfig = desc;
@@ -123,14 +134,12 @@ define(function (require) {
         var $title = this.$head.find('.rt-title>div');
         var $tool = this.$head.find('.rt-tool');
 
-        if (_.has(desc, 'back.html')) {
-            $back.html(desc.back.html);
-        }
-        if (_.has(desc, 'back.onClick')) {
+        if (_.has(desc, 'back')) {
+            if (_.has(desc.back, 'html')) {
+                $back.html(desc.back.html);
+            }
             $back.off('click').on('click', function () {
-                if (false !== desc.back.onClick()) {
-                    action.back();
-                }
+                _.has(desc.back, 'onClick') ? desc.back.onClick() : action.back();
             });
         }
         else {
@@ -142,7 +151,6 @@ define(function (require) {
         if (_.has(desc, 'title')) {
             $title.text(desc.title);
         }
-
         if (_.has(desc, 'tool')) {
             $tool.empty();
             _.forEach(desc && desc.tool, function (icon) {
@@ -163,9 +171,7 @@ define(function (require) {
     };
 
     CommonView.prototype.renderFrame = function (opts) {
-        // 拼 DOM
         if (this.frameRendered) {
-            // 检查是否已渲染
             return false;
         }
         this.frameRendered = true;
