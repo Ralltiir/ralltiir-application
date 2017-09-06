@@ -15,6 +15,12 @@ define(function (require) {
     var animationTimeMs = 300;
     var animationDelayMs = 0;
     var animationEase = 'ease';
+    var defaultHeadOptions = {
+        back: {
+            html: '<i class="c-icon">&#xe750;</i>',
+            onClick: action.back.bind(action)
+        }
+    };
 
     function addEventListener(target, eventName, handler, attach) {
         target.addEventListener(eventName, handler, attach);
@@ -128,36 +134,28 @@ define(function (require) {
         });
     }
 
+    function updateTitleBarElement($el, options) {
+        if (_.has(options, 'html')) {
+            $el.html(options.html);
+        }
+        if (_.has(options, 'onClick')) {
+            $el.off('click').on('click', _.get(options, 'onClick') || _.noop);
+        }
+    }
+
     CommonView.prototype.setHead = function (desc) {
-        this.headConfig = desc;
-        var $back = this.$head.find('.rt-back');
-        var $title = this.$head.find('.rt-title>div');
-        var $tool = this.$head.find('.rt-tool');
+        var $head = this.$head;
 
-        if (_.has(desc, 'back')) {
-            if (_.has(desc.back, 'html')) {
-                $back.html(desc.back.html);
-            }
-            $back.off('click').on('click', function () {
-                _.has(desc.back, 'onClick') ? desc.back.onClick() : action.back();
-            });
-        }
-        else {
-            $back.off('click').on('click', function () {
-                action.back();
-            });
-        }
+        updateTitleBarElement($head.find('.rt-back'), _.get(desc, 'back'));
+        updateTitleBarElement($head.find('.rt-title'), _.get(desc, 'title'));
+        updateTitleBarElement($head.find('.rt-subtitle'), _.get(desc, 'subtitle'));
 
-        if (_.has(desc, 'title')) {
-            $title.text(desc.title);
-        }
-        if (_.has(desc, 'tool')) {
+        if (_.has(desc, 'actions')) {
+            var $tool = $head.find('.rt-actions');
             $tool.empty();
-            _.forEach(desc && desc.tool, function (icon) {
-                var $icon = $(icon.html);
-                if (icon.onClick) {
-                    $icon.on('click', icon.onClick);
-                }
+            _.forEach(desc.actions, function (icon) {
+                var $icon = $('<span>');
+                updateTitleBarElement($icon, icon);
                 $tool.append($icon);
             });
         }
@@ -167,7 +165,7 @@ define(function (require) {
         this.$view = $el;
         this.$head = $el.find('.rt-head');
         this.$body = $el.find('.rt-body');
-        this.setHead();
+        this.setHead(defaultHeadOptions);
     };
 
     CommonView.prototype.renderFrame = function (opts) {
@@ -178,14 +176,15 @@ define(function (require) {
 
         this.$head = $([
             '<div class="rt-head">',
-                '<div class="rt-back"><i class="c-icon">&#xe750;</i></div>',
-                '<div class="rt-tool"></div>',
-                '<div class="rt-title">',
-                    '<div class="c-line-clamp1"></div>',
+                '<div class="rt-back"></div>',
+                '<div class="rt-actions"></div>',
+                '<div class="rt-center">',
+                    '<span class="rt-title"></span>',
+                    '<span class="rt-subtitle"></span>',
                 '</div>',
             '</div>'
         ].join(''));
-        this.setHead(opts.head);
+        this.setHead(_.defaultsDeep(opts.head, defaultHeadOptions));
 
         this.$body = $('<div class="rt-body">');
         this.$view = $('<div class="rt-view">');
