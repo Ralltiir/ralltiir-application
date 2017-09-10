@@ -116,6 +116,9 @@ define(function (require) {
         var body = this.vw.body;
         return resource.then(function (xhr) {
             var to = options.to ? body.querySelector(options.to) : body;
+            if (options.replace) {
+                to.innerHTML = '';
+            }
             return render(renderer, xhr.data || '', to);
         });
     };
@@ -245,7 +248,10 @@ define(function (require) {
     };
 
     CommonView.prototype.detach = function () {
+        // TODO: remove all head-related events
         this.$view && this.$view.find('.rt-back').off('click');
+
+        this.$body.trigger('rt.detach');
         this.vw.emit('detach');
     };
 
@@ -275,6 +281,7 @@ define(function (require) {
     };
 
     CommonView.prototype.removeDom = function () {
+        this.$body.trigger('rt.destroy');
         this.$view.remove();
         delete this.$view;
         delete this.$head;
