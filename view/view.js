@@ -220,9 +220,6 @@ define(function (require) {
         // 设为 static 的动作必须在动画结束后、原页面已销毁时进行操作
         // 否则会导致页面滚动位置的跳动
         this.$view.css({
-            'position': 'static',
-            'overflow': 'auto',
-            'height': 'auto',
             '-webkit-transform': 'none',
             'transform': 'none',
             'min-height': $(window).height()
@@ -260,14 +257,15 @@ define(function (require) {
         return new Promise(function (resolve) {
             if (self.exitAnimate) {
                 var dom = self.$view[0];
-                Naboo.exit(dom, animationTimeMs, animationEase, animationDelayMs).start(function () {
+                Naboo
+                .exit(dom, animationTimeMs, animationEase, animationDelayMs)
+                .start(function () {
                     resolve();
                 });
             }
             else {
                 self.$view.css({
                     'display': 'none',
-                    'position': 'static',
                     '-webkit-transform': 'none',
                     'transform': 'none'
                 });
