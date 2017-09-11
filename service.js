@@ -32,21 +32,17 @@ define(function (require) {
             view.prepareRender();
         }
         else {
-            var opt = _.assign({}, current.options && current.options.view);
+            var opt = _.assign({}, _.get(current, 'options.view'));
             // 渲染框架
             view.renderFrame(opt);
             view.vw.performance.requestStart = Date.now();
             view.setTemplateStream(createTemplateStream(current.url));
             // 检查动画
             view.enterAnimate = false;
-            var skipAllAnimation = current && current.options && current.options.skipAllAnimation;
-            var src = current && current.options && current.options.src;
+            var skipAllAnimation = _.get(current, 'options.skipAllAnimation');
+            var src = _.get(current, 'options.src');
             if (!skipAllAnimation && src !== 'history' && src !== 'back' && src !== 'sync') {
                 // 普通入场
-                view.enterAnimate = true;
-            }
-            else if (!current && !prev) {
-                // 无参数入场（为啥会无参数？？）
                 view.enterAnimate = true;
             }
             ret = view.startEnterAnimate(current, prev, extra);
@@ -111,6 +107,7 @@ define(function (require) {
         return view.startExitAnimate(current, prev, extra)
         .then(function () {
             view.removeDom();
+            prev.page.view = null;
         });
     };
 
