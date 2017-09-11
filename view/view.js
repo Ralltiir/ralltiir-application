@@ -217,9 +217,10 @@ define(function (require) {
     };
 
     CommonView.prototype.prepareRender = function () {
-        // 设为 static 的动作必须在动画结束后、原页面已销毁时进行操作
+        // 设为 static 的动作必须在动画结束后且原页面已销毁时进行操作
         // 否则会导致页面滚动位置的跳动
         this.$view.css({
+            'position': 'static',
             '-webkit-transform': 'none',
             'transform': 'none',
             'min-height': $(window).height()

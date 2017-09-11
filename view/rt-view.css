@@ -6,10 +6,8 @@
     width: 100%;
     min-height: 100%;
     background-color: #f2f2f2;
-    overflow: auto;
 }
 .rt-view .rt-body {
-    overflow: hidden;
     text-align: left;
     padding-top: 44px;
 }

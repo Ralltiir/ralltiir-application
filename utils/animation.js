@@ -22,7 +22,7 @@ define(function (require) {
             '-webkit-transform': 'translate3d(0, 0, 0)',
             'transform': 'translate3d(0, 0, 0)'
         }, duration, ease, delay, function () {
-            // 设为 static 的动作需要在动画结束后、原页面已销毁时进行操作
+            // 设为 static 的动作需要在动画结束后且原页面已销毁时进行操作
             // 否则会导致页面滚动位置的跳动
             next();
         });
