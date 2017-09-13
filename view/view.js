@@ -119,21 +119,28 @@ define(function (require) {
             if (options.replace) {
                 to.innerHTML = '';
             }
-            return render(renderer, xhr.data || '', to);
+            return render(renderer, xhr.data || '', to, options.from);
         });
     };
 
-    function render (renderer, html, to) {
+    function render (renderer, html, to, from) {
         var el = document.createElement('div');
         el.innerHTML = html;
+        if (from) {
+            var fromEl = el.querySelector(from);
+            if (!fromEl) {
+                console.warn('from element not found, using all');
+                fromEl = el;
+            }
+        }
         // 手百&浏览器 内核渲染数据标记
         html += '<rendermark></rendermark>';
-        _.forEach(el.querySelectorAll('[data-sfr-omit]'), function (el) {
-            el.remove();
+        _.forEach(fromEl.querySelectorAll('[data-sfr-omit]'), function (fromEl) {
+            fromEl.remove();
         });
         return renderer.renderPartial(to, {
             type: 'template/body',
-            innerHTML: el.innerHTML
+            innerHTML: fromEl.innerHTML
         });
     }
 
