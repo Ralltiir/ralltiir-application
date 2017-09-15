@@ -32,7 +32,7 @@ define(function (require) {
             view.prepareRender();
         }
         else {
-            var opt = _.assign({}, _.get(current, 'options.view'));
+            var opt = _.assign({}, _.get(current, 'options'));
             // 渲染框架
             view.renderFrame(opt);
             view.vw.performance.requestStart = Date.now();
