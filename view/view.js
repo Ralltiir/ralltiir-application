@@ -149,7 +149,10 @@ define(function (require) {
             $el.html(options.html);
         }
         if (_.has(options, 'onClick')) {
-            $el.off('click').on('click', _.get(options, 'onClick') || _.noop);
+            $el.off('click').on('click', function () {
+                var cb = _.get(options, 'onClick') || _.noop;
+                cb();
+            });
         }
     }
 
