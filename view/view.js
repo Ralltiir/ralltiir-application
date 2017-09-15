@@ -124,23 +124,26 @@ define(function (require) {
     };
 
     function render (renderer, html, to, from) {
-        var el = document.createElement('div');
-        el.innerHTML = html;
+        var fromEl = document.createElement('div');
+        fromEl.innerHTML = html;
         if (from) {
-            var fromEl = el.querySelector(from);
-            if (!fromEl) {
+            var result = el.querySelector(from);
+            if (result) {
+                fromEl = result;
+            } else {
                 console.warn('from element not found, using all');
-                fromEl = el;
             }
         }
+        _.forEach(fromEl.querySelectorAll('[data-sfr-omit]'), function (el) {
+            el.remove();
+        });
+
+        var html = fromEl.innerHTML;
         // 手百&浏览器 内核渲染数据标记
         html += '<rendermark></rendermark>';
-        _.forEach(fromEl.querySelectorAll('[data-sfr-omit]'), function (fromEl) {
-            fromEl.remove();
-        });
         return renderer.renderPartial(to, {
             type: 'template/body',
-            innerHTML: fromEl.innerHTML
+            innerHTML: html
         });
     }
 
