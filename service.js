@@ -5,15 +5,13 @@
  * @author  lizhaoming
  */
 define(function (require) {
-    console.log('v3===================');
     var rt = require('ralltiir');
-    var CommonView = require('./view/view');
+    var View = require('./view/view');
     var Cache = rt.cache;
-    var http = rt.http;
     var _ = rt._;
 
     function Service() {
-        this.view = new CommonView();
+        this.view = new View();
     };
 
     Service.prototype.beforeAttach = function (current) {
@@ -29,7 +27,7 @@ define(function (require) {
         }
         else {
             view.renderFrame(current.options);
-            view.setTemplateStream(createTemplateStream(current.url));
+            view.setTemplateStream(View.createTemplateStream(current.url));
         }
 
         // 检查动画
@@ -77,15 +75,6 @@ define(function (require) {
         });
     };
 
-    Service.prototype.partialUpdate = function (url, options) {
-        var view = options.page.view;
-        var resource = createTemplateStream(url, {
-            'x-rt-partial': 'true',
-            'x-rt-selector': options.from || ':root'
-        });
-        return view.partialUpdate(resource, options);
-    };
-
     Service.prototype.beforeDetach = function (current, prev) {
         return this.view.beforeDetach();
     };
@@ -111,17 +100,6 @@ define(function (require) {
     };
 
     Service.instancEnabled = true;
-
-    function createTemplateStream (url, headers) {
-        return http.ajax(url, {
-            headers: _.assign(headers, {
-                'x-rt': 'true'
-            }),
-            xhrFields: {
-                withCredentials: true
-            }
-        });
-    };
 
     return Service;
 });

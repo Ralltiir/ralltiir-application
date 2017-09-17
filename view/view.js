@@ -6,6 +6,7 @@
 define(function (require) {
     require('../utils/animation');
     var rt = require('ralltiir');
+    var http = rt.http;
     var Naboo = require('../../fusion/deps/naboo');
     var Renderer = require('./render');
     var _ = rt._;
@@ -45,15 +46,25 @@ define(function (require) {
         });
     };
 
-    View.prototype.partialUpdate = function (resource, options) {
+    View.prototype.partialUpdate = function (url, options) {
         var renderer = this.renderer;
         var body = this.$body[0];
-        return resource.then(function (xhr) {
+        return View
+        .createTemplateStream(url, {
+            'x-rt-partial': 'true',
+            'x-rt-selector': options.from || ':root'
+        })
+        .then(function (xhr) {
+            rt.action.reset(url, null, {silent: true});
             var to = options.to ? body.querySelector(options.to) : body;
+            to.dispatchEvent(new Event('rt.willUpdate'));
             if (options.replace) {
                 to.innerHTML = '';
             }
-            return render(renderer, xhr.data || '', to, options.from);
+            return render(renderer, xhr.data || '', to, options.from)
+            .then(function () {
+                to.dispatchEvent(new Event('rt.updated'));
+            });
         });
     };
 
@@ -224,6 +235,17 @@ define(function (require) {
         delete this.$view;
         delete this.$head;
         delete this.$body;
+    };
+
+    View.createTemplateStream = function (url, headers) {
+        return http.ajax(url, {
+            headers: _.assign(headers, {
+                'x-rt': 'true'
+            }),
+            xhrFields: {
+                withCredentials: true
+            }
+        });
     };
 
     return View;
