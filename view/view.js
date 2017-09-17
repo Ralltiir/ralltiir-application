@@ -9,7 +9,6 @@ define(function (require) {
     var Naboo = require('../../fusion/deps/naboo');
     var Renderer = require('./render');
     var _ = rt._;
-    var View = rt.view;
     var action = rt.action;
     var Promise = rt.promise;
     var animationTimeMs = 300;
@@ -22,98 +21,33 @@ define(function (require) {
         }
     };
 
-    function addEventListener(target, eventName, handler, attach) {
-        target.addEventListener(eventName, handler, attach);
-        this.on('detach', function () {
-            target.removeEventListener(eventName, handler, attach);
-        });
-    }
-    function vwAddEventListener() {
-        var fn = addEventListener;
-        if (arguments.length < 4) {
-            fn = _.partial(fn, window);
-        }
-        fn.apply(this, arguments);
-    }
-
-    /**
-     * CommonView
-     *
-     * @class
-     */
-    var CommonView = function () {
-        View.apply(this, arguments);
-        // 初始化 virtual window
-        var view = this;
-        var vw = Object.create({
-            performance: {},
-            view: this
-        }, {
-            head: {
-                writeable: false,
-                get: function () {
-                    return view.$head && view.$head[0];
-                }
-            },
-            body: {
-                writeable: false,
-                get: function () {
-                    return view.$body && view.$body[0];
-                }
-            },
-            container: {
-                writeable: false,
-                get: function () {
-                    return view.$view && view.$view[0];
-                }
-            },
-            render: {
-                writeable: false,
-                get: function () {
-                    return view.renderer;
-                }
-            },
-            addEventListener: {
-                writeable: false,
-                get: function () {
-                    return vwAddEventListener;
-                }
-            }
-        });
-        this.vw = vw;
-        rt.emitter.mixin(this.vw);
+    function View() {
+        this.renderer = new Renderer();
     };
 
-    /**
-     * Parent
-     *
-     * @class
-     */
-    var Parent = function () {};
-    Parent.prototype = View.prototype;
-    CommonView.prototype = new Parent();
-    CommonView.uber = View.prototype;
-    CommonView.prototype.constructor = CommonView;
-	// rewrite render function
-    CommonView.prototype.setTemplateStream = function (promise) {
+    View.prototype.setTemplateStream = function (promise) {
         this.resourceQueryPromise = promise;
     };
 
-    CommonView.prototype.render = function () {
+    View.prototype.render = function () {
         this.prepareRender();
+        var view = this;
         if (this.streamRenderPromise) {
             return this.streamRenderPromise;
         }
         var view = this;
-        return this.streamRenderPromise = this.resourceQueryPromise.then(function (xhr) {
-            view.vw.emit('beforeRender');
-            return render(view.renderer, xhr.data || '', view.vw.body)
+        return this.streamRenderPromise = this.resourceQueryPromise
+        .then(function (xhr) {
+            return render(view.renderer, xhr.data || '', view.$body[0], '.rt-body')
+        })
+        .then(function () {
+            view.rendered = true;
         });
     };
 
-    CommonView.prototype.partialUpdate = function (resource, options) {
+    View.prototype.partialUpdate = function (resource, options) {
         var renderer = this.renderer;
-        var body = this.vw.body;
+        var body = this.$body[0];
         return resource.then(function (xhr) {
             var to = options.to ? body.querySelector(options.to) : body;
             if (options.replace) {
@@ -124,12 +58,13 @@ define(function (require) {
     };
 
     function render (renderer, html, to, from) {
-        var fromEl = document.createElement('div');
-        fromEl.innerHTML = html;
+        var wrapper = document.createElement('div');
+        var fromEl = wrapper;
+        wrapper.innerHTML = html;
         if (from) {
-            var result = el.querySelector(from);
-            if (result) {
-                fromEl = result;
+            var tmp = wrapper.querySelector(from);
+            if (tmp) {
+                fromEl = tmp;
             } else {
                 console.warn('from element not found, using all');
             }
@@ -141,10 +76,7 @@ define(function (require) {
         var html = fromEl.innerHTML;
         // 手百&浏览器 内核渲染数据标记
         html += '<rendermark></rendermark>';
-        return renderer.renderPartial(to, {
-            type: 'template/body',
-            innerHTML: html
-        });
+        return renderer.render(to, html);
     }
 
     function updateTitleBarElement($el, options) {
@@ -159,7 +91,7 @@ define(function (require) {
         }
     }
 
-    CommonView.prototype.setHead = function (desc) {
+    View.prototype.setHead = function (desc) {
         var $head = this.$head;
 
         updateTitleBarElement($head.find('.rt-back'), _.get(desc, 'back'));
@@ -177,14 +109,16 @@ define(function (require) {
         }
     };
 
-    CommonView.prototype.parse = function ($el) {
+    View.prototype.parse = function ($el) {
         this.$view = $el;
         this.$head = $el.find('.rt-head');
         this.$body = $el.find('.rt-body');
+        this.$view.addClass('active');
+        this.$view.get(0).ralltiir = this;
         this.setHead(defaultHeadOptions);
     };
 
-    CommonView.prototype.renderFrame = function (opts) {
+    View.prototype.renderFrame = function (opts) {
         if (this.frameRendered) {
             return false;
         }
@@ -205,18 +139,23 @@ define(function (require) {
         this.$body = $('<div class="rt-body">');
         this.$view = $('<div class="rt-view">');
         this.$view.append(this.$head).append(this.$body);
+        this.$view.addClass('active');
+        this.$view.get(0).ralltiir = this;
 
         $(rt.doc).append(this.$view);
     };
 
-    CommonView.prototype.startEnterAnimate = function () {
+    // TODO 统一由 attach 操作，干掉 reAttach
+    View.prototype.reAttach = function () {
+        rt.doc.appendChild(this.$view.get(0));
+    };
+
+    View.prototype.startEnterAnimate = function () {
         var self = this;
         return new Promise(function (resolve) {
             if (self.enterAnimate) {
                 var dom = self.$view[0];
-                Naboo.enter(dom, animationTimeMs, animationEase, animationDelayMs).start(function () {
-                    resolve();
-                });
+                Naboo.enter(dom, animationTimeMs, animationEase, animationDelayMs).start(resolve);
             }
             else {
                 self.$view.css({
@@ -229,7 +168,7 @@ define(function (require) {
         });
     };
 
-    CommonView.prototype.prepareRender = function () {
+    View.prototype.prepareRender = function () {
         // 设为 static 的动作必须在动画结束后且原页面已销毁时进行操作
         // 否则会导致页面滚动位置的跳动
         this.$view.css({
@@ -238,35 +177,25 @@ define(function (require) {
             'transform': 'none',
             'min-height': $(window).height()
         });
-        if (!this.renderer) {
-            this.renderer = new Renderer(this.vw);
-        }
-        window._SF_ = window._SF_ || {};
-        window._SF_._global_ = this.renderer.global._global_;
-        window._SF_.page = this.renderer.global.scope;
-        window._SF_.vw = this.vw;
     };
 
-    CommonView.prototype.renderStream = function () {
-        // eslint-disable-next-line
-        console.warn('view.renderStream deprecated, use view.render() instead.');
-        return this.render();
+    View.prototype.attach = function () {
+        this.$view.trigger('rt.attached');
+        this.attached = true;
     };
 
-    CommonView.prototype.attach = function () {
-        this.vw.emit('attach');
-        return Promise.resolve();
+    View.prototype.beforeDetach = function () {
+        this.$body.trigger('rt.willDetach');
+        this.$view.removeClass('active');
     };
 
-    CommonView.prototype.detach = function () {
-        // TODO: remove all head-related events
-        this.$view && this.$view.find('.rt-back').off('click');
-
-        this.$body.trigger('rt.detach');
-        this.vw.emit('detach');
+    View.prototype.detach = function () {
+        this.$view.trigger('rt.detached')
+        this.$view.remove()
+        this.attached = false;
     };
 
-    CommonView.prototype.startExitAnimate = function () {
+    View.prototype.startExitAnimate = function () {
         var self = this;
         return new Promise(function (resolve) {
             if (self.exitAnimate) {
@@ -288,17 +217,14 @@ define(function (require) {
         });
     };
 
-    CommonView.prototype.hideView = function () {
-        this.$view.hide();
-    };
-
-    CommonView.prototype.removeDom = function () {
-        this.$body.trigger('rt.destroy');
-        this.$view.remove();
+    View.prototype.destroy = function () {
+        this.$view
+        .trigger('rt.destroyed')
+        .remove();
         delete this.$view;
         delete this.$head;
         delete this.$body;
     };
 
-    return CommonView;
+    return View;
 });
