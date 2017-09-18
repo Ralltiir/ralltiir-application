@@ -17,16 +17,20 @@ define(['ralltiir'], function (superFrame) {
      *
      * @param {HTMLElement} parent The parent element
      * @param {String} html The html string to render with
+     * @param {string} [options=] render options
+     * @param {string} [options.from=:root] The container element or the selector of the container element in the DOM of the retrieved HTML
+     * @param {boolean} [options.replace=false] Whether or not to replace the contents of container element
      * @return {Promise} resolves when partial fully rendered, rejects when render error
      */
-    Render.prototype.render = function (parent, html) {
-        // documentFragment does not allow setting arbitrary innerHTML,
-        // use <div> instead.
-        var docfrag = document.createElement('div');
-        docfrag.innerHTML = html;
+    Render.prototype.render = function (parent, html, options) {
+        var docfrag = this.parse(html, options.from);
 
         var links = docfrag.querySelectorAll('link');
         var scripts = docfrag.querySelectorAll('script');
+
+        if (options.replace) {
+            parent.innerHTML = '';
+        }
 
         return Promise.resolve()
             .then(function () {
@@ -39,6 +43,37 @@ define(['ralltiir'], function (superFrame) {
                 return this.enforceJS(scripts);
             }.bind(this));
     };
+
+    /**
+     * Parse HTML to DOM Object
+     *
+     * @param {String} html The html string to render with
+     * @param {String} [from=:root] The root selector, allows returning partial DOM
+     * @return {HTMLElement} element containing the DOM tree from `html`
+     */
+    Render.prototype.parse = function (html, from) {
+        // documentFragment does not allow setting arbitrary innerHTML,
+        // use <div> instead.
+        var docfrag = document.createElement('div');
+        docfrag.innerHTML = html;
+
+        if (from) {
+            var tmp = docfrag.querySelector(from);
+            if (tmp) {
+                docfrag = tmp;
+            } else {
+                console.warn('from element not found, using all');
+            }
+        }
+
+        _.forEach(docfrag.querySelectorAll('[data-rt-omit]'), function (el) {
+            el.remove();
+        });
+
+        // 手百&浏览器 内核渲染数据标记
+        docfrag.appendChild(document.createElement('rendermark'));
+        return docfrag;
+    }
 
     function moveNodes(from, to) {
         while (from.childNodes.length > 0) {

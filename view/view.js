@@ -39,11 +39,28 @@ define(function (require) {
         var view = this;
         return this.streamRenderPromise = this.resourceQueryPromise
         .then(function (xhr) {
-            return render(view.renderer, xhr.data || '', view.$body[0], '.rt-body')
+            view.headOptions = null;
+            return Promise.all([
+                view.renderer.render(view.$head[0], xhr.data || '', {
+                    replace: true,
+                    from: '.rt-head'
+                }).then(view.initBackIfNotset.bind(view)),
+                view.renderer.render(view.$body[0], xhr.data || '', {
+                    replace: true,
+                    from: '.rt-body'
+                })
+            ]);
         })
         .then(function () {
             view.rendered = true;
         });
+    };
+
+    View.prototype.initBackIfNotset = function () {
+        if (this.headOptions) {
+            return;
+        }
+        this.setHead();
     };
 
     View.prototype.partialUpdate = function (url, options) {
@@ -58,10 +75,10 @@ define(function (require) {
             rt.action.reset(url, null, {silent: true});
             var to = options.to ? body.querySelector(options.to) : body;
             to.dispatchEvent(new Event('rt.willUpdate'));
-            if (options.replace) {
-                to.innerHTML = '';
-            }
-            return render(renderer, xhr.data || '', to, options.from)
+            return renderer.render(to, xhr.data || '', {
+                from: options.from,
+                replace: options.replace
+            })
             .then(function () {
                 to.dispatchEvent(new Event('rt.updated'));
             });
@@ -71,28 +88,6 @@ define(function (require) {
             location.href = url;
         });
     };
-
-    function render (renderer, html, to, from) {
-        var wrapper = document.createElement('div');
-        var fromEl = wrapper;
-        wrapper.innerHTML = html;
-        if (from) {
-            var tmp = wrapper.querySelector(from);
-            if (tmp) {
-                fromEl = tmp;
-            } else {
-                console.warn('from element not found, using all');
-            }
-        }
-        _.forEach(fromEl.querySelectorAll('[data-sfr-omit]'), function (el) {
-            el.remove();
-        });
-
-        var html = fromEl.innerHTML;
-        // 手百&浏览器 内核渲染数据标记
-        html += '<rendermark></rendermark>';
-        return renderer.render(to, html);
-    }
 
     function updateTitleBarElement($el, options) {
         if (_.has(options, 'html')) {
@@ -107,13 +102,16 @@ define(function (require) {
     }
 
     View.prototype.setHead = function (desc) {
+        desc = desc || defaultHeadOptions;
+        this.headOptions = desc;
+
         var $head = this.$head;
 
-        updateTitleBarElement($head.find('.rt-back'), _.get(desc, 'back'));
-        updateTitleBarElement($head.find('.rt-title'), _.get(desc, 'title'));
-        updateTitleBarElement($head.find('.rt-subtitle'), _.get(desc, 'subtitle'));
+        updateTitleBarElement($head.find('.rt-back'), desc.back);
+        updateTitleBarElement($head.find('.rt-title'), desc.title);
+        updateTitleBarElement($head.find('.rt-subtitle'), desc.subtitle);
 
-        if (_.has(desc, 'actions')) {
+        if (desc.actions) {
             var $tool = $head.find('.rt-actions');
             $tool.empty();
             _.forEach(desc.actions, function (icon) {
@@ -130,7 +128,7 @@ define(function (require) {
         this.$body = $el.find('.rt-body');
         this.$view.addClass('active');
         this.$view.get(0).ralltiir = this;
-        this.setHead(defaultHeadOptions);
+        this.setHead();
         this.rendered = true;
     };
 
