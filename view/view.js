@@ -65,6 +65,10 @@ define(function (require) {
             .then(function () {
                 to.dispatchEvent(new Event('rt.updated'));
             });
+        })
+        .catch(function (e) {
+            console.warn('partialUpdate Error, redirecting', e);
+            location.href = url;
         });
     };
 
@@ -127,6 +131,7 @@ define(function (require) {
         this.$view.addClass('active');
         this.$view.get(0).ralltiir = this;
         this.setHead(defaultHeadOptions);
+        this.rendered = true;
     };
 
     View.prototype.renderFrame = function (opts) {

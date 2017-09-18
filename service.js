@@ -58,19 +58,10 @@ define(function (require) {
             return view.attach();
         })
         .catch(function (err) {
-            var code = err.status;
-            if ((typeof code) !== 'number') {
-                code = err.code || 901;
-            }
             // eslint-disable-next-line
             console.error('RenderError, redirecting...', err);
             if (current.options.src !== 'sync') {
-                var query = location.search + (location.search ? '&' : '?');
-                query += 'rt_fb=' + code;
-
-                var url = location.protocol + '//' + location.host
-                    + location.pathname + query + location.hash;
-                location.replace(url);
+                location.replace(location.href);
             }
         });
     };
