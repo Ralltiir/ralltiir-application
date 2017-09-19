@@ -194,12 +194,15 @@ define(function (require) {
     };
 
     View.prototype.attach = function () {
+        window.scrollTo(this.scrollX, this.scrollY);
         this.$view.trigger('rt.attached');
         this.attached = true;
     };
 
     View.prototype.beforeDetach = function () {
         this.$body.trigger('rt.willDetach');
+        this.scrollX = window.scrollX;
+        this.scrollY = window.scrollY;
         this.$view.removeClass('active');
     };
 
