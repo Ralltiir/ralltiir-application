@@ -51,9 +51,15 @@ define(function (require) {
         // 修复 iOS 下动画闪烁的问题，在 renderStream 前 scroll
         scrollTo(0, 0);
         // 此处没有 return promise，因为这样会阻塞生命周期导致无法回退，故让 render 不受生命周期控制
-        
-        var p = view.rendered ? Promise.resolve() : view.render();
-        p
+        Promise.resolve()
+        .then(function () {
+            if (view.rendered) {
+                view.prepareRender();
+            }
+            else {
+                return view.render();
+            }
+        })
         .then(function () {
             return view.attach();
         })
@@ -67,7 +73,7 @@ define(function (require) {
     };
 
     Service.prototype.beforeDetach = function (current, prev) {
-        return this.view.beforeDetach();
+        return this.view.beforeDetach(current, prev);
     };
 
     Service.prototype.detach = function (current, prev, extra) {

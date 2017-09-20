@@ -194,21 +194,26 @@ define(function (require) {
     };
 
     View.prototype.attach = function () {
-        window.scrollTo(this.scrollX, this.scrollY);
+        if (this.hasOwnProperty('scrollX')) {
+            window.scrollTo(this.scrollX, this.scrollY);
+        }
         this.$view.trigger('rt.attached');
         this.attached = true;
     };
 
-    View.prototype.beforeDetach = function () {
+    View.prototype.beforeDetach = function (current, prev) {
         this.$body.trigger('rt.willDetach');
-        this.scrollX = window.scrollX;
-        this.scrollY = window.scrollY;
+        // 对历史记录操作，不保存浏览位置
+        if (['back', 'history'].indexOf(current.options.src) < 0) {
+            this.scrollX = window.scrollX;
+            this.scrollY = window.scrollY;
+        }
         this.$view.removeClass('active');
     };
 
     View.prototype.detach = function () {
-        this.$view.trigger('rt.detached')
-        this.$view.remove()
+        this.$view.trigger('rt.detached');
+        this.$view.remove();
         this.attached = false;
     };
 
