@@ -7,19 +7,18 @@
 define(function (require) {
     var rt = require('ralltiir');
     var View = require('./view/view');
-    var Cache = rt.cache;
     var _ = rt._;
 
     function Service() {
         this.view = new View();
-    };
+    }
 
     Service.prototype.beforeAttach = function (current) {
         var view = this.view;
         if (_.get(current, 'options.src') === 'sync') {
             view.parse($('#sfr-app .rt-view'));
             view.prepareRender();
-            return
+            return;
         }
 
         if (view.rendered) {
@@ -48,8 +47,6 @@ define(function (require) {
             view.attach();
             return;
         }
-        // 修复 iOS 下动画闪烁的问题，在 renderStream 前 scroll
-        scrollTo(0, 0);
         // 此处没有 return promise，因为这样会阻塞生命周期导致无法回退，故让 render 不受生命周期控制
         Promise.resolve()
         .then(function () {
@@ -57,6 +54,8 @@ define(function (require) {
                 view.prepareRender();
             }
             else {
+                // 修复 iOS 下动画闪烁的问题，在 renderStream 前 scroll
+                scrollTo(0, 0);
                 return view.render();
             }
         })
@@ -78,13 +77,16 @@ define(function (require) {
 
     Service.prototype.detach = function (current, prev, extra) {
         var view = this.view;
-        var self = this;
         view.exitAnimate = false;
         var skipAnimation = _.get(current, 'options.skipAnimation');
         var src = _.get(current, 'options.src');
         if (!skipAnimation && src === 'back') {
             view.exitAnimate = true;
         }
+
+        // 修复退场时，页面跳动的问题；还原滚动位置的时机比较诡异，需要在动画做之前搞定。
+        // TODO: 增加生命周期来完整这个工作
+        _.get(current, 'service.view.restoreScrollState') && current.service.view.restoreScrollState();
 
         return view.startExitAnimate(current, prev, extra)
         .then(function () {

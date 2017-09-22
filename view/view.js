@@ -24,7 +24,7 @@ define(function (require) {
 
     function View() {
         this.renderer = new Renderer();
-    };
+    }
 
     View.prototype.setTemplateStream = function (promise) {
         this.resourceQueryPromise = promise;
@@ -36,7 +36,6 @@ define(function (require) {
         if (this.streamRenderPromise) {
             return this.streamRenderPromise;
         }
-        var view = this;
         return this.streamRenderPromise = this.resourceQueryPromise
         .then(function (xhr) {
             view.headOptions = null;
@@ -194,9 +193,6 @@ define(function (require) {
     };
 
     View.prototype.attach = function () {
-        if (this.hasOwnProperty('scrollX')) {
-            window.scrollTo(this.scrollX, this.scrollY);
-        }
         this.$view.trigger('rt.attached');
         this.attached = true;
     };
@@ -246,6 +242,12 @@ define(function (require) {
         delete this.$view;
         delete this.$head;
         delete this.$body;
+    };
+
+    View.prototype.restoreScrollState = function () {
+        if (this.hasOwnProperty('scrollX')) {
+            scrollTo(this.scrollX, this.scrollY);
+        }
     };
 
     View.createTemplateStream = function (url, headers) {
