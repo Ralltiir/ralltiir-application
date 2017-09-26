@@ -100,11 +100,18 @@ define(function (require) {
         }
     }
 
-    View.prototype.setHead = function (desc) {
-        desc = desc || defaultHeadOptions;
+    View.prototype.setHead = function (desc, options) {
+        desc = desc || _.assign({}, defaultHeadOptions);
+        options = options || {};
+        
+        var $head = this.$head;
+
+        if(options.isIndex === true && $head.find('.rt-back').html() === '') {
+            desc.back = {};
+        }
+
         this.headOptions = desc;
 
-        var $head = this.$head;
 
         updateTitleBarElement($head.find('.rt-back'), desc.back);
         updateTitleBarElement($head.find('.rt-title'), desc.title);
@@ -121,13 +128,13 @@ define(function (require) {
         }
     };
 
-    View.prototype.parse = function ($el) {
+    View.prototype.parse = function ($el, options) {
         this.$view = $el;
         this.$head = $el.find('.rt-head');
         this.$body = $el.find('.rt-body');
         this.$view.addClass('active');
         this.$view.get(0).ralltiir = this;
-        this.setHead();
+        this.setHead(null, options);
         this.rendered = true;
     };
 

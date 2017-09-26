@@ -16,7 +16,7 @@ define(function (require) {
     Service.prototype.beforeAttach = function (current) {
         var view = this.view;
         if (_.get(current, 'options.src') === 'sync') {
-            view.parse($('#sfr-app .rt-view'));
+            view.parse($('#sfr-app .rt-view'), {isIndex: _.get(current, 'page.isIndex')});
             view.prepareRender();
             return;
         }
