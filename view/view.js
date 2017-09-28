@@ -202,6 +202,8 @@ define(function (require) {
     View.prototype.attach = function () {
         this.$view.trigger('rt.attached');
         this.attached = true;
+        //不使用restoreScrollState，因为要处理回退后再打开（scollX无记录）置顶的情况
+        scrollTo(this.scroll, this.scrollY);
     };
 
     View.prototype.beforeDetach = function (current, prev) {
