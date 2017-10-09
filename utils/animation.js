@@ -3,8 +3,8 @@
  * @author taoqingqian01
  * */
 define(function (require) {
-    var Naboo = require('../../fusion/deps/naboo');
-    var Spark = require('../../fusion/deps/spark');
+    var Naboo = require('./naboo');
+    var Spark = require('./spark');
     Naboo.register('enter', function (next, dom, duration, ease, delay) {
         $(dom).css({
             'display': 'block',

@@ -7,7 +7,7 @@ define(function (require) {
     require('../utils/animation');
     var rt = require('ralltiir');
     var http = rt.http;
-    var Naboo = require('../../fusion/deps/naboo');
+    var Naboo = require('../utils/naboo');
     var Renderer = require('./render');
     var _ = rt._;
     var action = rt.action;
@@ -157,9 +157,8 @@ define(function (require) {
         this.setHead(_.defaultsDeep(opts.head, defaultHeadOptions));
 
         this.$body = $('<div class="rt-body">');
-        this.$view = $('<div class="rt-view">');
+        this.$view = $('<div class="rt-view active">');
         this.$view.append(this.$head).append(this.$body);
-        this.$view.addClass('active');
         this.$view.get(0).ralltiir = this;
 
         $(rt.doc).append(this.$view);
@@ -167,6 +166,7 @@ define(function (require) {
 
     // TODO 统一由 attach 操作，干掉 reAttach
     View.prototype.reAttach = function () {
+        this.$view.addClass('active');
         rt.doc.appendChild(this.$view.get(0));
     };
 
