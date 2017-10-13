@@ -9,14 +9,14 @@ define(function (require) {
     var View = require('./view/view');
     var _ = rt._;
 
-    function Service() {
-        this.view = new View();
+    function Service(url, options) {
+        this.view = new View(options.head);
     }
 
     Service.prototype.beforeAttach = function (current) {
         var view = this.view;
         if (_.get(current, 'options.src') === 'sync') {
-            view.parse($('#sfr-app .rt-view'), {isIndex: _.get(current, 'page.isIndex')});
+            view.parse($('#sfr-app .rt-view'));
             view.prepareRender();
             return;
         }

@@ -2,6 +2,7 @@
  * @file    通用 view
  * @author  lizhaoming
  */
+console.log('ha!')
 
 define(function (require) {
     require('../utils/animation');
@@ -15,15 +16,16 @@ define(function (require) {
     var animationTimeMs = 300;
     var animationDelayMs = 0;
     var animationEase = 'ease';
-    var defaultHeadOptions = {
-        back: {
+
+    function View(options) {
+        this.renderer = new Renderer();
+        this.backOption = {
             html: '<i class="c-icon">&#xe750;</i>',
             onClick: action.back.bind(action)
-        }
-    };
-
-    function View() {
-        this.renderer = new Renderer();
+        };
+        this.defaultHeadOptions = options || {
+            back: backOption
+        };
     }
 
     View.prototype.setTemplateStream = function (promise) {
@@ -38,12 +40,12 @@ define(function (require) {
         }
         return this.streamRenderPromise = this.resourceQueryPromise
         .then(function (xhr) {
-            view.headOptions = null;
             return Promise.all([
                 view.renderer.render(view.$head[0], xhr.data || '', {
                     replace: true,
-                    from: '.rt-head'
-                }).then(view.initBackIfNotset.bind(view)),
+                    from: '.rt-head',
+                    render: view.updateHead.bind(view)
+                }),
                 view.renderer.render(view.$body[0], xhr.data || '', {
                     replace: true,
                     from: '.rt-body'
@@ -55,11 +57,11 @@ define(function (require) {
         });
     };
 
-    View.prototype.initBackIfNotset = function () {
-        if (this.headOptions) {
-            return;
+    View.prototype.updateHead = function (container) {
+        this.$head.html(container.innerHTML);
+        if (history.length) {
+            updateTitleBarElement(this.$head.find('.rt-back'), this.backOption);
         }
-        this.setHead();
     };
 
     View.prototype.partialUpdate = function (url, options) {
@@ -100,19 +102,11 @@ define(function (require) {
         }
     }
 
-    View.prototype.setHead = function (desc, options) {
-        desc = desc || _.assign({}, defaultHeadOptions);
-        options = options || {};
-        
+    View.prototype.setHead = function (desc) {
+        desc = desc || {};
         var $head = this.$head;
 
-        if(options.isIndex === true && $head.find('.rt-back').html() === '') {
-            desc.back = {};
-        }
-
-        this.headOptions = desc;
-
-
+        desc.back = history.length > 0 ? this.backOption : desc.back;
         updateTitleBarElement($head.find('.rt-back'), desc.back);
         updateTitleBarElement($head.find('.rt-title'), desc.title);
         updateTitleBarElement($head.find('.rt-subtitle'), desc.subtitle);
@@ -128,13 +122,13 @@ define(function (require) {
         }
     };
 
-    View.prototype.parse = function ($el, options) {
+    View.prototype.parse = function ($el) {
         this.$view = $el;
         this.$head = $el.find('.rt-head');
         this.$body = $el.find('.rt-body');
         this.$view.addClass('active');
         this.$view.get(0).ralltiir = this;
-        this.setHead(null, options);
+        this.setHead(this.defaultHeadOptions);
         this.rendered = true;
     };
 
@@ -144,6 +138,8 @@ define(function (require) {
         }
         this.frameRendered = true;
 
+        this.$view = $('<div class="rt-view active">');
+        this.$body = $('<div class="rt-body">');
         this.$head = $([
             '<div class="rt-head">',
                 '<div class="rt-back"></div>',
@@ -154,10 +150,8 @@ define(function (require) {
                 '</div>',
             '</div>'
         ].join(''));
-        this.setHead(_.defaultsDeep(opts.head, defaultHeadOptions));
+        this.setHead(_.defaultsDeep(opts.head, this.defaultHeadOptions));
 
-        this.$body = $('<div class="rt-body">');
-        this.$view = $('<div class="rt-view active">');
         this.$view.append(this.$head).append(this.$body);
         this.$view.get(0).ralltiir = this;
 
@@ -203,7 +197,7 @@ define(function (require) {
         this.$view.trigger('rt.attached');
         this.attached = true;
         //不使用restoreScrollState，因为要处理回退后再打开（scollX无记录）置顶的情况
-        scrollTo(this.scroll, this.scrollY);
+        scrollTo(this.scrollX, this.scrollY);
     };
 
     View.prototype.beforeDetach = function (current, prev) {

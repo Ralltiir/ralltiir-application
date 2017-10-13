@@ -16,8 +16,5 @@
   "bugs": {
     "url": "https://github.com/Ralltiir/ralltiir-application/issues"
   },
-  "homepage": "https://github.com/Ralltiir/ralltiir-application#readme",
-  "dependencies": {
-    "ralltiir": "^2.7.0-0"
-  }
+  "homepage": "https://github.com/Ralltiir/ralltiir-application#readme"
 }

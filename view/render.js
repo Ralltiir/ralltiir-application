@@ -32,6 +32,10 @@ define(['ralltiir'], function (superFrame) {
             parent.innerHTML = '';
         }
 
+        if (options.render) {
+            return options.render(docfrag, links, scripts);
+        }
+
         return Promise.resolve()
             .then(function () {
                 return enforceCSS(links, parent);
