@@ -67,6 +67,14 @@ define(function (require) {
     View.prototype.partialUpdate = function (url, options) {
         var renderer = this.renderer;
         var body = this.$body[0];
+        var to = options.to ? body.querySelector(options.to) : body;
+
+        if (options.replace) {
+            var evt = new Event('rt.updating');
+            evt.options = options
+            to.dispatchEvent(evt);
+        }
+
         return View
         .createTemplateStream(url, {
             'x-rt-partial': 'true',
@@ -74,7 +82,6 @@ define(function (require) {
         })
         .then(function (xhr) {
             rt.action.reset(url, null, {silent: true});
-            var to = options.to ? body.querySelector(options.to) : body;
             to.dispatchEvent(new Event('rt.willUpdate'));
             return renderer.render(to, xhr.data || '', {
                 from: options.from,

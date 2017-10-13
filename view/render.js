@@ -23,7 +23,7 @@ define(['ralltiir'], function (superFrame) {
      * @return {Promise} resolves when partial fully rendered, rejects when render error
      */
     Render.prototype.render = function (parent, html, options) {
-        var docfrag = this.parse(html, options.from);
+        var docfrag = Render.parse(html, options.from);
 
         var links = docfrag.querySelectorAll('link');
         var scripts = docfrag.querySelectorAll('script');
@@ -55,7 +55,7 @@ define(['ralltiir'], function (superFrame) {
      * @param {String} [from=:root] The root selector, allows returning partial DOM
      * @return {HTMLElement} element containing the DOM tree from `html`
      */
-    Render.prototype.parse = function (html, from) {
+    Render.parse = function (html, from) {
         // documentFragment does not allow setting arbitrary innerHTML,
         // use <div> instead.
         var docfrag = document.createElement('div');
