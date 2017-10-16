@@ -11,6 +11,7 @@ define(function (require) {
     var _ = rt._;
 
     function Service(url, options) {
+        options = options || {};
         this.view = new View(options.head);
     }
 
