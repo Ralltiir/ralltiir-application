@@ -24,7 +24,7 @@ define(function (require) {
             onClick: action.back.bind(action)
         };
         this.defaultHeadOptions = options || {
-            back: backOption
+            back: this.backOption
         };
     }
 
