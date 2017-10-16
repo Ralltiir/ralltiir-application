@@ -6,6 +6,7 @@
  */
 define(function (require) {
     var rt = require('ralltiir');
+    var Promise = rt.promise;
     var View = require('./view/view');
     var _ = rt._;
 
