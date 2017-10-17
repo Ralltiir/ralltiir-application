@@ -15,38 +15,37 @@ define(function (require) {
     }
 
     Service.prototype.beforeAttach = function (current) {
-        var view;
         if (_.get(current, 'options.head')) {
             console.warn('use options.view instead of options.head');
             current.options.view = current.options.head;
         }
         if (_.get(current, 'options.src') === 'sync') {
-            var view = this.view = View.parse(
+            this.view = View.parse(
                 current.options.view,
                 document.querySelector('#sfr-app .rt-view')
             );
-            view.prepareRender();
+            this.view.prepareRender();
             return;
         }
 
-        if (view.rendered) {
-            view.reAttach();
+        if (this.view && this.view.rendered) {
+            this.view.reAttach();
         }
         else {
             var viewOpts = _.defaultsDeep(current.options, this.options);
-            view = this.view = new View(viewOpts);
+            this.view = new View(viewOpts);
             this.view.setTemplateStream(View.createTemplateStream(current.url));
         }
 
         // 检查动画
-        view.enterAnimate = false;
+        this.view.enterAnimate = false;
         var skipAnimation = _.get(current, 'options.skipAnimation');
         var src = _.get(current, 'options.src');
         if (!skipAnimation && src !== 'history' && src !== 'back' && src !== 'sync') {
             // 普通入场
-            view.enterAnimate = true;
+            this.view.enterAnimate = true;
         }
-        return view.startEnterAnimate();
+        return this.view.startEnterAnimate();
     };
 
     Service.prototype.attach = function (current) {

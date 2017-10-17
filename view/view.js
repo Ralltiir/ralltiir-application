@@ -23,12 +23,13 @@ define(function (require) {
         '    <div class="rt-back"></div>',
         '    <div class="rt-actions"></div>',
         '    <div class="rt-center">',
-        '    <span class="rt-title"></span>',
-        '    <span class="rt-subtitle"></span>',
+        '      <span class="rt-title"></span>',
+        '      <span class="rt-subtitle"></span>',
+        '    </div>',
         '  </div>',
         '  <div class="rt-body"></div>',
         '</div>'
-    ];
+    ].join('');
 
     function View(options, viewEl) {
         this.renderer = new Renderer();
@@ -155,7 +156,7 @@ define(function (require) {
 
         if (desc.actions) {
             var toolEl = headEl.querySelector('.rt-actions');
-            toolEl.empty();
+            toolEl.innerHTML = '';
             _.forEach(desc.actions, function (icon) {
                 var iconEl = dom.elementFromString('<span>');
                 updateTitleBarElement(iconEl, icon);
@@ -168,8 +169,7 @@ define(function (require) {
         var self = this;
         return new Promise(function (resolve) {
             if (self.enterAnimate) {
-                var dom = self.viewEl;
-                Naboo.enter(dom, animationTimeMs, animationEase, animationDelayMs).start(resolve);
+                Naboo.enter(self.viewEl, animationTimeMs, animationEase, animationDelayMs).start(resolve);
             }
             else {
                 dom.css(self.viewEl, {
@@ -189,7 +189,7 @@ define(function (require) {
             'position': 'static',
             '-webkit-transform': 'none',
             'transform': 'none',
-            'min-height': window.innerHeight
+            'min-height': window.innerHeight + 'px'
         });
     };
 
@@ -202,7 +202,8 @@ define(function (require) {
 
     // TODO 统一由 attach 操作，干掉 reAttach
     View.prototype.reAttach = function () {
-        this.viewEl.addClass('active');
+        dom.addClass(this.viewEl, 'active');
+        dom.show(this.viewEl);
         rt.doc.appendChild(this.viewEl);
     };
 
@@ -213,7 +214,7 @@ define(function (require) {
             this.scrollX = window.scrollX;
             this.scrollY = window.scrollY;
         }
-        this.viewEl.removeClass('active');
+        dom.removeClass(this.viewEl, 'active');
     };
 
     View.prototype.detach = function () {
@@ -226,15 +227,14 @@ define(function (require) {
         var self = this;
         return new Promise(function (resolve) {
             if (self.exitAnimate) {
-                var dom = self.viewEl;
                 Naboo
-                .exit(dom, animationTimeMs, animationEase, animationDelayMs)
+                .exit(self.viewEl, animationTimeMs, animationEase, animationDelayMs)
                 .start(function () {
                     resolve();
                 });
             }
             else {
-                self.viewEl.css({
+                dom.css(self.viewEl, {
                     'display': 'none',
                     '-webkit-transform': 'none',
                     'transform': 'none'

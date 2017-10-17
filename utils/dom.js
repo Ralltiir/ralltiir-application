@@ -1,6 +1,34 @@
 define(function (require) {
     var _ = require('ralltiir')._;
 
+    function truthy(val) {
+        return !!val;
+    }
+
+    function addClass(el, name) {
+        var cls = (el.className || '') + ' ' + name;
+        var map = {};
+        
+        cls.split(/\s+/g).forEach(function(cls){
+            map[cls] = true;
+        });
+        el.className = _.keys(map).join(' ');
+    }
+
+    function removeClass(el, name) {
+        var cls = (el.className || '');
+        var map = {};
+        
+        cls.split(/\s+/g).forEach(function(cls){
+            map[cls] = true;
+        });
+
+        (name || '').split(/\s+/g).forEach(function(cls){
+            delete map[cls];
+        });
+        el.className = _.keys(map).join(' ');
+    }
+
     function elementFromString(html) {
         var div = document.createElement('div');
         div.innerHTML = html;
@@ -25,16 +53,28 @@ define(function (require) {
                 }
             })
         _.assign(style, obj);
-        var styleText = _.reduce(obj, function (str, key) {
-            var statement = key + ':' + obj[key] + ';';
-            return str + statement;
-        }, '');
+        var styleText = '';
+        _.forOwn(style, function (val, key) {
+            styleText += key + ':' + val + ';';
+        });
         el.setAttribute('style', styleText);
+    }
+
+    function show(el) {
+        css(el, {display: 'block'})
+    }
+
+    function hide(el) {
+        css(el, {display: 'none'})
     }
 
     return {
         css: css,
+        removeClass: removeClass,
+        addClass: addClass,
         elementFromString: elementFromString,
-        trigger: trigger
+        trigger: trigger,
+        show: show,
+        hide: hide
     }
 })
