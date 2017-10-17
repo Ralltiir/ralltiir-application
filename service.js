@@ -2,7 +2,7 @@
  * 通用 service
  *
  * @file    service.js
- * @author  lizhaoming
+ * @author  harttle<harttle@harttle.com>
  */
 define(function (require) {
     var rt = require('ralltiir');
@@ -11,14 +11,20 @@ define(function (require) {
     var _ = rt._;
 
     function Service(url, options) {
-        options = options || {};
-        this.view = new View(options.head);
+        this.options = options || {};
     }
 
     Service.prototype.beforeAttach = function (current) {
-        var view = this.view;
+        var view;
+        if (_.get(current, 'options.head')) {
+            console.warn('use options.view instead of options.head');
+            current.options.view = current.options.head;
+        }
         if (_.get(current, 'options.src') === 'sync') {
-            view.parse($('#sfr-app .rt-view'));
+            var view = this.view = View.parse(
+                current.options.view,
+                document.querySelector('#sfr-app .rt-view')
+            );
             view.prepareRender();
             return;
         }
@@ -27,8 +33,9 @@ define(function (require) {
             view.reAttach();
         }
         else {
-            view.renderFrame(current.options);
-            view.setTemplateStream(View.createTemplateStream(current.url));
+            var viewOpts = _.defaultsDeep(current.options, this.options);
+            view = this.view = new View(viewOpts);
+            this.view.setTemplateStream(View.createTemplateStream(current.url));
         }
 
         // 检查动画

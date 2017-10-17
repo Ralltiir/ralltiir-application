@@ -72,3 +72,58 @@
 .rt-view .rt-head .rt-actions * {
     vertical-align: middle;
 }
+
+.rt-view .rt-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 161px;
+    height: 49px;
+    line-height: 49px;
+    border-radius: 1px;
+    overflow: hidden;
+    padding: 0;
+    margin: -24px auto auto -80px;
+    color: #fff;
+}
+.rt-view .rt-loading span {
+    display: inline-block;
+    color: #6b6b6b;
+    font-size: 18px;
+    vertical-align: middle;
+}
+.rt-view .rt-loading .rt-loading-logo {
+    background: url(//m.baidu.com/se/static/img/iphone/tab_loading__bg_logo.png) no-repeat;
+    background-size: 147px 48px;
+    height: 48px;
+    width: 147px;
+}
+.rt-view .rt-loading .rt-loading-bar {
+    display: inline-block;
+    position: absolute;
+    height: 60px;
+    width: 12px;
+    top: 0px;
+    left: 0px;
+    background-color: rgba(255,255,255,.5);
+    -webkit-transform: skew(20deg);
+    transform: skew(20deg);
+    -webkit-animation: 1s rt-lodingframes infinite;
+    animation: 1s rt-loadingframes infinite;
+}
+@keyframes rt-loadingframes {
+    0% {
+        left: 0px;
+    }
+    100% {
+        left: 150px;
+    }
+}
+@-webkit-keyframes rt-loadingframes {
+    0% {
+        left: 0px;
+    }
+    100% {
+        left: 150px;
+    }
+}
