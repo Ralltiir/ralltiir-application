@@ -91,7 +91,7 @@ define(function (require) {
     };
 
     View.prototype.updateHead = function (container) {
-        this.headEl.innerHTML = container.innerHTML;
+        this.headEl.innerHTML = container.innerHTML || '';
         if (history.length) {
             updateTitleBarElement(this.headEl.querySelector('.rt-back'), this.backOption);
         }
@@ -138,7 +138,7 @@ define(function (require) {
             });
         }
         if (_.has(options, 'html')) {
-            el.innerHTML = options.html;
+            el.innerHTML = options.html || '';
         }
         if (_.has(options, 'onClick')) {
             el.rtClickHandler = _.get(options, 'onClick');

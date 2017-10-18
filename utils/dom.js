@@ -31,7 +31,7 @@ define(function (require) {
 
     function elementFromString(html) {
         var div = document.createElement('div');
-        div.innerHTML = html;
+        div.innerHTML = html || '';
         return div.childNodes[0]
     }
     function trigger(el, type, options) {
