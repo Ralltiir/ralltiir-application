@@ -11,14 +11,22 @@ define(function (require) {
     var _ = rt._;
 
     function Service(url, options) {
-        this.options = options || {};
+        this.options = parse(options);
+    }
+
+    function parse(options) {
+        if (!options) return {};
+
+        if (options.head) {
+            console.warn('use options.view instead of options.head');
+            options.view = options.head;
+        }
+        return options;
     }
 
     Service.prototype.beforeAttach = function (current) {
-        if (_.get(current, 'options.head')) {
-            console.warn('use options.view instead of options.head');
-            current.options.view = current.options.head;
-        }
+
+        var options = parse(current.options);
         if (_.get(current, 'options.src') === 'sync') {
             this.view = View.parse(
                 current.options.view,
@@ -32,7 +40,10 @@ define(function (require) {
             this.view.reAttach();
         }
         else {
-            var viewOpts = _.defaultsDeep(current.options, this.options);
+            var viewOpts = _.defaultsDeep(
+                options.view,
+                this.options.view
+            );
             this.view = new View(viewOpts);
             this.view.setTemplateStream(View.createTemplateStream(current.url));
         }
