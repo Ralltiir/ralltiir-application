@@ -189,6 +189,7 @@ define(function (require) {
             'position': 'static',
             '-webkit-transform': 'none',
             'transform': 'none',
+            'overflow': 'visible',
             'min-height': window.innerHeight + 'px'
         });
     };
