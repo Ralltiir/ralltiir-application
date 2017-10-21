@@ -1,11 +1,13 @@
 # Ralltiir Application
 
-Ralltiir 接入模块示例。
+Ralltiir 异步引擎的应用程序，使用方式请参考：[Ralltiir Wiki][rt-wiki]。
 
 ## Roadmap
 
-- [ ] 去 Zepto
+- [x] 去 Zepto
 - [x] 去 Naboo
-- [ ] 文档
+- [x] 文档
+- [ ] 单元测试
 - [ ] Plain Demo
-- [ ] Atom Demo
+
+[rt-wiki]: https://ralltiir.github.io/ralltiir/get-started/html-structure.html
