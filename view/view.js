@@ -30,33 +30,40 @@ define(function (require) {
         '  <div class="rt-body"></div>',
         '</div>'
     ].join('');
+    var defaultOptions = {
+        back: {
+            html: '<i class="c-icon">&#xe750;</i>',
+            onClick: action.back.bind(action)
+        }
+    };
 
     function View(options, viewEl) {
         this.renderer = new Renderer();
-        this.backOption = {
-            html: '<i class="c-icon">&#xe750;</i>',
-            onClick: action.back.bind(action)
-        };
-        this.defaultHeadOptions = options || {
-            back: this.backOption
-        };
+        this.loading = new Loading();
+        options = options || {};
 
-        if (!viewEl) {
-            viewEl = dom.elementFromString(html);
-            rt.doc.appendChild(viewEl);
+        if (viewEl) {
+            this.bindElement(viewEl);
+            options = _.defaultsDeep(parseOptions(viewEl), options);
+            this.setData(applyDefaults(options));
         }
+        else {
+            this.bindElement(createContainer());
+            this.setData(applyDefaults(options));
+        }
+    }
 
+    View.prototype.bindElement = function (viewEl) {
         this.viewEl = viewEl;
         this.headEl = this.viewEl.querySelector('.rt-head');
         this.bodyEl = this.viewEl.querySelector('.rt-body');
         this.viewEl.ralltiir = this;
+    };
 
-        this.loading = new Loading();
-        this.setHead(_.defaultsDeep(options, this.defaultHeadOptions));
-    }
-
+    // TODO 移到 Service
     View.parse = function (options, el) {
         var view = new View({}, el);
+        // TODO 去掉这个标记
         view.rendered = true;
         return view;
     };
@@ -73,37 +80,25 @@ define(function (require) {
         }
         return this.streamRenderPromise = this.resourceQueryPromise
         .then(function (xhr) {
-            return Promise.all([
-                view.renderer.render(view.headEl, xhr.data || '', {
-                    replace: true,
-                    from: '.rt-head',
-                    render: view.updateHead.bind(view)
-                }),
-                view.renderer.render(view.bodyEl, xhr.data || '', {
-                    replace: true,
-                    from: '.rt-body'
-                })
-            ]);
+            view.setData(parseOptions(dom.wrapElementFromString(xhr.data)));
+            return view.renderer.render(view.bodyEl, xhr.data || '', {
+                replace: true,
+                from: '.rt-body'
+            });
         })
         .then(function () {
             view.rendered = true;
         });
     };
 
-    View.prototype.updateHead = function (container) {
-        this.headEl.innerHTML = container.innerHTML || '';
-        if (history.length) {
-            updateTitleBarElement(this.headEl.querySelector('.rt-back'), this.backOption);
-        }
-    };
-
     View.prototype.partialUpdate = function (url, options) {
         var renderer = this.renderer;
         var body = this.bodyEl;
         var to = options.to ? body.querySelector(options.to) : body;
+        var data = {url: url, options: options};
+        dom.trigger(to, 'rt.willUpdate', data);
 
         if (options.replace) {
-            dom.trigger(to, 'rt.updating', {options: options});
             to.innerHTML = '';
             this.loading.show(to);
         }
@@ -115,13 +110,12 @@ define(function (require) {
         })
         .then(function (xhr) {
             rt.action.reset(url, null, {silent: true});
-            dom.trigger(to, 'rt.willUpdate');
             return renderer.render(to, xhr.data || '', {
                 from: options.from,
                 replace: options.replace
             })
             .then(function () {
-                dom.trigger(to, 'rt.updated');
+                dom.trigger(to, 'rt.updated', data);
             });
         })
         .catch(function (e) {
@@ -131,25 +125,40 @@ define(function (require) {
     };
 
     function updateTitleBarElement(el, options) {
+        if (_.has(options, 'html')) {
+            el.innerHTML = options.html || '';
+            // special markups
+            if (el.querySelector('rt-back')) {
+                el.innerHTML = '<i class="c-icon">&#xe750;</i>';
+                options.onClick = action.back.bind(action);
+            }
+            else if (el.querySelector('rt-empty')) {
+                el.innerHTML = '';
+            }
+            if (options.tryReplace && el.children.length) {
+                el = el.children[0];
+            }
+        }
         if (!el.rtClickHandler) {
             el.rtClickHandler = _.noop;
             el.addEventListener('click', function () {
                 el.rtClickHandler();
             });
         }
-        if (_.has(options, 'html')) {
-            el.innerHTML = options.html || '';
-        }
         if (_.has(options, 'onClick')) {
             el.rtClickHandler = _.get(options, 'onClick');
         }
+        return el;
     }
 
     View.prototype.setHead = function (desc) {
-        desc = desc || {};
+        console.warn('[DEPRECATED] use .setData() instead of .setHead()');
+        return this.setData(desc);
+    }
+
+    View.prototype.setData = function (desc) {
         var headEl = this.headEl;
 
-        desc.back = history.length > 0 ? this.backOption : desc.back;
         updateTitleBarElement(headEl.querySelector('.rt-back'), desc.back);
         updateTitleBarElement(headEl.querySelector('.rt-title'), desc.title);
         updateTitleBarElement(headEl.querySelector('.rt-subtitle'), desc.subtitle);
@@ -158,9 +167,10 @@ define(function (require) {
             var toolEl = headEl.querySelector('.rt-actions');
             toolEl.innerHTML = '';
             _.forEach(desc.actions, function (icon) {
-                var iconEl = dom.elementFromString('<span>');
-                updateTitleBarElement(iconEl, icon);
-                toolEl.appendChild(iconEl);
+                var iconEl = dom.elementFromString('<span class="rt-action">');
+                icon.tryReplace = true;
+                var resultIconEl = updateTitleBarElement(iconEl, icon);
+                toolEl.appendChild(resultIconEl);
             });
         }
     };
@@ -269,6 +279,58 @@ define(function (require) {
             }
         });
     };
+
+    function applyDefaults(options) {
+        if (_.get(options, 'back.html') === undefined
+            && history.length > 1) {
+            _.set(options, 'back.html', '<rt-back></rt-back>');
+        }
+        return options;
+    }
+
+    function parseOptions(el) {
+        var headEl = el.querySelector('.rt-head');
+        var ret = {};
+
+        var backEl = headEl.querySelector('.rt-back');
+        if (backEl && backEl.innerHTML) {
+            ret.back = { html: backEl.innerHTML };
+        }
+        else if (history.length > 1){
+            ret.back = {
+                html: '<i class="c-icon">&#xe750;</i>',
+                onClick: action.back.bind(action)
+            };
+        }
+
+        var titleEl = headEl.querySelector('.rt-title');
+        if (titleEl && titleEl.innerHTML) {
+            ret.title = { html: titleEl.innerHTML };
+        }
+
+        var subtitleEl = headEl.querySelector('.rt-subtitle');
+        if (subtitleEl && subtitleEl.innerHTML) {
+            ret.subtitle = { html: subtitleEl.innerHTML };
+        }
+
+        var actionEls = headEl.querySelector('.rt-actions').children;
+        if (actionEls.length) {
+            ret.actions = [];
+            _.forEach(actionEls, function (el) {
+                if (el && el.outerHTML) {
+                    ret.actions.push({ html: el.outerHTML });
+                }
+            });
+        }
+
+        return ret;
+    }
+
+    function createContainer() {
+        var viewEl = dom.elementFromString(html);
+        rt.doc.appendChild(viewEl);
+        return viewEl;
+    }
 
     return View;
 });

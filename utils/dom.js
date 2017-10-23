@@ -30,9 +30,12 @@ define(function (require) {
     }
 
     function elementFromString(html) {
+        return wrapElementFromString(html).childNodes[0];
+    }
+    function wrapElementFromString(html) {
         var div = document.createElement('div');
         div.innerHTML = html || '';
-        return div.childNodes[0]
+        return div;
     }
     function trigger(el, type, options) {
         var event = new Event(type);
@@ -73,6 +76,7 @@ define(function (require) {
         removeClass: removeClass,
         addClass: addClass,
         elementFromString: elementFromString,
+        wrapElementFromString: wrapElementFromString,
         trigger: trigger,
         show: show,
         hide: hide

@@ -4,9 +4,10 @@
  * */
 define(function (require) {
     var Naboo = require('./naboo');
+	var dom = require('./dom')
     var Spark = require('./spark');
-    Naboo.register('enter', function (next, dom, duration, ease, delay) {
-        $(dom).css({
+    Naboo.register('enter', function (next, el, duration, ease, delay) {
+        dom.css(el, {
             'display': 'block',
             'position': 'fixed',
             'top': 0,
@@ -17,7 +18,7 @@ define(function (require) {
             '-webkit-transform': 'translate3d(100%, 0, 0)',
             'transform': 'translate3d(100%, 0, 0)'
         });
-        Spark.css3(dom, {
+        Spark.css3(el, {
             'opacity': 1,
             '-webkit-transform': 'translate3d(0, 0, 0)',
             'transform': 'translate3d(0, 0, 0)'
@@ -28,8 +29,8 @@ define(function (require) {
         });
     });
 
-    Naboo.register('exit', function (next, dom, duration, ease, delay) {
-        $(dom).css({
+    Naboo.register('exit', function (next, el, duration, ease, delay) {
+        dom.css(el, {
             'position': 'fixed',
             'top': 0,
             'left': 0,
@@ -39,12 +40,12 @@ define(function (require) {
             '-webkit-transform': 'translate3d(0, 0, 0)',
             'transform': 'translate3d(0, 0, 0)'
         });
-        Spark.css3(dom, {
+        Spark.css3(el, {
             'opacity': 0,
             '-webkit-transform': 'translate3d(100%, 0, 0)',
             'transform': 'translate3d(100%, 0, 0)'
         }, duration, ease, delay, function () {
-            $(dom).css({
+            dom.css(el, {
                 'display': 'none',
                 'overflow': 'auto',
                 'position': 'static',

@@ -32,10 +32,6 @@ define(['ralltiir'], function (superFrame) {
             parent.innerHTML = '';
         }
 
-        if (options.render) {
-            return options.render(docfrag, links, scripts);
-        }
-
         return Promise.resolve()
             .then(function () {
                 return enforceCSS(links, parent);
@@ -44,7 +40,7 @@ define(['ralltiir'], function (superFrame) {
                 return moveNodes(docfrag, parent);
             })
             .then(function () {
-                return this.enforceJS(scripts);
+                return this.enforceJS(scripts, parent);
             }.bind(this));
     };
 
@@ -125,9 +121,10 @@ define(['ralltiir'], function (superFrame) {
      * Enforce `<script>` execution within the given HTML element
      *
      * @param {HTMLElementCollection} scripts The elements containing `<script>` tags
+     * @param {HTMLElement} parent The parent element to insert `<script>`
      * @return {Promise} resolves when all scripts complete/error, never rejects
      */
-    Render.prototype.enforceJS = function (scripts) {
+    Render.prototype.enforceJS = function (scripts, parent) {
         var fp = createEvaluator(this.global);
         var pendingJS = _
             .toArray(scripts)
@@ -147,7 +144,7 @@ define(['ralltiir'], function (superFrame) {
             }
 
             pendingJS.forEach(function (script) {
-                domEval(script, done);
+                domEval(script, parent, done);
             });
 
             function done() {
@@ -203,8 +200,8 @@ define(['ralltiir'], function (superFrame) {
      * @param {HTMLElement} el the element to attach
      * @param {Function} cb the callback to be called when render complete (or error)
      */
-    function domEval(el, cb) {
-        document.head.appendChild(el);
+    function domEval (el, parent, cb) {
+        parent.appendChild(el);
 
         // we DO NOT need to wait for inline scripts
         if (!el.src) {
@@ -216,10 +213,10 @@ define(['ralltiir'], function (superFrame) {
         }
 
         function done() {
-            document.head.removeChild(el);
+            el.remove();
             cb();
         }
-    }
+    };
 
     /**
      * Scripts inserted by innerHTML will **NOT** be executed,

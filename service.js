@@ -25,7 +25,6 @@ define(function (require) {
     }
 
     Service.prototype.beforeAttach = function (current) {
-
         var options = parse(current.options);
         if (_.get(current, 'options.src') === 'sync') {
             this.view = View.parse(
