@@ -30,12 +30,6 @@ define(function (require) {
         '  <div class="rt-body"></div>',
         '</div>'
     ].join('');
-    var defaultOptions = {
-        back: {
-            html: '<i class="c-icon">&#xe750;</i>',
-            onClick: action.back.bind(action)
-        }
-    };
 
     function View(options, viewEl) {
         this.renderer = new Renderer();
@@ -68,6 +62,8 @@ define(function (require) {
         return view;
     };
 
+    View.backHTML = '<i class="c-icon">&#xe750;</i>';
+
     View.prototype.setTemplateStream = function (promise) {
         this.resourceQueryPromise = promise;
     };
@@ -80,7 +76,8 @@ define(function (require) {
         }
         return this.streamRenderPromise = this.resourceQueryPromise
         .then(function (xhr) {
-            view.setData(parseOptions(dom.wrapElementFromString(xhr.data)));
+            var opts = parseOptions(dom.wrapElementFromString(xhr.data));
+            view.setData(applyDefaults(opts));
             return view.renderer.render(view.bodyEl, xhr.data || '', {
                 replace: true,
                 from: '.rt-body'
@@ -102,7 +99,6 @@ define(function (require) {
             to.innerHTML = '';
             this.loading.show(to);
         }
-
         return View
         .createTemplateStream(url, {
             'x-rt-partial': 'true',
@@ -124,12 +120,17 @@ define(function (require) {
         });
     };
 
+    function getBackendUrl(url) {
+        var root = rt.action.config().root.replace(/\/+$/, '');
+        return root + url;
+    }
+
     function updateTitleBarElement(el, options) {
         if (_.has(options, 'html')) {
             el.innerHTML = options.html || '';
             // special markups
             if (el.querySelector('rt-back')) {
-                el.innerHTML = '<i class="c-icon">&#xe750;</i>';
+                el.innerHTML = View.backHTML;
                 options.onClick = action.back.bind(action);
             }
             else if (el.querySelector('rt-empty')) {
@@ -270,7 +271,7 @@ define(function (require) {
     };
 
     View.createTemplateStream = function (url, headers) {
-        return http.ajax(url, {
+        return http.ajax(getBackendUrl(url), {
             headers: _.assign(headers, {
                 'x-rt': 'true'
             }),
@@ -295,12 +296,6 @@ define(function (require) {
         var backEl = headEl.querySelector('.rt-back');
         if (backEl && backEl.innerHTML) {
             ret.back = { html: backEl.innerHTML };
-        }
-        else if (history.length > 1){
-            ret.back = {
-                html: '<i class="c-icon">&#xe750;</i>',
-                onClick: action.back.bind(action)
-            };
         }
 
         var titleEl = headEl.querySelector('.rt-title');
