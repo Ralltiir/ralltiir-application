@@ -8,7 +8,6 @@ define(function (require) {
     var Loading = require('./rt-loading');
     var dom = require('../utils/dom');
     var rt = require('ralltiir');
-    var http = rt.http;
     var Naboo = require('../utils/naboo');
     var Renderer = require('./render');
     var _ = rt._;
@@ -34,21 +33,22 @@ define(function (require) {
     function View(options, viewEl) {
         this.renderer = new Renderer();
         this.loading = new Loading();
-        options = options || {};
+        this.options = options || {};
 
         if (viewEl) {
-            this.bindElement(viewEl);
+            this.initElement(viewEl);
             options = _.defaultsDeep(parseOptions(viewEl), options);
             this.setData(applyDefaults(options));
         }
         else {
-            this.bindElement(createContainer());
+            this.initElement(createContainer());
             this.setData(applyDefaults(options));
         }
     }
 
-    View.prototype.bindElement = function (viewEl) {
+    View.prototype.initElement = function (viewEl) {
         this.viewEl = viewEl;
+        this.viewEl.setAttribute('data-base', this.options.baseUrl || '');
         this.headEl = this.viewEl.querySelector('.rt-head');
         this.bodyEl = this.viewEl.querySelector('.rt-body');
         this.viewEl.ralltiir = this;
@@ -56,7 +56,7 @@ define(function (require) {
 
     // TODO 移到 Service
     View.parse = function (options, el) {
-        var view = new View({}, el);
+        var view = new View(options, el);
         // TODO 去掉这个标记
         view.rendered = true;
         return view;
@@ -120,11 +120,6 @@ define(function (require) {
         });
     };
 
-    function getBackendUrl(url) {
-        var root = rt.action.config().root.replace(/\/+$/, '');
-        return root + url;
-    }
-
     function updateTitleBarElement(el, options) {
         if (_.has(options, 'html')) {
             el.innerHTML = options.html || '';
@@ -155,7 +150,7 @@ define(function (require) {
     View.prototype.setHead = function (desc) {
         console.warn('[DEPRECATED] use .setData() instead of .setHead()');
         return this.setData(desc);
-    }
+    };
 
     View.prototype.setData = function (desc) {
         var headEl = this.headEl;
@@ -257,7 +252,7 @@ define(function (require) {
     };
 
     View.prototype.destroy = function () {
-        dom.trigger(this.viewEl, 'rt.destroyed')
+        dom.trigger(this.viewEl, 'rt.destroyed');
         this.viewEl.remove();
         delete this.viewEl;
         delete this.headEl;
@@ -268,17 +263,6 @@ define(function (require) {
         if (this.hasOwnProperty('scrollX')) {
             scrollTo(this.scrollX, this.scrollY);
         }
-    };
-
-    View.createTemplateStream = function (url, headers) {
-        return http.ajax(getBackendUrl(url), {
-            headers: _.assign(headers, {
-                'x-rt': 'true'
-            }),
-            xhrFields: {
-                withCredentials: true
-            }
-        });
     };
 
     function applyDefaults(options) {
@@ -295,17 +279,17 @@ define(function (require) {
 
         var backEl = headEl.querySelector('.rt-back');
         if (backEl && backEl.innerHTML) {
-            ret.back = { html: backEl.innerHTML };
+            ret.back = {html: backEl.innerHTML};
         }
 
         var titleEl = headEl.querySelector('.rt-title');
         if (titleEl && titleEl.innerHTML) {
-            ret.title = { html: titleEl.innerHTML };
+            ret.title = {html: titleEl.innerHTML};
         }
 
         var subtitleEl = headEl.querySelector('.rt-subtitle');
         if (subtitleEl && subtitleEl.innerHTML) {
-            ret.subtitle = { html: subtitleEl.innerHTML };
+            ret.subtitle = {html: subtitleEl.innerHTML};
         }
 
         var actionEls = headEl.querySelector('.rt-actions').children;
@@ -313,7 +297,7 @@ define(function (require) {
             ret.actions = [];
             _.forEach(actionEls, function (el) {
                 if (el && el.outerHTML) {
-                    ret.actions.push({ html: el.outerHTML });
+                    ret.actions.push({html: el.outerHTML});
                 }
             });
         }

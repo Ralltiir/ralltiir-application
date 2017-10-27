@@ -9,13 +9,16 @@ define(function (require) {
     var Promise = rt.promise;
     var View = require('./view/view');
     var _ = rt._;
+    var http = rt.http;
 
     function Service(url, options) {
         this.options = parse(options);
     }
 
     function parse(options) {
-        if (!options) return {};
+        if (!options) {
+            return {};
+        }
 
         if (options.head) {
             console.warn('use options.view instead of options.head');
@@ -23,6 +26,26 @@ define(function (require) {
         }
         return options;
     }
+
+    Service.prototype.createTemplateStream = function (url, headers) {
+        return http.ajax(this.getBackendUrl(url), {
+            headers: _.assign(headers, {
+                // 'x-rt': 'true'
+            }),
+            xhrFields: {
+                withCredentials: true
+            }
+        });
+    };
+
+    Service.prototype.getBackendUrl = function (url) {
+        if (_.isFunction(this.options.backendUrl)) {
+            return this.options.backendUrl(url);
+        }
+        var root = rt.action.config().root.replace(/\/+$/, '');
+        return root + url;
+    };
+
 
     Service.prototype.beforeAttach = function (current) {
         var options = parse(current.options);
@@ -44,7 +67,7 @@ define(function (require) {
                 this.options.view
             );
             this.view = new View(viewOpts);
-            this.view.setTemplateStream(View.createTemplateStream(current.url));
+            this.view.setTemplateStream(this.createTemplateStream(current.url));
         }
 
         // 检查动画
