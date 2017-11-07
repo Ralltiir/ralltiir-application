@@ -6,15 +6,7 @@
  * @copyright 2015 Baidu.com, Inc. All Rights Reserved
  */
 
-(function (window, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define(factory);
-    }
-    else {
-        window.Naboo = factory();
-    }
-})(this, function () {
-
+define(function () {
     function Naboo() {
         this.steps = [];
         this._index = -1;

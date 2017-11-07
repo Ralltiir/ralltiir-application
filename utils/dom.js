@@ -58,6 +58,9 @@ define(function (require) {
         _.assign(style, obj);
         var styleText = '';
         _.forOwn(style, function (val, key) {
+            if (val === '') {
+                return;
+            }
             styleText += key + ':' + val + ';';
         });
         el.setAttribute('style', styleText);

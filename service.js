@@ -15,123 +15,50 @@ define(function (require) {
         this.options = parse(options);
     }
 
-    function parse(options) {
-        if (!options) {
-            return {};
-        }
-
-        if (options.head) {
-            console.warn('use options.view instead of options.head');
-            options.view = options.head;
-        }
-        return options;
-    }
-
-    Service.prototype.createTemplateStream = function (url, headers) {
-        return http.ajax(this.getBackendUrl(url), {
-            headers: _.assign(headers, {
-                // 'x-rt': 'true'
-            }),
-            xhrFields: {
-                withCredentials: true
-            }
-        });
-    };
-
-    Service.prototype.getBackendUrl = function (url) {
-        if (_.isFunction(this.options.backendUrl)) {
-            return this.options.backendUrl(url);
-        }
-        var root = rt.action.config().root.replace(/\/+$/, '');
-        return root + url;
-    };
-
-
     Service.prototype.beforeAttach = function (current) {
-        var options = parse(current.options);
-        if (_.get(current, 'options.src') === 'sync') {
-            this.view = View.parse(
-                current.options.view,
-                document.querySelector('#sfr-app .rt-view')
-            );
-            this.view.prepareRender();
-            return;
-        }
+        _.assign(this.options, parse(current.options));
 
-        if (this.view && this.view.rendered) {
-            this.view.reAttach();
+        if (this.view) {
+            this.view.reuse();
+        }
+        else if (isServerRendered(current)) {
+            var rootEl = document.querySelector('#sfr-app .rt-view')
+            this.view = new View(this.options, rootEl);
         }
         else {
-            var viewOpts = _.defaultsDeep(
-                options.view,
-                this.options.view
-            );
-            this.view = new View(viewOpts);
-            this.view.setTemplateStream(this.createTemplateStream(current.url));
+            this.view = new View(this.options);
+            this.view.fetchUrl(current.url);
         }
 
-        // 检查动画
-        this.view.enterAnimate = false;
-        var skipAnimation = _.get(current, 'options.skipAnimation');
-        var src = _.get(current, 'options.src');
-        if (!skipAnimation && src !== 'history' && src !== 'back' && src !== 'sync') {
-            // 普通入场
-            this.view.enterAnimate = true;
-        }
-        return this.view.startEnterAnimate();
+        return this.view.enter(shouldEnterAnimate(current));
     };
 
     Service.prototype.attach = function (current) {
         var view = this.view;
-        // 同步页首次加载，首屏dom放入sfview
-        if (current.options && current.options.src === 'sync') {
-            view.attach();
-            return;
-        }
-        // 此处没有 return promise，因为这样会阻塞生命周期导致无法回退，故让 render 不受生命周期控制
-        Promise.resolve()
+
+        return Promise.resolve()
         .then(function () {
-            if (view.rendered) {
-                view.prepareRender();
-            }
-            else {
-                // 修复 iOS 下动画闪烁的问题，在 renderStream 前 scroll
-                scrollTo(0, 0);
-                return view.render();
-            }
+            return view.populated ? '' : view.render();
         })
         .then(function () {
+            view.resetStyle();
             return view.attach();
-        })
-        .catch(function (err) {
-            // eslint-disable-next-line
-            console.error('RenderError, redirecting...', err);
-            if (current.options.src !== 'sync') {
-                location.replace(location.href);
-            }
         });
     };
 
-    Service.prototype.beforeDetach = function (current, prev) {
-        return this.view.beforeDetach(current, prev);
+    Service.prototype.beforeDetach = function (current) {
+        return this.view.prepareExit(shouldExitAnimate(current));
     };
 
     Service.prototype.detach = function (current, prev, extra) {
         var view = this.view;
-        view.exitAnimate = false;
-        var skipAnimation = _.get(current, 'options.skipAnimation');
-        var src = _.get(current, 'options.src');
-        if (!skipAnimation && src === 'back') {
-            view.exitAnimate = true;
-        }
-
-        // 修复退场时，页面跳动的问题；还原滚动位置的时机比较诡异，需要在动画做之前搞定。
-        // TODO: 增加生命周期来完整这个工作
-        _.get(current, 'service.view.restoreScrollState') && current.service.view.restoreScrollState();
-
-        return view.startExitAnimate(current, prev, extra)
+        return view
+        .exit(shouldExitAnimate(current))
         .then(function () {
             view.detach();
+        })
+        .then(function () {
+            view.trigger('rt.detached');
         });
     };
 
@@ -139,7 +66,29 @@ define(function (require) {
         return this.view.destroy();
     };
 
-    Service.instancEnabled = true;
+    function shouldEnterAnimate(state) {
+        if (isServerRendered(state)) {
+            return false;
+        }
+        var reason = _.get(state, 'options.src');
+        return reason === '' || reason === 'hijack';
+    }
+
+    function shouldExitAnimate(state) {
+        var reason = _.get(state, 'options.src');
+        return reason === 'back';
+    }
+
+    function isServerRendered(state) {
+        return _.get(state, 'options.src') === 'sync'
+    }
+
+    function parse(options) {
+        if (!options) {
+            return {};
+        }
+        return _.assign({}, options.view, options.head);
+    }
 
     return Service;
 });
