@@ -88,7 +88,7 @@ define(function (require) {
         if (!options) {
             return {};
         }
-        return _.assign({}, options.view, options.head);
+        return _.assign({}, options, options.view, options.head);
     }
 
     return Service;

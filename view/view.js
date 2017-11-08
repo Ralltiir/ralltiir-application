@@ -5,7 +5,7 @@
 
 define(function (require) {
     var animation = require('../utils/animation');
-    var Loading = require('./rt-loading');
+    var Loading = require('./loading');
     var dom = require('../utils/dom');
     var rt = require('ralltiir');
     var Renderer = require('./render');
@@ -37,12 +37,12 @@ define(function (require) {
         if (viewEl) {
             this.initElement(viewEl);
             this.populated = true;
-            this.options = _.defaultsDeep(parseOptions(viewEl), options);
-            this.setData(applyDefaults(this.options));
+            this.options = _.defaultsDeep(optionsFromDOM(viewEl), options);
+            this.setData(normalize(this.options));
         }
         else {
             this.initElement(this.createContainer());
-            this.setData(applyDefaults(this.options));
+            this.setData(normalize(this.options));
         }
         this.loading = new Loading(this.viewEl);
     }
@@ -59,8 +59,8 @@ define(function (require) {
         var view = this;
         return this.pendingFetch
         .then(function (xhr) {
-            var opts = parseOptions(dom.wrapElementFromString(xhr.data));
-            view.setData(applyDefaults(opts));
+            var opts = optionsFromDOM(dom.wrapElementFromString(xhr.data));
+            view.setData(normalize(opts));
             view.loading.hide();
             return view.renderer.render(view.bodyEl, xhr.data || '', {
                 replace: true,
@@ -176,7 +176,7 @@ define(function (require) {
         this.scrollX = window.scrollX;
         this.scrollY = window.scrollY;
         return animation.prepareExit(this.viewEl, window.scrollX, window.scrollY);
-    }
+    };
 
     View.prototype.exit = function (useAnimation) {
         return useAnimation
@@ -221,7 +221,22 @@ define(function (require) {
 
     View.backHTML = '<i class="c-icon">&#xe750;</i>';
 
-    function applyDefaults(options) {
+    function normalize(options) {
+        options = options || {};
+        if (_.isString(options.title)) {
+            options.title = {html: options.title};
+        }
+        if (_.isString(options.subtitle)) {
+            options.subtitle = {html: options.subtitle};
+        }
+        if (_.isString(options.back)) {
+            options.back = {html: options.back};
+        }
+        _.forEach(options.actions, function (action, i) {
+            if (_.isString(action)) {
+                options.actions[i] = {html: action};
+            }
+        });
         if (_.get(options, 'back.html') === undefined
             && history.length > 1) {
             _.set(options, 'back.html', '<rt-back></rt-back>');
@@ -246,7 +261,7 @@ define(function (require) {
         }
     }
 
-    function parseOptions(el) {
+    function optionsFromDOM(el) {
         var headEl = el.querySelector('.rt-head');
         var ret = {};
 
