@@ -13,15 +13,18 @@ define(function (require) {
         '</div>'
     ].join('\n');
 
-    function Loading () {
+    function Loading (parent) {
+        this.container = parent;
         this.element = dom.elementFromString(html);
     }
 
-    Loading.prototype.show = function (parent) {
-        parent.appendChild(this.element);
+    Loading.prototype.show = function () {
+        dom.css(this.container, {'background-color': '#fff'});
+        this.container.appendChild(this.element);
     }
 
     Loading.prototype.hide = function () {
+        dom.css(this.container, {'background-color': ''});
         this.element.remove();
     }
 

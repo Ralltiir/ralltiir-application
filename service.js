@@ -9,14 +9,13 @@ define(function (require) {
     var Promise = rt.promise;
     var View = require('./view/view');
     var _ = rt._;
-    var http = rt.http;
 
     function Service(url, options) {
-        this.options = parse(options);
+        this.options = normalize(options);
     }
 
     Service.prototype.beforeAttach = function (current) {
-        _.assign(this.options, parse(current.options));
+        _.assign(this.options, normalize(current.options));
 
         if (this.view) {
             this.view.reuse();
@@ -85,7 +84,7 @@ define(function (require) {
         return _.get(state, 'options.src') === 'sync'
     }
 
-    function parse(options) {
+    function normalize(options) {
         if (!options) {
             return {};
         }

@@ -8,9 +8,10 @@ define(function (require) {
     var Loading = require('./rt-loading');
     var dom = require('../utils/dom');
     var rt = require('ralltiir');
-    var http = rt.http;
     var Renderer = require('./render');
+    var debug = require('../utils/debug')
     var _ = rt._;
+    var http = rt.http;
     var action = rt.action;
     var Promise = rt.promise;
     var html = [
@@ -27,11 +28,11 @@ define(function (require) {
         '</div>'
     ].join('');
 
+    prepareEnvironment();
+
     function View(options, viewEl) {
         this.renderer = new Renderer();
-        this.loading = new Loading();
         this.options = options || {};
-        prepareEnvironment();
 
         if (viewEl) {
             this.initElement(viewEl);
@@ -40,9 +41,10 @@ define(function (require) {
             this.setData(applyDefaults(this.options));
         }
         else {
-            this.initElement(createContainer());
+            this.initElement(this.createContainer());
             this.setData(applyDefaults(this.options));
         }
+        this.loading = new Loading(this.viewEl);
     }
 
     View.prototype.initElement = function (viewEl) {
@@ -55,10 +57,11 @@ define(function (require) {
 
     View.prototype.render = function () {
         var view = this;
-        return this.resourceQueryPromise
+        return this.pendingFetch
         .then(function (xhr) {
             var opts = parseOptions(dom.wrapElementFromString(xhr.data));
             view.setData(applyDefaults(opts));
+            view.loading.hide();
             return view.renderer.render(view.bodyEl, xhr.data || '', {
                 replace: true,
                 from: '.rt-body'
@@ -74,11 +77,14 @@ define(function (require) {
         var body = this.bodyEl;
         var to = options.to ? body.querySelector(options.to) : body;
         var data = {url: url, options: options};
+        var self = this;
+        var loading = new Loading(to);
+
         dom.trigger(to, 'rt.willUpdate', data);
 
         if (options.replace) {
             to.innerHTML = '';
-            this.loading.show(to);
+            loading.show();
         }
         return View
         .createTemplateStream(url, {
@@ -86,6 +92,7 @@ define(function (require) {
             'x-rt-selector': options.from || ':root'
         })
         .then(function (xhr) {
+            loading.hide();
             rt.action.reset(url, null, {silent: true});
             return renderer.render(to, xhr.data || '', {
                 from: options.from,
@@ -98,7 +105,7 @@ define(function (require) {
         .catch(function (e) {
             console.warn('partialUpdate Error, redirecting', e);
             location.href = url;
-        });
+        })
     };
 
     View.prototype.setHead = function (desc) {
@@ -126,24 +133,8 @@ define(function (require) {
     };
 
     View.prototype.resetStyle = function () {
-        dom.css(this.viewEl, {
-            'display': '',
-            'opacity': '',
-            'position': '',
-            'z-index': '',
-            'top': '',
-            'left': '',
-            'height': '',
-            'width': '',
-            'overflow': '',
-            '-webkit-transform': '',
-            'transform': ''
-        });
-        dom.css(this.headEl, {
-            'z-index': '',
-            'position': '',
-            'top': ''
-        });
+        dom.css(this.viewEl, animation.defaultStyle);
+        dom.css(this.headEl, animation.defaultHeadStyle);
     };
 
     View.prototype.attach = function () {
@@ -184,27 +175,13 @@ define(function (require) {
     View.prototype.prepareExit = function (useAnimation) {
         this.scrollX = window.scrollX;
         this.scrollY = window.scrollY;
-
-        if (!useAnimation) {
-            return Promise.resolve();
-        }
-        var el = this.viewEl;
-        return animation.prepareExit(el, window.scrollX, window.scrollY);
+        return animation.prepareExit(this.viewEl, window.scrollX, window.scrollY);
     }
 
     View.prototype.exit = function (useAnimation) {
-        var el = this.viewEl;
-        var sx = this.scrollX;
-        var sy = this.scrollY;
-        if (!useAnimation) {
-            dom.css(el, {
-                'display': 'none',
-                '-webkit-transform': 'none',
-                'transform': 'none'
-            });
-            return Promise.resolve();
-        }
-        return animation.exit(el, sx, sy);
+        return useAnimation
+            ? animation.exit(this.viewEl, this.scrollX, this.scrollY)
+            : animation.exitSilent(this.viewEl);
     };
 
     View.prototype.destroy = function () {
@@ -222,7 +199,8 @@ define(function (require) {
     };
 
     View.prototype.fetchUrl = function (url) {
-        this.resourceQueryPromise = this.createTemplateStream(url);
+        this.loading.show();
+        this.pendingFetch = this.createTemplateStream(url);
     }
 
     View.prototype.createTemplateStream = function (url, headers) {
@@ -255,6 +233,16 @@ define(function (require) {
         if ('scrollRestoration' in history) {
             // Back off, browser, I got this...
             history.scrollRestoration = 'manual';
+        }
+        if (
+            !document.querySelector('link[rel=stylesheet][data-for=rt-view]')
+            && !document.querySelector('style[data-for="rt-view"]')
+            && !document.querySelector('link[rel=stylesheet][href$="view/rt-view.css"]') // legacy
+        ) {
+            var prefix = debug.enabled ? './amd_modules' : '//unpkg.com';
+            var link = dom.elementFromString('<link rel="stylesheet">');
+            link.setAttribute('href', prefix + '/ralltiir-application/view/rt-view.css');
+            document.head.appendChild(link);
         }
     }
 
@@ -290,11 +278,11 @@ define(function (require) {
         return ret;
     }
 
-    function createContainer() {
+    View.prototype.createContainer = function () {
         var viewEl = dom.elementFromString(html);
         rt.doc.appendChild(viewEl);
         return viewEl;
-    }
+    };
 
     function getBackendUrl(url) {
         var root = rt.action.config().root.replace(/\/+$/, '');

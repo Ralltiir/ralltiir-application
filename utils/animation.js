@@ -26,7 +26,7 @@ define(function (require) {
         el.scrollTop = sy;
         dom.css(el.querySelector('.rt-head'), {
             'z-index': '503',
-            'top': sy + 'px'
+            'top': (sy || 0) + 'px'
         });
         return new Promise(function (resolve) {
             Spark.css3(el, {
@@ -72,6 +72,33 @@ define(function (require) {
                 resolve();
             });
         });
+    };
+
+    exports.exitSilent = function (el) {
+        dom.css(el, {
+            'display': 'none'
+        });
+        return Promise.resolve();
+    };
+
+    exports.defaultStyle = {
+        'display': '',
+        'opacity': '',
+        'position': '',
+        'z-index': '',
+        'top': '',
+        'left': '',
+        'height': '',
+        'width': '',
+        'overflow': '',
+        '-webkit-transform': '',
+        'transform': ''
+    };
+
+    exports.defaultHeadStyle = {
+        'z-index': '',
+        'position': '',
+        'top': ''
     };
 
     function shouldScrollFixed () {

@@ -32,6 +32,9 @@ define(function (require) {
     function elementFromString(html) {
         return wrapElementFromString(html).childNodes[0];
     }
+    function createElement(name) {
+        return document.createElement(html);
+    }
     function wrapElementFromString(html) {
         var div = document.createElement('div');
         div.innerHTML = html || '';
