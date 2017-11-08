@@ -38,7 +38,9 @@ define(function (require) {
         return div;
     }
     function trigger(el, type, options) {
-        var event = new Event(type);
+        var event = new Event(type, {
+            bubbles: true
+        });
         _.assign(event, options);
         el.dispatchEvent(event);
     }

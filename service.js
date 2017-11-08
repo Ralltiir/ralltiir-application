@@ -30,6 +30,7 @@ define(function (require) {
             this.view.fetchUrl(current.url);
         }
 
+        this.view.trigger('rt.beforeAttach');
         return this.view.enter(shouldEnterAnimate(current));
     };
 
@@ -47,6 +48,7 @@ define(function (require) {
     };
 
     Service.prototype.beforeDetach = function (current) {
+        this.view.trigger('rt.beforeDetach');
         return this.view.prepareExit(shouldExitAnimate(current));
     };
 

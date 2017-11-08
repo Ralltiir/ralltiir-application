@@ -4,12 +4,11 @@
  */
 
 define(function (require) {
-    require('../utils/animation');
+    var animation = require('../utils/animation');
     var Loading = require('./rt-loading');
     var dom = require('../utils/dom');
     var rt = require('ralltiir');
     var http = rt.http;
-    var Naboo = require('../utils/naboo');
     var Renderer = require('./render');
     var _ = rt._;
     var action = rt.action;
@@ -179,9 +178,7 @@ define(function (require) {
         var el = this.viewEl;
         var scrollX = this.scrollX;
         var scrollY = this.scrollY;
-        return new Promise(function (resolve) {
-            Naboo.enter(el, scrollX, scrollY).start(resolve);
-        });
+        return animation.enter(el, scrollX, scrollY);
     };
 
     View.prototype.prepareExit = function (useAnimation) {
@@ -192,9 +189,7 @@ define(function (require) {
             return Promise.resolve();
         }
         var el = this.viewEl;
-        return new Promise(function (resolve) {
-            Naboo.prepareExit(el, window.scrollX, window.scrollY).start(resolve);
-        });
+        return animation.prepareExit(el, window.scrollX, window.scrollY);
     }
 
     View.prototype.exit = function (useAnimation) {
@@ -209,9 +204,7 @@ define(function (require) {
             });
             return Promise.resolve();
         }
-        return new Promise(function (resolve) {
-            Naboo.exit(el, sx, sy).start(resolve);
-        });
+        return animation.exit(el, sx, sy);
     };
 
     View.prototype.destroy = function () {

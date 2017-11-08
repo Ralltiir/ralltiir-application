@@ -3,13 +3,12 @@
  * @author taoqingqian01
  * */
 define(function (require) {
-    var Naboo = require('./naboo');
     var UA = require('./ua');
 	var dom = require('./dom');
     var Spark = require('./spark');
     var exports = {duration: '300', ease: 'ease', delay: 'delay'};
 
-    Naboo.register('enter', function (next, el, sx, sy) {
+    exports.enter = function (el, sx, sy) {
         dom.css(el, {
             'display': 'block',
             'position': 'fixed',
@@ -29,14 +28,16 @@ define(function (require) {
             'z-index': '503',
             'top': sy + 'px'
         });
-        Spark.css3(el, {
-            'opacity': 1,
-            '-webkit-transform': translate3d(0, 0, 0),
-            'transform': translate3d(0, 0, 0)
-        }, exports.duration, exports.ease, exports.delay, next);
-    });
+        return new Promise(function (resolve) {
+            Spark.css3(el, {
+                'opacity': 1,
+                '-webkit-transform': translate3d(0, 0, 0),
+                'transform': translate3d(0, 0, 0)
+            }, exports.duration, exports.ease, exports.delay, resolve);
+        });
+    };
 
-    Naboo.register('prepareExit', function (next, el, sx, sy) {
+    exports.prepareExit = function (el, sx, sy) {
         dom.css(el, {
             'position': 'fixed',
             'z-index': 502,
@@ -57,20 +58,21 @@ define(function (require) {
                 'top': sy + 'px'
             });
         }
-        next();
-    });
+    };
 
-    Naboo.register('exit', function (next, el, sx, sy) {
-        Spark.css3(el, {
-            'opacity': 0,
-            'left': '100%',
-            '-webkit-transform': translate3d('100%', 0, 0),
-            'transform': translate3d('100%', 0, 0)
-        }, exports.duration, exports.ease, exports.delay, function () {
-            dom.css(el, { 'display': 'none' });
-            next();
+    exports.exit = function (el, sx, sy) {
+        return new Promise(function(resolve) {
+            Spark.css3(el, {
+                'opacity': 0,
+                'left': '100%',
+                '-webkit-transform': translate3d('100%', 0, 0),
+                'transform': translate3d('100%', 0, 0)
+            }, exports.duration, exports.ease, exports.delay, function () {
+                dom.css(el, { 'display': 'none' });
+                resolve();
+            });
         });
-    });
+    };
 
     function shouldScrollFixed () {
         return UA.isWKWebView() && !UA.isBaidu();
