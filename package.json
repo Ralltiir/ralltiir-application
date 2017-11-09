@@ -5,6 +5,7 @@
   "main": "./service/service.js",
   "scripts": {
     "postversion": "git push && git push --tags",
+    "lint": "fecs check --level 2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -16,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/Ralltiir/ralltiir-application/issues"
   },
-  "homepage": "https://github.com/Ralltiir/ralltiir-application#readme"
+  "homepage": "https://github.com/Ralltiir/ralltiir-application#readme",
+  "devDependencies": {
+    "fecs": "^1.4.1"
+  }
 }

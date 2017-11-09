@@ -16,7 +16,7 @@ define(['ralltiir'], function (superFrame) {
      * Render and encorce JavaScript execution
      *
      * @param {HTMLElement} parent The parent element
-     * @param {String} html The html string to render with
+     * @param {string} html The html string to render with
      * @param {string} [options=] render options
      * @param {string} [options.from=:root] The container element or the selector of the container element in the DOM of the retrieved HTML
      * @param {boolean} [options.replace=false] Whether or not to replace the contents of container element
@@ -47,8 +47,8 @@ define(['ralltiir'], function (superFrame) {
     /**
      * Parse HTML to DOM Object
      *
-     * @param {String} html The html string to render with
-     * @param {String} [from=:root] The root selector, allows returning partial DOM
+     * @param {string} html The html string to render with
+     * @param {string} [from=:root] The root selector, allows returning partial DOM
      * @return {HTMLElement} element containing the DOM tree from `html`
      */
     Render.parse = function (html, from) {
@@ -73,7 +73,7 @@ define(['ralltiir'], function (superFrame) {
         // 手百&浏览器 内核渲染数据标记
         docfrag.appendChild(document.createElement('rendermark'));
         return docfrag;
-    }
+    };
 
     function moveNodes(from, to) {
         while (from.childNodes.length > 0) {
@@ -198,9 +198,10 @@ define(['ralltiir'], function (superFrame) {
      * Execute the given external script
      *
      * @param {HTMLElement} el the element to attach
+     * @param {Function} parent parent node to insert into
      * @param {Function} cb the callback to be called when render complete (or error)
      */
-    function domEval (el, parent, cb) {
+    function domEval(el, parent, cb) {
         parent.appendChild(el);
 
         // we DO NOT need to wait for inline scripts
@@ -216,7 +217,7 @@ define(['ralltiir'], function (superFrame) {
             el.remove();
             cb();
         }
-    };
+    }
 
     /**
      * Scripts inserted by innerHTML will **NOT** be executed,

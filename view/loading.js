@@ -13,7 +13,7 @@ define(function (require) {
         '</div>'
     ].join('\n');
 
-    function Loading (parent) {
+    function Loading(parent) {
         this.container = parent;
         this.element = dom.elementFromString(html);
     }
@@ -21,12 +21,12 @@ define(function (require) {
     Loading.prototype.show = function () {
         dom.css(this.container, {'background-color': '#fff'});
         this.container.appendChild(this.element);
-    }
+    };
 
     Loading.prototype.hide = function () {
         dom.css(this.container, {'background-color': ''});
         this.element.remove();
-    }
+    };
 
     return Loading;
 });

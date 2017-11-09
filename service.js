@@ -21,7 +21,7 @@ define(function (require) {
             this.view.reuse();
         }
         else if (isServerRendered(current)) {
-            var rootEl = document.querySelector('#sfr-app .rt-view')
+            var rootEl = document.querySelector('#sfr-app .rt-view');
             this.view = new View(this.options, rootEl);
         }
         else {
@@ -81,7 +81,7 @@ define(function (require) {
     }
 
     function isServerRendered(state) {
-        return _.get(state, 'options.src') === 'sync'
+        return _.get(state, 'options.src') === 'sync';
     }
 
     function normalize(options) {

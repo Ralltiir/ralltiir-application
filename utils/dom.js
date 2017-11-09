@@ -1,3 +1,7 @@
+/**
+ * @file dom utility
+ * @author harttle<harttle@harttle.com>
+ */
 define(function (require) {
     var _ = require('ralltiir')._;
 
@@ -8,8 +12,7 @@ define(function (require) {
     function addClass(el, name) {
         var cls = (el.className || '') + ' ' + name;
         var map = {};
-        
-        cls.split(/\s+/g).forEach(function(cls){
+        cls.split(/\s+/g).forEach(function (cls) {
             map[cls] = true;
         });
         el.className = _.keys(map).join(' ');
@@ -18,12 +21,11 @@ define(function (require) {
     function removeClass(el, name) {
         var cls = (el.className || '');
         var map = {};
-        
-        cls.split(/\s+/g).forEach(function(cls){
+        cls.split(/\s+/g).forEach(function (cls) {
             map[cls] = true;
         });
 
-        (name || '').split(/\s+/g).forEach(function(cls){
+        (name || '').split(/\s+/g).forEach(function (cls) {
             delete map[cls];
         });
         el.className = _.keys(map).join(' ');
@@ -33,7 +35,7 @@ define(function (require) {
         return wrapElementFromString(html).childNodes[0];
     }
     function createElement(name) {
-        return document.createElement(html);
+        return document.createElement(name);
     }
     function wrapElementFromString(html) {
         var div = document.createElement('div');
@@ -49,7 +51,7 @@ define(function (require) {
     }
     function css(el, obj) {
         var style = {};
-        var currStyle = el.getAttribute('style') || ''
+        var currStyle = el.getAttribute('style') || '';
         currStyle
             .split(';')
             .forEach(function (statement) {
@@ -59,7 +61,7 @@ define(function (require) {
                 if (key && val) {
                     style[key] = val;
                 }
-            })
+            });
         _.assign(style, obj);
         var styleText = '';
         _.forOwn(style, function (val, key) {
@@ -72,11 +74,11 @@ define(function (require) {
     }
 
     function show(el) {
-        css(el, {display: 'block'})
+        css(el, {display: 'block'});
     }
 
     function hide(el) {
-        css(el, {display: 'none'})
+        css(el, {display: 'none'});
     }
 
     return {
@@ -88,5 +90,5 @@ define(function (require) {
         trigger: trigger,
         show: show,
         hide: hide
-    }
-})
+    };
+});

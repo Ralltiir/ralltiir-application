@@ -107,7 +107,7 @@ define(function (require) {
         .catch(function (e) {
             console.warn('partialUpdate Error, redirecting', e);
             location.href = url;
-        })
+        });
     };
 
     View.prototype.setHead = function (desc) {
@@ -135,8 +135,7 @@ define(function (require) {
     };
 
     View.prototype.resetStyle = function () {
-        dom.css(this.viewEl, animation.defaultStyle);
-        dom.css(this.headEl, animation.defaultHeadStyle);
+        animation.resetStyle(this.viewEl);
     };
 
     View.prototype.attach = function () {
@@ -203,14 +202,14 @@ define(function (require) {
     View.prototype.fetchUrl = function (url) {
         this.loading.show();
         this.pendingFetch = this.createTemplateStream(url);
-    }
+    };
 
     View.prototype.createTemplateStream = function (url, headers) {
         var backendUrl = this.getBackendUrl(url);
         backendUrl = URL.setQuery(backendUrl, 'rt', 'true');
         return http.ajax(backendUrl, {
             headers: headers || {},
-            xhrFields: { withCredentials: true }
+            xhrFields: {withCredentials: true}
         });
     };
 
@@ -233,7 +232,7 @@ define(function (require) {
         return options;
     }
 
-    function prepareEnvironment () {
+    function prepareEnvironment() {
         if ('scrollRestoration' in history) {
             // Back off, browser, I got this...
             history.scrollRestoration = 'manual';

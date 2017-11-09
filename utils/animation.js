@@ -4,7 +4,8 @@
  * */
 define(function (require) {
     var UA = require('./ua');
-	var dom = require('./dom');
+    var _ = require('ralltiir')._;
+    var dom = require('./dom');
     var Spark = require('./spark');
     var exports = {duration: '300', ease: 'ease', delay: 'delay'};
 
@@ -22,12 +23,7 @@ define(function (require) {
             '-webkit-transform': translate3d('100%', 0, 0),
             'transform': translate3d('100%', 0, 0)
         });
-        el.scrollLeft = sx;
-        el.scrollTop = sy;
-        dom.css(el.querySelector('.rt-head'), {
-            'z-index': '503',
-            'top': (sy || 0) + 'px'
-        });
+        restoreScroll(el, sx, sy);
         return new Promise(function (resolve) {
             Spark.css3(el, {
                 'opacity': 1,
@@ -36,6 +32,18 @@ define(function (require) {
             }, exports.duration, exports.ease, exports.delay, resolve);
         });
     };
+
+    function restoreScroll(el, sx, sy) {
+        el.scrollLeft = sx;
+        el.scrollTop = sy;
+        dom.css(el.querySelector('.rt-head'), {
+            'z-index': '503',
+            'top': (sy || 0) + 'px'
+        });
+        _.forEach(el.querySelectorAll('.rt-fixed'), function (el) {
+            dom.css(el, {'display': 'none'});
+        });
+    }
 
     exports.prepareExit = function (el, sx, sy) {
         dom.css(el, {
@@ -51,24 +59,19 @@ define(function (require) {
             'transform': translate3d(0, 0, 0)
         });
         if (shouldScrollFixed()) {
-            el.scrollLeft = sx;
-            el.scrollTop = sy;
-            dom.css(el.querySelector('.rt-head'), {
-                'position': 'absolute',
-                'top': sy + 'px'
-            });
+            restoreScroll(el, sx, sy);
         }
     };
 
     exports.exit = function (el, sx, sy) {
-        return new Promise(function(resolve) {
+        return new Promise(function (resolve) {
             Spark.css3(el, {
                 'opacity': 0,
                 'left': '100%',
                 '-webkit-transform': translate3d('100%', 0, 0),
                 'transform': translate3d('100%', 0, 0)
             }, exports.duration, exports.ease, exports.delay, function () {
-                dom.css(el, { 'display': 'none' });
+                dom.css(el, {'display': 'none'});
                 resolve();
             });
         });
@@ -81,27 +84,31 @@ define(function (require) {
         return Promise.resolve();
     };
 
-    exports.defaultStyle = {
-        'display': '',
-        'opacity': '',
-        'position': '',
-        'z-index': '',
-        'top': '',
-        'left': '',
-        'height': '',
-        'width': '',
-        'overflow': '',
-        '-webkit-transform': '',
-        'transform': ''
+    exports.resetStyle = function (viewEl) {
+        dom.css(viewEl, {
+            'display': '',
+            'opacity': '',
+            'position': '',
+            'z-index': '',
+            'top': '',
+            'left': '',
+            'height': '',
+            'width': '',
+            'overflow': '',
+            '-webkit-transform': '',
+            'transform': ''
+        });
+        dom.css(viewEl.querySelector('.rt-head'), {
+            'z-index': '',
+            'position': '',
+            'top': ''
+        });
+        _.forEach(viewEl.querySelectorAll('.rt-fixed'), function (el) {
+            dom.css(el, {'display': ''});
+        });
     };
 
-    exports.defaultHeadStyle = {
-        'z-index': '',
-        'position': '',
-        'top': ''
-    };
-
-    function shouldScrollFixed () {
+    function shouldScrollFixed() {
         return UA.isWKWebView() && !UA.isBaidu();
     }
     function translate3d(x, y, z) {
@@ -109,13 +116,13 @@ define(function (require) {
         y = y ? y : 0;
         z = z ? z : 0;
         if (typeof x === 'number') {
-            x += 'px'
+            x += 'px';
         }
         if (typeof y === 'number') {
-            y += 'px'
+            y += 'px';
         }
         if (typeof z === 'number') {
-            z += 'px'
+            z += 'px';
         }
         return 'translate3d(' + x + ',' + y + ',' + z + ')';
     }
