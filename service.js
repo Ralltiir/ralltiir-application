@@ -72,7 +72,7 @@ define(function (require) {
             return false;
         }
         var reason = _.get(state, 'options.src');
-        return reason === '' || reason === 'hijack';
+        return !reason || reason === 'hijack';
     }
 
     function shouldExitAnimate(state) {
