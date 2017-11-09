@@ -5,11 +5,12 @@
 
 define(function (require) {
     var animation = require('../utils/animation');
+    var URL = require('../utils/url');
     var Loading = require('./loading');
     var dom = require('../utils/dom');
     var rt = require('ralltiir');
     var Renderer = require('./render');
-    var debug = require('../utils/debug')
+    var debug = require('../utils/debug');
     var _ = rt._;
     var http = rt.http;
     var action = rt.action;
@@ -86,11 +87,12 @@ define(function (require) {
             to.innerHTML = '';
             loading.show();
         }
+
         return View
-        .createTemplateStream(url, {
-            'x-rt-partial': 'true',
-            'x-rt-selector': options.from || ':root'
-        })
+        .createTemplateStream(URL.setQuery(url, {
+            'rt-partial': 'true',
+            'rt-selector': options.from || ':root'
+        }))
         .then(function (xhr) {
             loading.hide();
             rt.action.reset(url, null, {silent: true});
@@ -204,9 +206,10 @@ define(function (require) {
     }
 
     View.prototype.createTemplateStream = function (url, headers) {
-        var backendUrl = this.getBackendUrl(url)
+        var backendUrl = this.getBackendUrl(url);
+        backendUrl = URL.setQuery(backendUrl, 'rt', 'true');
         return http.ajax(backendUrl, {
-            headers: _.assign(headers, { 'x-rt': 'true' }),
+            headers: headers || {},
             xhrFields: { withCredentials: true }
         });
     };
@@ -223,20 +226,6 @@ define(function (require) {
 
     function normalize(options) {
         options = options || {};
-        if (_.isString(options.title)) {
-            options.title = {html: options.title};
-        }
-        if (_.isString(options.subtitle)) {
-            options.subtitle = {html: options.subtitle};
-        }
-        if (_.isString(options.back)) {
-            options.back = {html: options.back};
-        }
-        _.forEach(options.actions, function (action, i) {
-            if (_.isString(action)) {
-                options.actions[i] = {html: action};
-            }
-        });
         if (_.get(options, 'back.html') === undefined
             && history.length > 1) {
             _.set(options, 'back.html', '<rt-back></rt-back>');

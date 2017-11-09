@@ -88,7 +88,23 @@ define(function (require) {
         if (!options) {
             return {};
         }
-        return _.assign({}, options, options.view, options.head);
+        options = _.assign({}, options, options.view, options.head);
+
+        if (_.isString(options.title)) {
+            options.title = {html: options.title};
+        }
+        if (_.isString(options.subtitle)) {
+            options.subtitle = {html: options.subtitle};
+        }
+        if (_.isString(options.back)) {
+            options.back = {html: options.back};
+        }
+        _.forEach(options.actions, function (action, i) {
+            if (_.isString(action)) {
+                options.actions[i] = {html: action};
+            }
+        });
+        return options;
     }
 
     return Service;

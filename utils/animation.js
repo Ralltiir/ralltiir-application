@@ -105,6 +105,9 @@ define(function (require) {
         return UA.isWKWebView() && !UA.isBaidu();
     }
     function translate3d(x, y, z) {
+        x = x ? x : 0;
+        y = y ? y : 0;
+        z = z ? z : 0;
         if (typeof x === 'number') {
             x += 'px'
         }
