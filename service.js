@@ -29,25 +29,23 @@ define(function (require) {
             this.view.fetchUrl(current.url);
         }
 
-        this.view.trigger('rt.beforeAttach');
         return this.view.enter(shouldEnterAnimate(current));
     };
 
     Service.prototype.attach = function (current) {
         var view = this.view;
+        view.setActive();
 
         return Promise.resolve()
         .then(function () {
             return view.populated ? '' : view.render();
         })
         .then(function () {
-            view.resetStyle();
-            return view.attach();
+            view.setAttached();
         });
     };
 
     Service.prototype.beforeDetach = function (current) {
-        this.view.trigger('rt.beforeDetach');
         return this.view.prepareExit(shouldExitAnimate(current));
     };
 
@@ -56,10 +54,7 @@ define(function (require) {
         return view
         .exit(shouldExitAnimate(current))
         .then(function () {
-            view.detach();
-        })
-        .then(function () {
-            view.trigger('rt.detached');
+            view.setDetached();
         });
     };
 

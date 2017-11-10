@@ -81,6 +81,18 @@ define(function (require) {
         var self = this;
         var loading = new Loading(to);
 
+        if (!options.to) {
+            options.to = '.rt-body';
+        }
+
+        if (!options.from) {
+            options.from = options.to;
+        }
+
+        if (!options.fromUrl) {
+            options.fromUrl = url;
+        }
+
         dom.trigger(to, 'rt.willUpdate', data);
 
         if (options.replace) {
@@ -88,13 +100,19 @@ define(function (require) {
             loading.show();
         }
 
-        return View
-        .createTemplateStream(URL.setQuery(url, {
+        var token = Math.random().toString(36).substr(2);
+        to.setAttribute('data-rt-token', token);
+
+        return this.createTemplateStream(URL.setQuery(options.fromUrl, {
             'rt-partial': 'true',
-            'rt-selector': options.from || ':root'
+            'rt-selector': options.from
         }))
         .then(function (xhr) {
             loading.hide();
+
+            if (to.getAttribute('data-rt-token') !== token) {
+                return;
+            }
             rt.action.reset(url, null, {silent: true});
             return renderer.render(to, xhr.data || '', {
                 from: options.from,
@@ -138,22 +156,26 @@ define(function (require) {
         animation.resetStyle(this.viewEl);
     };
 
-    View.prototype.attach = function () {
+    View.prototype.setAttached = function () {
+        this.resetStyle();
         scrollTo(this.scrollX, this.scrollY);
         this.attached = true;
-        dom.trigger(this.viewEl, 'rt.attached');
+        this.trigger('rt.attached');
+    };
+
+    View.prototype.setActive = function () {
+        this.trigger('rt.ready');
+        dom.addClass(this.viewEl, 'active');
     };
 
     View.prototype.reuse = function () {
-        this.resetStyle();
-        dom.addClass(this.viewEl, 'active');
         rt.doc.appendChild(this.viewEl);
     };
 
-    View.prototype.detach = function () {
-        dom.removeClass(this.viewEl, 'active');
+    View.prototype.setDetached = function () {
         this.attached = false;
         this.viewEl.remove();
+        this.trigger('rt.detached');
     };
 
     View.prototype.trigger = function (event) {
@@ -161,6 +183,7 @@ define(function (require) {
     };
 
     View.prototype.enter = function (useAnimation) {
+        this.trigger('rt.beforeAttach');
         this.resetStyle();
 
         if (!useAnimation) {
@@ -174,8 +197,10 @@ define(function (require) {
     };
 
     View.prototype.prepareExit = function (useAnimation) {
+        this.trigger('rt.beforeDetach');
         this.scrollX = window.scrollX;
         this.scrollY = window.scrollY;
+        dom.removeClass(this.viewEl, 'active');
         return animation.prepareExit(this.viewEl, window.scrollX, window.scrollY);
     };
 
@@ -186,7 +211,7 @@ define(function (require) {
     };
 
     View.prototype.destroy = function () {
-        dom.trigger(this.viewEl, 'rt.destroyed');
+        this.trigger('rt.destroyed');
         this.viewEl.remove();
         delete this.viewEl;
         delete this.headEl;
