@@ -183,7 +183,7 @@ define(function (require) {
     };
 
     View.prototype.enter = function (useAnimation) {
-        this.trigger('rt.beforeAttach');
+        this.trigger('rt.willAttach');
         this.resetStyle();
 
         if (!useAnimation) {
@@ -197,7 +197,7 @@ define(function (require) {
     };
 
     View.prototype.prepareExit = function (useAnimation) {
-        this.trigger('rt.beforeDetach');
+        this.trigger('rt.willDetach');
         this.scrollX = window.scrollX;
         this.scrollY = window.scrollY;
         dom.removeClass(this.viewEl, 'active');
