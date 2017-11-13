@@ -1,5 +1,5 @@
 .rt-view {
-    font: 14px/22px Arial,Helvetica,sans-serif;
+    font: 14px/22px Arial, Helvetica, sans-serif;
     word-break: break-word;
     word-wrap: break-word;
     z-index: 501;
@@ -20,14 +20,15 @@
     height: 44px;
     line-height: 44px;
     font-size: 18px;
-    background-color: #ffffff;
+    background-color: #fff;
     color: #333;
     -webkit-user-select: none;
-    user-select: none;
+            user-select: none;
     -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
 }
-.rt-view .rt-head .rt-actions .c-icon{
+
+.rt-view .rt-actions .c-icon {
     cursor: pointer;
     font-size: 21px;
 }
@@ -50,10 +51,10 @@
     text-overflow: ellipsis;
     text-align: center;
 }
-.rt-view .rt-head .rt-center .rt-title {
+.rt-view .rt-head .rt-title {
     vertical-align: middle;
 }
-.rt-view .rt-head .rt-center .rt-subtitle {
+.rt-view .rt-head .rt-subtitle {
     font-size: 14px;
     margin-left: 5px;
     vertical-align: middle;
@@ -65,11 +66,12 @@
     text-align: center;
     font-size: 16px;
 }
-.rt-view .rt-head .rt-actions>* {
+
+.rt-view .rt-actions > * {
     margin-right: 15px;
     margin-left: 0;
 }
-.rt-view .rt-head .rt-actions * {
+.rt-view .rt-actions * {
     vertical-align: middle;
 }
 
@@ -103,17 +105,17 @@
     position: absolute;
     height: 60px;
     width: 12px;
-    top: 0px;
-    left: 0px;
-    background-color: rgba(255,255,255,.5);
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, .5);
     -webkit-transform: skew(20deg);
-    transform: skew(20deg);
+            transform: skew(20deg);
     -webkit-animation: 1s rt-lodingframes infinite;
-    animation: 1s rt-loadingframes infinite;
+            animation: 1s rt-loadingframes infinite;
 }
 @keyframes rt-loadingframes {
     0% {
-        left: 0px;
+        left: 0;
     }
     100% {
         left: 150px;
@@ -121,7 +123,7 @@
 }
 @-webkit-keyframes rt-loadingframes {
     0% {
-        left: 0px;
+        left: 0;
     }
     100% {
         left: 150px;
