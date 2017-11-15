@@ -17,7 +17,7 @@ define(function (require) {
     Service.prototype.beforeAttach = function (current) {
         _.assign(this.options, normalize(current.options));
 
-        if (this.view) {
+        if (this.view && this.view.valid) {
             this.view.reuse();
         }
         else if (isServerRendered(current)) {

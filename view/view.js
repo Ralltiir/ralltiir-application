@@ -34,6 +34,7 @@ define(function (require) {
     function View(options, viewEl) {
         this.renderer = new Renderer();
         this.options = options || {};
+        this.valid = true;
 
         if (viewEl) {
             this.initElement(viewEl);
@@ -80,6 +81,10 @@ define(function (require) {
         var data = {url: url, options: options};
         var self = this;
         var loading = new Loading(to);
+
+        if (url !== location.pathname + location.search) {
+            this.valid = false;
+        }
 
         if (!options.to) {
             options.to = '.rt-body';
