@@ -31,13 +31,16 @@ define(['ralltiir'], function (superFrame) {
         if (options.replace) {
             parent.innerHTML = '';
         }
+        if (!options.onContentLoaded) {
+            options.onContentLoaded = _.noop;
+        }
 
         return Promise.resolve()
             .then(function () {
                 return enforceCSS(links, parent);
             })
             .then(function () {
-                return moveNodes(docfrag, parent);
+                return moveNodes(docfrag, parent), options.onContentLoaded();
             })
             .then(function () {
                 return this.enforceJS(scripts, parent);

@@ -61,12 +61,21 @@ define(function (require) {
         var view = this;
         return this.pendingFetch
         .then(function (xhr) {
-            var opts = optionsFromDOM(dom.wrapElementFromString(xhr.data));
-            view.setData(normalize(opts));
+            var html = xhr.data || '';
             view.loading.hide();
-            return view.renderer.render(view.bodyEl, xhr.data || '', {
+            return view.renderer.render(view.headEl, html, {
                 replace: true,
-                from: '.rt-body'
+                from: '.rt-head',
+                onContentLoaded: function normalizeSSR() {
+                    var opts = optionsFromDOM(dom.wrapElementFromString(html));
+                    view.setData(normalize(opts));
+                }
+            })
+            .then(function () {
+                return view.renderer.render(view.bodyEl, html, {
+                    replace: true,
+                    from: '.rt-body'
+                });
             });
         })
         .then(function () {
