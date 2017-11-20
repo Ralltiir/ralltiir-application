@@ -9,7 +9,7 @@ define(function (require) {
     var Loading = require('./loading');
     var dom = require('../utils/dom');
     var rt = require('ralltiir');
-    var Renderer = require('./render');
+    var Render = require('./render');
     var debug = require('../utils/debug');
     var _ = rt._;
     var http = rt.http;
@@ -32,7 +32,7 @@ define(function (require) {
     prepareEnvironment();
 
     function View(options, viewEl) {
-        this.renderer = new Renderer();
+        this.renderer = new Render();
         this.options = options || {};
         this.valid = true;
 
@@ -62,19 +62,24 @@ define(function (require) {
         return this.pendingFetch
         .then(function (xhr) {
             var html = xhr.data || '';
+            var docfrag = Render.parse(html);
+
             view.loading.hide();
-            return view.renderer.render(view.headEl, html, {
-                replace: true,
-                from: '.rt-head',
-                onContentLoaded: function normalizeSSR() {
-                    var opts = optionsFromDOM(dom.wrapElementFromString(html));
-                    view.setData(normalize(opts));
-                }
+            view.renderer.moveClasses(view.viewEl, docfrag.querySelector('.rt-view'));
+
+            return Promise.resolve()
+            .then(function () {
+                return view.renderer.render(view.headEl, docfrag.querySelector('.rt-head'), {
+                    replace: true,
+                    onContentLoaded: function normalizeSSR() {
+                        var opts = optionsFromDOM(dom.wrapElementFromString(html));
+                        view.setData(normalize(opts));
+                    }
+                });
             })
             .then(function () {
-                return view.renderer.render(view.bodyEl, html, {
-                    replace: true,
-                    from: '.rt-body'
+                return view.renderer.render(view.bodyEl, docfrag.querySelector('.rt-body'), {
+                    replace: true
                 });
             });
         })
@@ -128,10 +133,11 @@ define(function (require) {
                 return;
             }
             rt.action.reset(url, null, {silent: true});
-            return renderer.render(to, xhr.data || '', {
-                from: options.from,
-                replace: options.replace
-            })
+
+            var docfrag = Render.parse(xhr.data || '');
+            docfrag = options.from ? docfrag.querySelector(options.from) : docfrag;
+
+            return renderer.render(to, docfrag, {replace: options.replace})
             .then(function () {
                 dom.trigger(to, 'rt.updated', data);
             });

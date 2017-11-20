@@ -3,28 +3,24 @@
  * @author harttle<harttle@harttle.com>
  * The Template Render, render templates in serial.
  */
-define(['ralltiir'], function (superFrame) {
+define(function (require) {
+    var superFrame = require('ralltiir');
     var _ = superFrame._;
     var Promise = superFrame.promise;
     // reference: https://github.com/jquery/jquery/blob/master/src/manipulation/var/rscriptType.js
     var rscriptType = /^$|\/(?:java|ecma)script/i;
     var rstylesheetType = /stylesheet/i;
+    var dom = require('../utils/dom');
 
     function Render() {}
 
-    /**
-     * Render and encorce JavaScript execution
-     *
-     * @param {HTMLElement} parent The parent element
-     * @param {string} html The html string to render with
-     * @param {string} [options=] render options
-     * @param {string} [options.from=:root] The container element or the selector of the container element in the DOM of the retrieved HTML
-     * @param {boolean} [options.replace=false] Whether or not to replace the contents of container element
-     * @return {Promise} resolves when partial fully rendered, rejects when render error
-     */
-    Render.prototype.render = function (parent, html, options) {
-        var docfrag = Render.parse(html, options.from);
+    Render.prototype.moveClasses = function (parent, docfrag) {
+        (docfrag.className || '').split(/\s+/).forEach(function (cls) {
+            dom.addClass(parent, cls);
+        });
+    };
 
+    Render.prototype.render = function (parent, docfrag, options) {
         var links = docfrag.querySelectorAll('link');
         var scripts = docfrag.querySelectorAll('script');
 
@@ -51,30 +47,17 @@ define(['ralltiir'], function (superFrame) {
      * Parse HTML to DOM Object
      *
      * @param {string} html The html string to render with
-     * @param {string} [from=:root] The root selector, allows returning partial DOM
      * @return {HTMLElement} element containing the DOM tree from `html`
      */
-    Render.parse = function (html, from) {
+    Render.parse = function (html) {
         // documentFragment does not allow setting arbitrary innerHTML,
         // use <div> instead.
         var docfrag = document.createElement('div');
         docfrag.innerHTML = html;
 
-        if (from) {
-            var tmp = docfrag.querySelector(from);
-            if (tmp) {
-                docfrag = tmp;
-            } else {
-                console.warn('from element not found, using all');
-            }
-        }
-
         _.forEach(docfrag.querySelectorAll('[data-rt-omit]'), function (el) {
             el.remove();
         });
-
-        // 手百&浏览器 内核渲染数据标记
-        docfrag.appendChild(document.createElement('rendermark'));
         return docfrag;
     };
 
