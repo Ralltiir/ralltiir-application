@@ -7,13 +7,18 @@ define(function (require) {
     var _ = require('ralltiir')._;
     var dom = require('./dom');
     var Spark = require('./spark');
-    var exports = {duration: '300', ease: 'ease', delay: 'delay'};
+    var exports = {duration: getDuration(), ease: 'ease', delay: 'delay'};
+
+    function getDuration() {
+        var match = /rt-duration=(\d+)/.exec(location.search);
+        return match ? match[1] : 300;
+    }
 
     exports.enter = function (el, sx, sy) {
         dom.css(el, {
             'display': 'block',
             'position': 'fixed',
-            'z-index': '502',
+            'z-index': '600',
             'top': 0,
             'left': 0,
             'height': '100%',
@@ -37,7 +42,7 @@ define(function (require) {
         el.scrollLeft = sx;
         el.scrollTop = sy;
         dom.css(el.querySelector('.rt-head'), {
-            'z-index': '503',
+            'z-index': '610',
             'top': (sy || 0) + 'px'
         });
         _.forEach(el.querySelectorAll('.rt-fixed'), function (el) {
@@ -48,7 +53,7 @@ define(function (require) {
     exports.prepareExit = function (el, sx, sy) {
         dom.css(el, {
             'position': 'fixed',
-            'z-index': 502,
+            'z-index': '600',
             'top': 0,
             'left': 0,
             'opacity': 1,
@@ -109,7 +114,10 @@ define(function (require) {
     };
 
     function shouldScrollFixed() {
-        return UA.isWKWebView() && !UA.isBaidu();
+        if (!UA.isIOS) {
+            return true;
+        }
+        return UA.isWKWebView && !UA.isBaidu;
     }
     function translate3d(x, y, z) {
         x = x ? x : 0;

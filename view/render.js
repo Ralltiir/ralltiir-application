@@ -12,7 +12,8 @@ define(function (require) {
     var rstylesheetType = /stylesheet/i;
     var dom = require('../utils/dom');
 
-    function Render() {}
+    function Render() {
+    }
 
     Render.prototype.moveClasses = function (parent, docfrag) {
         (docfrag.className || '').split(/\s+/).forEach(function (cls) {
@@ -21,21 +22,34 @@ define(function (require) {
     };
 
     Render.prototype.render = function (parent, docfrag, options) {
+        var renderid = Math.random().toString(36).substr(1);
         var links = docfrag.querySelectorAll('link');
         var scripts = docfrag.querySelectorAll('script');
 
-        if (options.replace) {
-            parent.innerHTML = '';
-        }
         if (!options.onContentLoaded) {
             options.onContentLoaded = _.noop;
         }
 
         return Promise.resolve()
             .then(function () {
+                _.forEach(links, function (link) {
+                    link.setAttribute('rt-renderid', renderid);
+                });
                 return enforceCSS(links, parent);
             })
             .then(function () {
+                if (options.replace) {
+                    _
+                    .filter(parent.childNodes, function isLegacy(node) {
+                        if (node.nodeType === 1) {
+                            return node.getAttribute('rt-renderid') !== renderid;
+                        }
+                        return true;
+                    })
+                    .forEach(function (node) {
+                        node.remove();
+                    });
+                }
                 return moveNodes(docfrag, parent), options.onContentLoaded();
             })
             .then(function () {

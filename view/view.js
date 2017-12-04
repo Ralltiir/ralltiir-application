@@ -5,6 +5,7 @@
 
 define(function (require) {
     var animation = require('../utils/animation');
+    var ua = require('../utils/ua');
     var URL = require('../utils/url');
     var Loading = require('./loading');
     var dom = require('../utils/dom');
@@ -221,7 +222,7 @@ define(function (require) {
         this.scrollX = window.scrollX;
         this.scrollY = window.scrollY;
         dom.removeClass(this.viewEl, 'active');
-        return animation.prepareExit(this.viewEl, window.scrollX, window.scrollY);
+        return useAnimation && animation.prepareExit(this.viewEl, window.scrollX, window.scrollY);
     };
 
     View.prototype.exit = function (useAnimation) {
@@ -278,7 +279,8 @@ define(function (require) {
     }
 
     function prepareEnvironment() {
-        if ('scrollRestoration' in history) {
+        // ios 设为 manual 时回退时页面不响应 1s
+        if (('scrollRestoration' in history) && !ua.isIOS) {
             // Back off, browser, I got this...
             history.scrollRestoration = 'manual';
         }
@@ -342,7 +344,7 @@ define(function (require) {
             el.innerHTML = options.html || '';
             // special markups
             if (el.querySelector('rt-back')) {
-                el.innerHTML = View.backHTML;
+                el.innerHTML = el.querySelector('rt-back').innerHTML || View.backHTML;
                 options.onClick = action.back.bind(action);
             }
             else if (el.querySelector('rt-empty')) {
