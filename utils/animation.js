@@ -28,7 +28,7 @@ define(function (require) {
             '-webkit-transform': translate3d('100%', 0, 0),
             'transform': translate3d('100%', 0, 0)
         });
-        restoreScroll(el, sx, sy);
+        restoreFixedPosition(el, sx, sy);
         return new Promise(function (resolve) {
             Spark.css3(el, {
                 'opacity': 1,
@@ -38,7 +38,7 @@ define(function (require) {
         });
     };
 
-    function restoreScroll(el, sx, sy) {
+    function restoreFixedPosition(el, sx, sy) {
         el.scrollLeft = sx;
         el.scrollTop = sy;
         dom.css(el.querySelector('.rt-head'), {
@@ -64,7 +64,7 @@ define(function (require) {
             'transform': translate3d(0, 0, 0)
         });
         if (shouldScrollFixed()) {
-            restoreScroll(el, sx, sy);
+            restoreFixedPosition(el, sx, sy);
         }
     };
 

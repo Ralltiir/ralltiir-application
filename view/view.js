@@ -179,7 +179,7 @@ define(function (require) {
 
     View.prototype.setAttached = function () {
         this.resetStyle();
-        scrollTo(this.scrollX, this.scrollY);
+        this.restoreStates();
         this.attached = true;
         this.trigger('rt.attached');
     };
@@ -217,12 +217,13 @@ define(function (require) {
         return animation.enter(el, scrollX, scrollY);
     };
 
-    View.prototype.prepareExit = function (useAnimation) {
+    View.prototype.prepareExit = function () {
         this.trigger('rt.willDetach');
         this.scrollX = window.scrollX;
         this.scrollY = window.scrollY;
         dom.removeClass(this.viewEl, 'active');
-        return useAnimation && animation.prepareExit(this.viewEl, window.scrollX, window.scrollY);
+        // need prepare regardless useAnimation, scrollTop will be affected otherwise
+        return animation.prepareExit(this.viewEl, window.scrollX, window.scrollY);
     };
 
     View.prototype.exit = function (useAnimation) {
