@@ -15,9 +15,9 @@ define(function (require) {
     function Render() {
     }
 
-    Render.prototype.moveClasses = function (parent, docfrag) {
-        (docfrag.className || '').split(/\s+/).forEach(function (cls) {
-            dom.addClass(parent, cls);
+    Render.prototype.moveClasses = function (from, to) {
+        (from.className || '').split(/\s+/).forEach(function (cls) {
+            dom.addClass(to, cls);
         });
     };
 

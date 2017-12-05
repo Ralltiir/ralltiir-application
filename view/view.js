@@ -59,33 +59,41 @@ define(function (require) {
     };
 
     View.prototype.render = function () {
-        var view = this;
+        var self = this;
         return this.pendingFetch
         .then(function (xhr) {
             var html = xhr.data || '';
             var docfrag = Render.parse(html);
 
-            view.loading.hide();
-            view.renderer.moveClasses(view.viewEl, docfrag.querySelector('.rt-view'));
+            self.loading.hide();
+
+            var view = docfrag.querySelector('.rt-view');
+            if (!view) {
+                var message = '".rt-view" not found in retrieved HTML'
+                + '(from ' + self.backendUrl + ' )'
+                + 'abort rendering...';
+                throw new Error(message);
+            }
+            self.renderer.moveClasses(view, self.viewEl);
 
             return Promise.resolve()
             .then(function () {
-                return view.renderer.render(view.headEl, docfrag.querySelector('.rt-head'), {
+                return self.renderer.render(self.headEl, docfrag.querySelector('.rt-head'), {
                     replace: true,
                     onContentLoaded: function normalizeSSR() {
                         var opts = optionsFromDOM(dom.wrapElementFromString(html));
-                        view.setData(normalize(opts));
+                        self.setData(normalize(opts));
                     }
                 });
             })
             .then(function () {
-                return view.renderer.render(view.bodyEl, docfrag.querySelector('.rt-body'), {
+                return self.renderer.render(self.bodyEl, docfrag.querySelector('.rt-body'), {
                     replace: true
                 });
             });
         })
         .then(function () {
-            view.populated = true;
+            self.populated = true;
         });
     };
 
@@ -252,9 +260,9 @@ define(function (require) {
     };
 
     View.prototype.createTemplateStream = function (url, headers) {
-        var backendUrl = this.getBackendUrl(url);
-        backendUrl = URL.setQuery(backendUrl, 'rt', 'true');
-        return http.ajax(backendUrl, {
+        this.backendUrl = this.getBackendUrl(url);
+        this.backendUrl = URL.setQuery(this.backendUrl, 'rt', 'true');
+        return http.ajax(this.backendUrl, {
             headers: headers || {},
             xhrFields: {withCredentials: true}
         });
