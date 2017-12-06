@@ -12,8 +12,7 @@ define(function (require) {
     var rstylesheetType = /stylesheet/i;
     var dom = require('../utils/dom');
 
-    function Render() {
-    }
+    function Render() {}
 
     Render.prototype.moveClasses = function (from, to) {
         (from.className || '').split(/\s+/).forEach(function (cls) {
@@ -24,36 +23,23 @@ define(function (require) {
     Render.prototype.render = function (parent, docfrag, options) {
         var renderid = Math.random().toString(36).substr(1);
         var links = docfrag.querySelectorAll('link');
-        var scripts = docfrag.querySelectorAll('script');
-
-        if (!options.onContentLoaded) {
-            options.onContentLoaded = _.noop;
-        }
 
         return Promise.resolve()
             .then(function () {
-                _.forEach(links, function (link) {
-                    link.setAttribute('rt-renderid', renderid);
-                });
+                markRenderID(links, renderid);
                 return enforceCSS(links, parent);
             })
             .then(function () {
                 if (options.replace) {
                     _
-                    .filter(parent.childNodes, function isLegacy(node) {
-                        if (node.nodeType === 1) {
-                            return node.getAttribute('rt-renderid') !== renderid;
-                        }
-                        return true;
-                    })
-                    .forEach(function (node) {
-                        node.remove();
-                    });
+                    .filter(parent.childNodes, notMarkedBy(renderid))
+                    .forEach(dom.removeNode);
                 }
-                return moveNodes(docfrag, parent), options.onContentLoaded();
+                moveNodes(docfrag, parent);
+                options.onContentLoaded && options.onContentLoaded();
             })
             .then(function () {
-                return this.enforceJS(scripts, parent);
+                return this.enforceJS(parent, options.boforeEvalScript);
             }.bind(this));
     };
 
@@ -119,15 +105,16 @@ define(function (require) {
 
     /**
      * Enforce `<script>` execution within the given HTML element
+     * script element created by .innerHTML = '' will not get executed by default,
+     * see: http://harttle.land/2017/01/16/dynamic-script-insertion.html
      *
-     * @param {HTMLElementCollection} scripts The elements containing `<script>` tags
-     * @param {HTMLElement} parent The parent element to insert `<script>`
+     * @param {HTMLElement} container The container element to insert `<script>`
      * @return {Promise} resolves when all scripts complete/error, never rejects
      */
-    Render.prototype.enforceJS = function (scripts, parent) {
+    Render.prototype.enforceJS = function (container) {
         var fp = createEvaluator(this.global);
         var pendingJS = _
-            .toArray(scripts)
+            .toArray(container.querySelectorAll('script'))
             .filter(function (script) {
                 return rscriptType.test(script.type);
             })
@@ -139,17 +126,16 @@ define(function (require) {
             var pendingCount = pendingJS.length;
 
             if (pendingCount === 0) {
-                pendingCount = 1;
                 return done();
             }
 
             pendingJS.forEach(function (script) {
-                domEval(script, parent, done);
+                domEval(script, container, done);
             });
 
             function done() {
                 pendingCount--;
-                if (pendingCount === 0) {
+                if (pendingCount <= 0) {
                     destroyEvaluator(fp);
                     resolve();
                 }
@@ -258,6 +244,28 @@ define(function (require) {
 
         };
     };
+
+    function markRenderID(nodes, id) {
+        if (!_.isArrayLike(nodes)) {
+            nodes = [nodes];
+        }
+        _.forEach(nodes, function (node) {
+            if (node.nodeType === 1) {
+                node.setAttribute('rt-renderid', id);
+            }
+        });
+    }
+
+    function notMarkedBy(id) {
+        return function isLegacy(node) {
+            if (node.nodeType === 1) {
+                var attrId = node.getAttribute('rt-renderid');
+                node.removeAttribute('rt-renderid');
+                return attrId !== id;
+            }
+            return true;
+        };
+    }
 
     return Render;
 });

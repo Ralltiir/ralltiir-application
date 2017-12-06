@@ -5,6 +5,10 @@
 define(function (require) {
     var _ = require('ralltiir')._;
 
+    function removeNode(node) {
+        node.remove();
+    }
+
     function truthy(val) {
         return !!val;
     }
@@ -89,6 +93,7 @@ define(function (require) {
         wrapElementFromString: wrapElementFromString,
         trigger: trigger,
         show: show,
+        removeNode: removeNode,
         hide: hide
     };
 });

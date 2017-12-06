@@ -131,7 +131,7 @@ define(function (require) {
         var token = Math.random().toString(36).substr(2);
         to.setAttribute('data-rt-token', token);
 
-        return this.createTemplateStream(URL.setQuery(options.fromUrl, {
+        return this.fetch(URL.setQuery(options.fromUrl, {
             'rt-partial': 'true',
             'rt-selector': options.from
         }))
@@ -256,10 +256,10 @@ define(function (require) {
 
     View.prototype.fetchUrl = function (url) {
         this.loading.show();
-        this.pendingFetch = this.createTemplateStream(url);
+        this.pendingFetch = this.fetch(url);
     };
 
-    View.prototype.createTemplateStream = function (url, headers) {
+    View.prototype.fetch = function (url, headers) {
         this.backendUrl = this.getBackendUrl(url);
         this.backendUrl = URL.setQuery(this.backendUrl, 'rt', 'true');
         return http.ajax(this.backendUrl, {
@@ -271,9 +271,12 @@ define(function (require) {
     View.prototype.getBackendUrl = function (url) {
         if (_.isFunction(this.options.backendUrl)) {
             return this.options.backendUrl(url);
+        } else if (_.isString(this.options.backendUrl)) {
+            return this.options.backendUrl;
+        } else {
+            var root = rt.action.config().root.replace(/\/+$/, '');
+            return root + url;
         }
-        var root = rt.action.config().root.replace(/\/+$/, '');
-        return root + url;
     };
 
     View.backHTML = '<i class="c-icon">&#xe750;</i>';
