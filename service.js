@@ -62,6 +62,10 @@ define(function (require) {
         return this.view.destroy();
     };
 
+    Service.setBackHtml = function (html) {
+        View.backHtml = html;
+    };
+
     function shouldEnterAnimate(state) {
         if (isServerRendered(state)) {
             return false;

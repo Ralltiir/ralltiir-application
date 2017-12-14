@@ -165,9 +165,9 @@ define(function (require) {
     View.prototype.setData = function (desc) {
         var headEl = this.headEl;
 
-        updateTitleBarElement(headEl.querySelector('.rt-back'), desc.back);
-        updateTitleBarElement(headEl.querySelector('.rt-title'), desc.title);
-        updateTitleBarElement(headEl.querySelector('.rt-subtitle'), desc.subtitle);
+        this.updateTitleBarElement(headEl.querySelector('.rt-back'), desc.back);
+        this.updateTitleBarElement(headEl.querySelector('.rt-title'), desc.title);
+        this.updateTitleBarElement(headEl.querySelector('.rt-subtitle'), desc.subtitle);
 
         if (desc.actions) {
             var toolEl = headEl.querySelector('.rt-actions');
@@ -175,9 +175,9 @@ define(function (require) {
             _.forEach(desc.actions, function (icon) {
                 var iconEl = dom.elementFromString('<span class="rt-action">');
                 icon.tryReplace = true;
-                var resultIconEl = updateTitleBarElement(iconEl, icon);
+                var resultIconEl = this.updateTitleBarElement(iconEl, icon);
                 toolEl.appendChild(resultIconEl);
-            });
+            }, this);
         }
     };
 
@@ -279,7 +279,7 @@ define(function (require) {
         }
     };
 
-    View.backHTML = '<i class="c-icon">&#xe750;</i>';
+    View.backHtml = '<i class="c-icon">&#xe750;</i>';
 
     function normalize(options) {
         options = options || {};
@@ -351,12 +351,12 @@ define(function (require) {
         return root + url;
     }
 
-    function updateTitleBarElement(el, options) {
+    View.prototype.updateTitleBarElement = function (el, options) {
         if (_.has(options, 'html')) {
             el.innerHTML = options.html || '';
             // special markups
             if (el.querySelector('rt-back')) {
-                el.innerHTML = el.querySelector('rt-back').innerHTML || View.backHTML;
+                el.innerHTML = el.querySelector('rt-back').innerHTML || View.backHtml;
                 options.onClick = action.back.bind(action);
             }
             else if (el.querySelector('rt-empty')) {
@@ -376,7 +376,7 @@ define(function (require) {
             el.rtClickHandler = _.get(options, 'onClick');
         }
         return el;
-    }
+    };
 
     return View;
 });
