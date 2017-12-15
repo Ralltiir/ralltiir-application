@@ -11,7 +11,6 @@ define(function (require) {
     var dom = require('../utils/dom');
     var rt = require('ralltiir');
     var Render = require('./render');
-    var debug = require('../utils/debug');
     var _ = rt._;
     var http = rt.http;
     var action = rt.action;
@@ -32,6 +31,7 @@ define(function (require) {
 
     prepareEnvironment();
 
+    // eslint-disable-next-line
     function View(options, viewEl) {
         this.renderer = new Render();
         this.options = options || {};
@@ -102,7 +102,6 @@ define(function (require) {
         var body = this.bodyEl;
         var to = options.to ? body.querySelector(options.to) : body;
         var data = {url: url, options: options};
-        var self = this;
         var loading = new Loading(to);
 
         if (url !== location.pathname + location.search) {
@@ -152,12 +151,14 @@ define(function (require) {
             });
         })
         .catch(function (e) {
+            // eslint-disable-next-line
             console.warn('partialUpdate Error, redirecting', e);
             location.href = url;
         });
     };
 
     View.prototype.setHead = function (desc) {
+        // eslint-disable-next-line
         console.warn('[DEPRECATED] use .setData() instead of .setHead()');
         return this.setData(desc);
     };
@@ -271,12 +272,12 @@ define(function (require) {
     View.prototype.getBackendUrl = function (url) {
         if (_.isFunction(this.options.backendUrl)) {
             return this.options.backendUrl(url);
-        } else if (_.isString(this.options.backendUrl)) {
-            return this.options.backendUrl;
-        } else {
-            var root = rt.action.config().root.replace(/\/+$/, '');
-            return root + url;
         }
+        if (_.isString(this.options.backendUrl)) {
+            return this.options.backendUrl;
+        }
+        var root = rt.action.config().root.replace(/\/+$/, '');
+        return root + url;
     };
 
     View.backHtml = '<i class="c-icon">&#xe750;</i>';
@@ -295,16 +296,6 @@ define(function (require) {
         if (('scrollRestoration' in history) && !ua.isIOS) {
             // Back off, browser, I got this...
             history.scrollRestoration = 'manual';
-        }
-        if (
-            !document.querySelector('link[rel=stylesheet][data-for=rt-view]')
-            && !document.querySelector('style[data-for="rt-view"]')
-            && !document.querySelector('link[rel=stylesheet][href$="view/rt-view.css"]') // legacy
-        ) {
-            var prefix = debug.enabled ? './amd_modules' : '//unpkg.com';
-            var link = dom.elementFromString('<link rel="stylesheet">');
-            link.setAttribute('href', prefix + '/ralltiir-application/view/rt-view.css');
-            document.head.appendChild(link);
         }
     }
 
@@ -345,11 +336,6 @@ define(function (require) {
         rt.doc.appendChild(viewEl);
         return viewEl;
     };
-
-    function getBackendUrl(url) {
-        var root = rt.action.config().root.replace(/\/+$/, '');
-        return root + url;
-    }
 
     View.prototype.updateTitleBarElement = function (el, options) {
         if (_.has(options, 'html')) {
