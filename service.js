@@ -9,7 +9,9 @@ define(function (require) {
     var Promise = rt.promise;
     var View = require('./view/view');
     var _ = rt._;
+    var debug = require('./utils/debug');
 
+    // eslint-disable-next-line
     function Service(url, options) {
         this.options = normalize(options);
     }
@@ -17,7 +19,7 @@ define(function (require) {
     Service.prototype.beforeAttach = function (current) {
         _.assign(this.options, normalize(current.options));
 
-        if (this.view && this.view.valid) {
+        if (!debug.cacheDisabled && this.view && this.view.valid) {
             this.view.reuse();
         }
         else if (isServerRendered(current)) {

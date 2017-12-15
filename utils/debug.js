@@ -3,7 +3,17 @@
  * @author harttle<harttle@harttle.com>
  */
 define(function () {
-    return {
-        enabled: /rt-debug/.test(location.search)
+    var debug = {
+        enabled: /rt-debug/.test(location.search),
+        cacheDisabled: /rt-cache-disable/.test(location.search)
     };
+    /* eslint-disable no-console */
+    if (debug.enabled) {
+        console.log('Ralltiir Application debug enabled');
+    }
+    if (debug.cacheDisabled) {
+        console.log('Ralltiir Application cache disabled');
+    }
+    /* eslint-enable no-console */
+    return debug;
 });
