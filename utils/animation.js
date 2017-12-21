@@ -7,12 +7,8 @@ define(function (require) {
     var _ = require('ralltiir')._;
     var dom = require('./dom');
     var Spark = require('./spark');
-    var exports = {duration: getDuration(), ease: 'ease', delay: 'delay'};
-
-    function getDuration() {
-        var match = /rt-duration=(\d+)/.exec(location.search);
-        return match ? match[1] : 300;
-    }
+    var config = require('../config');
+    var exports = {};
 
     exports.enter = function (el, sx, sy) {
         dom.css(el, {
@@ -34,7 +30,7 @@ define(function (require) {
                 'opacity': 1,
                 '-webkit-transform': translate3d(0, 0, 0),
                 'transform': translate3d(0, 0, 0)
-            }, exports.duration, exports.ease, exports.delay, resolve);
+            }, config.duration, config.animationEase, 0, resolve);
         });
     };
 
@@ -75,7 +71,7 @@ define(function (require) {
                 'left': '100%',
                 '-webkit-transform': translate3d('100%', 0, 0),
                 'transform': translate3d('100%', 0, 0)
-            }, exports.duration, exports.ease, exports.delay, function () {
+            }, config.duration, config.animationEase, 0, function () {
                 dom.css(el, {'display': 'none'});
                 resolve();
             });

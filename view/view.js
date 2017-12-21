@@ -286,7 +286,7 @@ define(function (require) {
         options = options || {};
         if (_.get(options, 'back.html') === undefined
             && history.length > 1) {
-            _.set(options, 'back.html', '<rt-back></rt-back>');
+            _.set(options, 'back.html', '<rt-back>' + View.backHtml + '</rt-back>');
         }
         return options;
     }
@@ -342,7 +342,7 @@ define(function (require) {
             el.innerHTML = options.html || '';
             // special markups
             if (el.querySelector('rt-back')) {
-                el.innerHTML = el.querySelector('rt-back').innerHTML || View.backHtml;
+                el.innerHTML = el.innerHTML || View.backHtml;
                 options.onClick = action.back.bind(action);
             }
             else if (el.querySelector('rt-empty')) {
