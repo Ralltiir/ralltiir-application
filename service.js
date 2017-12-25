@@ -16,10 +16,24 @@ define(function (require) {
         this.options = normalize(options);
     }
 
+    Service.prototype.hasValidView = function () {
+        return this.view && this.view.valid;
+    };
+
+    Service.prototype.shouldUseCache = function (useAnimation) {
+        if (config.cacheDisabled) {
+            return false;
+        }
+        if (this.options.isolateCSS) {
+            return !useAnimation;
+        }
+    };
+
     Service.prototype.beforeAttach = function (current) {
         _.assign(this.options, normalize(current.options));
+        var useAnimation = this.shouldEnterAnimate(current);
 
-        if (!config.cacheDisabled && this.view && this.view.valid) {
+        if (this.shouldUseCache(useAnimation) && this.hasValidView()) {
             this.view.reuse();
         }
         else if (isServerRendered(current)) {
@@ -31,7 +45,28 @@ define(function (require) {
             this.view.fetchUrl(current.url);
         }
 
-        return this.view.enter(shouldEnterAnimate(current));
+        return this.view.enter(useAnimation);
+    };
+
+    Service.prototype.shouldEnterAnimate = function (state) {
+        if (isServerRendered(state)) {
+            return false;
+        }
+        var reason = _.get(state, 'options.src');
+        return !reason || reason === 'hijack';
+    };
+
+    Service.prototype.shouldExitAnimate = function (current, prev) {
+        if (this.options.isolateCSS) {
+            if (!this.name) {
+                return false;
+            }
+            if (this.name !== _.get(current, 'service.name')) {
+                return false;
+            }
+        }
+        var reason = _.get(current, 'options.src');
+        return reason === 'back';
     };
 
     Service.prototype.attach = function (current) {
@@ -47,14 +82,14 @@ define(function (require) {
         });
     };
 
-    Service.prototype.beforeDetach = function (current) {
-        return this.view.prepareExit(shouldExitAnimate(current));
+    Service.prototype.beforeDetach = function (current, prev) {
+        return this.view.prepareExit(this.shouldExitAnimate(current, prev));
     };
 
     Service.prototype.detach = function (current, prev, extra) {
         var view = this.view;
         return view
-        .exit(shouldExitAnimate(current))
+        .exit(this.shouldExitAnimate(current, prev))
         .then(function () {
             view.setDetached();
         });
@@ -68,19 +103,6 @@ define(function (require) {
         View.backHtml = html;
     };
 
-    function shouldEnterAnimate(state) {
-        if (isServerRendered(state)) {
-            return false;
-        }
-        var reason = _.get(state, 'options.src');
-        return !reason || reason === 'hijack';
-    }
-
-    function shouldExitAnimate(state) {
-        var reason = _.get(state, 'options.src');
-        return reason === 'back';
-    }
-
     function isServerRendered(state) {
         return _.get(state, 'options.src') === 'sync';
     }
@@ -88,6 +110,12 @@ define(function (require) {
     function normalize(options) {
         if (!options) {
             return {};
+        }
+        if (options.view || options.head) {
+            console.warn(
+                '[DEPRECATED] options.head, options.view will not be supported in future version',
+                'checkout: https://ralltiir.github.io/ralltiir/get-started/view-options.html'
+            );
         }
         options = _.assign({}, options, options.view, options.head);
 
