@@ -192,10 +192,6 @@
                 if (off) {
                     duration = 0;
                 }
-                else {
-                    // 动画时长默认值400，单位ms
-                    duration = Number(duration) || 400;
-                }
                 duration = Math.max(duration, 0);
                 // 缓动函数默认为 linear
                 ease = timing[ease] || 'linear';

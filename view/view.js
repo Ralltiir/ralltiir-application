@@ -12,6 +12,7 @@ define(function (require) {
     var rt = require('ralltiir');
     var Render = require('./render');
     var _ = rt._;
+    var logger = rt.logger;
     var http = rt.http;
     var action = rt.action;
     var Promise = rt.promise;
@@ -157,12 +158,6 @@ define(function (require) {
         });
     };
 
-    View.prototype.setHead = function (desc) {
-        // eslint-disable-next-line
-        console.warn('[DEPRECATED] use .setData() instead of .setHead()');
-        return this.setData(desc);
-    };
-
     View.prototype.setData = function (desc) {
         var headEl = this.headEl;
 
@@ -212,27 +207,28 @@ define(function (require) {
         return dom.trigger(this.viewEl, event);
     };
 
-    View.prototype.enter = function (useAnimation) {
+    View.prototype.enter = function (useEnterAnimation) {
         this.trigger('rt.willAttach');
+        logger.debug('[view.enter] resetting styles, useEnterAnimation', useEnterAnimation);
         this.resetStyle();
-
-        if (!useAnimation) {
+        if (!useEnterAnimation) {
+            logger.debug('[view.enter] animation disabled restoreStates...');
             this.restoreStates();
             return Promise.resolve();
         }
         var el = this.viewEl;
-        var scrollX = this.scrollX;
-        var scrollY = this.scrollY;
-        return animation.enter(el, scrollX, scrollY);
+        logger.debug('[view.enter] calling animaiton.enter with', this.scrollX, this.scrollY);
+        return animation.enter(el, this.scrollX, this.scrollY);
     };
 
-    View.prototype.prepareExit = function () {
+    View.prototype.prepareExit = function (useAnimation) {
         this.trigger('rt.willDetach');
         this.scrollX = window.scrollX;
         this.scrollY = window.scrollY;
+        logger.debug('[view.prepareExit] saving scrollX/scrollY', this.scrollX, this.scrollY);
         dom.removeClass(this.viewEl, 'active');
-        // need prepare regardless useAnimation, scrollTop will be affected otherwise
-        return animation.prepareExit(this.viewEl, window.scrollX, window.scrollY);
+        // need prepare regardless useAnimation, scrollTop will be effected otherwise
+        return animation.prepareExit(this.viewEl, this.scrollX, this.scrollY);
     };
 
     View.prototype.exit = function (useAnimation) {
@@ -250,6 +246,7 @@ define(function (require) {
     };
 
     View.prototype.restoreStates = function () {
+        logger.debug('restoring states to', this.scrollX, this.scrollY);
         if (this.hasOwnProperty('scrollX')) {
             scrollTo(this.scrollX, this.scrollY);
         }

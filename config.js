@@ -12,7 +12,7 @@ define(function () {
 
     function getDuration() {
         var match = /rt-duration=(\d+)/.exec(location.search);
-        return match ? match[1] : 300;
+        return match ? Number(match[1]) : 300;
     }
 
     /* eslint-disable no-console */

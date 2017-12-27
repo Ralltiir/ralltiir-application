@@ -9,11 +9,13 @@ define(function (require) {
     var Promise = rt.promise;
     var View = require('./view/view');
     var _ = rt._;
+    var logger = rt.logger;
     var config = require('./config');
 
     // eslint-disable-next-line
     function Service(url, options) {
         this.options = normalize(options);
+        this.name = this.options.name;
     }
 
     Service.prototype.hasValidView = function () {
@@ -32,8 +34,10 @@ define(function (require) {
     Service.prototype.beforeAttach = function (current) {
         _.assign(this.options, normalize(current.options));
         var useAnimation = this.shouldEnterAnimate(current);
+        logger.debug('service.beforeAttach', this.beforeAttach);
 
         if (this.shouldUseCache(useAnimation) && this.hasValidView()) {
+            logger.info('using cached dom for', current.url);
             this.view.reuse();
         }
         else if (isServerRendered(current)) {
@@ -112,6 +116,7 @@ define(function (require) {
             return {};
         }
         if (options.view || options.head) {
+            // eslint-disable-next-line
             console.warn(
                 '[DEPRECATED] options.head, options.view will not be supported in future version',
                 'checkout: https://ralltiir.github.io/ralltiir/get-started/view-options.html'

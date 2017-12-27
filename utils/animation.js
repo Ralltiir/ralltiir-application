@@ -4,7 +4,9 @@
  * */
 define(function (require) {
     var UA = require('./ua');
-    var _ = require('ralltiir')._;
+    var rt = require('ralltiir');
+    var _ = rt._;
+    var logger = rt.logger;
     var dom = require('./dom');
     var Spark = require('./spark');
     var config = require('../config');
@@ -35,6 +37,7 @@ define(function (require) {
     };
 
     function restoreFixedPosition(el, sx, sy) {
+        logger.debug('[restoreFixedPosition] with scrollLeft/Top:', sx, sy);
         el.scrollLeft = sx;
         el.scrollTop = sy;
         dom.css(el.querySelector('.rt-head'), {
@@ -42,11 +45,12 @@ define(function (require) {
             'top': (sy || 0) + 'px'
         });
         _.forEach(el.querySelectorAll('.rt-fixed'), function (el) {
-            dom.css(el, {'display': 'none'});
+            dom.css(el, {opacity: '0'});
         });
     }
 
     exports.prepareExit = function (el, sx, sy) {
+        logger.debug('prepareing exit animation with scrollX/scrollY', sx, sy);
         dom.css(el, {
             'position': 'fixed',
             'z-index': '600',
@@ -72,7 +76,7 @@ define(function (require) {
                 '-webkit-transform': translate3d('100%', 0, 0),
                 'transform': translate3d('100%', 0, 0)
             }, config.duration, config.animationEase, 0, function () {
-                dom.css(el, {'display': 'none'});
+                dom.css(el, {display: 'none'});
                 resolve();
             });
         });
@@ -80,12 +84,13 @@ define(function (require) {
 
     exports.exitSilent = function (el) {
         dom.css(el, {
-            'display': 'none'
+            display: 'none'
         });
         return Promise.resolve();
     };
 
     exports.resetStyle = function (viewEl) {
+        logger.debug('resetting styles for', viewEl);
         dom.css(viewEl, {
             'display': '',
             'opacity': '',
@@ -105,7 +110,7 @@ define(function (require) {
             'top': ''
         });
         _.forEach(viewEl.querySelectorAll('.rt-fixed'), function (el) {
-            dom.css(el, {'display': ''});
+            dom.css(el, {opacity: ''});
         });
     };
 

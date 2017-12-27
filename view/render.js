@@ -12,6 +12,11 @@ define(function (require) {
     var rstylesheetType = /stylesheet/i;
     var dom = require('../utils/dom');
 
+    /**
+     * Render utility
+     *
+     * @class
+     */
     function Render() {}
 
     Render.prototype.moveClasses = function (from, to) {
