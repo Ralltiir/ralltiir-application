@@ -1,6 +1,6 @@
 {
   "name": "ralltiir-application",
-  "version": "4.2.4",
+  "version": "4.2.4-fix.1",
   "description": "A common service implement",
   "main": "./service/service.js",
   "scripts": {

@@ -6,7 +6,8 @@ define(function () {
     var ua = navigator.userAgent;
     var isIOS = /(iPad|iPhone|iPod)/.test(ua);
 
-    var awVersion = parseFloat(ua.match(/ applewebkit\/(\d+)/i)[1]);
+    var match = ua.match(/ applewebkit\/(\d+)/i);
+    var awVersion = match && parseFloat(match[1]);
     var isWKWebView = +awVersion > 600;
 
     var isBaidu = /baiduboxapp|baiduhi/.test(ua);
