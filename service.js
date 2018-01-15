@@ -22,13 +22,15 @@ define(function (require) {
         return this.view && this.view.valid;
     };
 
-    Service.prototype.shouldUseCache = function (useAnimation) {
+    Service.prototype.shouldUseCache = function (current, useAnimation) {
         if (config.cacheDisabled) {
             return false;
         }
-        if (this.options.isolateCSS) {
-            return !useAnimation;
+        if (this.options.isolateCSS && useAnimation) {
+            return false;
         }
+        var reason = _.get(current, 'options.src');
+        return reason === 'back' || reason === 'history';
     };
 
     Service.prototype.beforeAttach = function (current) {
@@ -36,7 +38,7 @@ define(function (require) {
         var useAnimation = this.shouldEnterAnimate(current);
         logger.debug('service.beforeAttach', this.beforeAttach);
 
-        if (this.shouldUseCache(useAnimation) && this.hasValidView()) {
+        if (this.shouldUseCache(current, useAnimation) && this.hasValidView()) {
             logger.info('using cached dom for', current.url);
             this.view.reuse();
         }
@@ -115,6 +117,7 @@ define(function (require) {
         if (!options) {
             return {};
         }
+        options = _.cloneDeep(options);
         if (options.view || options.head) {
             // eslint-disable-next-line
             console.warn(

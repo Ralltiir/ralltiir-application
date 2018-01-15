@@ -281,6 +281,7 @@ define(function (require) {
 
     function normalize(options) {
         options = options || {};
+        options = _.cloneDeep(options);
         if (_.get(options, 'back.html') === undefined
             && history.length > 1) {
             _.set(options, 'back.html', '<rt-back>' + View.backHtml + '</rt-back>');
