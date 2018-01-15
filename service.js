@@ -83,6 +83,19 @@ define(function (require) {
         })
         .then(function () {
             view.setAttached();
+        })
+        .catch(function (err) {
+            var status = err.status || 901;
+            var query = location.search + (location.search ? '&' : '?');
+
+            // eslint-disable-next-line
+            console.error(err);
+            if (_.get(current, 'options.src') !== 'sync' && query.indexOf('rt-err=') === -1) {
+                query += 'rt-err=' + status;
+                var url = location.protocol + '//' + location.host
+                    + location.pathname + query + location.hash;
+                location.replace(url);
+            }
         });
     };
 
