@@ -1,8 +1,8 @@
 {
   "name": "ralltiir-application",
-  "version": "4.2.4-fix.2",
+  "version": "4.2.4-fix.3",
   "description": "A common service implement",
-  "main": "./service/service.js",
+  "main": "./service.js",
   "scripts": {
     "postversion": "git push && git push --tags",
     "lint": "fecs check --level 2",
