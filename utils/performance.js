@@ -21,6 +21,7 @@ define(function (require) {
         this.requestStart = null;
         this.domLoading = null;
         this.headInteractive = null;
+        this.domContentLoaded = null;
         this.domInteractive = null;
     };
 

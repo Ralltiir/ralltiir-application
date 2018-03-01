@@ -100,7 +100,6 @@ define(function (require) {
             });
         })
         .then(function () {
-            self.performance.domInteractive = Date.now();
             self.populated = true;
         });
     };
@@ -192,6 +191,7 @@ define(function (require) {
         this.resetStyle();
         this.restoreStates();
         this.attached = true;
+        this.performance.domInteractive = Date.now();
         this.trigger('rt.attached');
     };
 
