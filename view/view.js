@@ -33,15 +33,16 @@ define(function (require) {
     prepareEnvironment();
 
     // eslint-disable-next-line
-    function View(options, viewEl) {
+    function View(scope, viewEl) {
         this.renderer = new Render();
-        this.options = options || {};
+        this.options = scope.options || {};
+        this.performance = scope.performance;
         this.valid = true;
 
         if (viewEl) {
             this.initElement(viewEl);
             this.populated = true;
-            this.options = _.defaultsDeep(optionsFromDOM(viewEl), options);
+            this.options = _.defaultsDeep(optionsFromDOM(viewEl), scope.options);
             this.setData(normalize(this.options));
         }
         else {
@@ -63,6 +64,7 @@ define(function (require) {
         var self = this;
         return this.pendingFetch
         .then(function (xhr) {
+            self.performance.domLoading = Date.now();
             var html = xhr.data || '';
             var docfrag = Render.parse(html);
 
@@ -88,12 +90,17 @@ define(function (require) {
                 });
             })
             .then(function () {
+                self.performance.headInteractive = Date.now();
                 return self.renderer.render(self.bodyEl, docfrag.querySelector('.rt-body'), {
-                    replace: true
+                    replace: true,
+                    onContentLoaded: function normalizeSSR() {
+                        self.performance.domContentLoaded = Date.now();
+                    }
                 });
             });
         })
         .then(function () {
+            self.performance.domInteractive = Date.now();
             self.populated = true;
         });
     };
@@ -260,6 +267,7 @@ define(function (require) {
     View.prototype.fetch = function (url, headers) {
         this.backendUrl = this.getBackendUrl(url);
         this.backendUrl = URL.setQuery(this.backendUrl, 'rt', 'true');
+        this.performance.requestStart = Date.now();
         return http.ajax(this.backendUrl, {
             headers: headers || {},
             xhrFields: {withCredentials: true}

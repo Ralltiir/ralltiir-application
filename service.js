@@ -8,6 +8,7 @@ define(function (require) {
     var rt = require('ralltiir');
     var Promise = rt.promise;
     var View = require('./view/view');
+    var Performance = require('./utils/performance');
     var _ = rt._;
     var logger = rt.logger;
     var config = require('./config');
@@ -15,6 +16,10 @@ define(function (require) {
     // eslint-disable-next-line
     function Service(url, options) {
         this.options = normalize(options);
+        this.scope = {
+            performance: new Performance(),
+            options: options
+        };
         this.name = this.options.name;
     }
 
@@ -34,6 +39,7 @@ define(function (require) {
     };
 
     Service.prototype.beforeAttach = function (current) {
+        this.scope.performance.startNavigation();
         _.assign(this.options, normalize(current.options));
         var useAnimation = this.shouldEnterAnimate(current);
         logger.debug('service.beforeAttach', this.beforeAttach);
@@ -44,10 +50,10 @@ define(function (require) {
         }
         else if (isServerRendered(current)) {
             var rootEl = document.querySelector('#sfr-app .rt-view');
-            this.view = new View(this.options, rootEl);
+            this.view = new View(this.scope, rootEl);
         }
         else {
-            this.view = new View(this.options);
+            this.view = new View(this.scope);
             this.view.fetchUrl(current.url);
         }
 
