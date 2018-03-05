@@ -10,8 +10,8 @@ define(function (require) {
     var Loading = require('./loading');
     var dom = require('../utils/dom');
     var rt = require('ralltiir');
+    var _ = require('@searchfe/underscore');
     var Render = require('./render');
-    var _ = rt._;
     var logger = rt.logger;
     var http = rt.http;
     var action = rt.action;

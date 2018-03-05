@@ -20,5 +20,8 @@
   "homepage": "https://github.com/Ralltiir/ralltiir-application#readme",
   "devDependencies": {
     "fecs": "^1.4.1"
+  },
+  "amdDependencies": {
+    "@searchfe/underscore": "^1.0.1"
   }
 }

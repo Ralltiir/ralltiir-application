@@ -5,7 +5,7 @@
 define(function (require) {
     var UA = require('./ua');
     var rt = require('ralltiir');
-    var _ = rt._;
+    var _ = require('@searchfe/underscore');
     var logger = rt.logger;
     var dom = require('./dom');
     var Spark = require('./spark');

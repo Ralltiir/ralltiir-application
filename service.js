@@ -9,7 +9,7 @@ define(function (require) {
     var Promise = rt.promise;
     var View = require('./view/view');
     var Performance = require('./utils/performance');
-    var _ = rt._;
+    var _ = require('@searchfe/underscore');
     var logger = rt.logger;
     var config = require('./config');
 

@@ -1,0 +1,13 @@
+{
+  "name": "ralltiir-application",
+  "version": "4.3.1",
+  "dependencies": {
+    "@searchfe/assert": {
+      "version": "1.0.0"
+    },
+    "@searchfe/underscore": {
+      "version": "1.0.1",
+      "integrity": "sha512-H4iktWJdRcG0XYOKkHOZoOvZH7Ag/FTwMTFhCH91ojy8dh2opcP36UUs3X8Jz7t6DKcKWLGpQJWmS5GMDymm/g=="
+    }
+  }
+}
