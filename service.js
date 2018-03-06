@@ -18,7 +18,7 @@ define(function (require) {
         this.options = normalize(options);
         this.scope = {
             performance: new Performance(),
-            options: options
+            options: this.options
         };
         this.name = this.options.name;
     }
@@ -40,7 +40,7 @@ define(function (require) {
 
     Service.prototype.beforeAttach = function (current) {
         this.scope.performance.startNavigation();
-        _.assign(this.options, normalize(current.options));
+        _.assign(this.options, current.options);
         var useAnimation = this.shouldEnterAnimate(current);
         logger.debug('service.beforeAttach', this.beforeAttach);
 
@@ -90,16 +90,18 @@ define(function (require) {
             return view.populated ? '' : view.render();
         })
         .then(function () {
-            view.setAttached();
+            return view.setAttached();
         })
         .catch(function (err) {
-            var status = err.status || 901;
+            var code = err.code || 999;
+            var msg = err.message || 'unkown';
             var query = location.search + (location.search ? '&' : '?');
 
             // eslint-disable-next-line
             console.error(err);
             if (_.get(current, 'options.src') !== 'sync' && query.indexOf('rt-err=') === -1) {
-                query += 'rt-err=' + status;
+                query += 'rt-err=' + code;
+                query += '&rt-msg=' + encodeURIComponent(msg);
                 var url = location.protocol + '//' + location.host
                     + location.pathname + query + location.hash;
                 location.replace(url);
@@ -160,6 +162,9 @@ define(function (require) {
                 options.actions[i] = {html: action};
             }
         });
+        if (options.baseUrl === undefined) {
+            options.baseUrl = '';
+        }
         return options;
     }
 

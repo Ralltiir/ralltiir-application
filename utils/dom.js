@@ -9,6 +9,14 @@ define(function (require) {
         node.remove();
     }
 
+    function closest(element, predict) {
+        var parent = element;
+        while (parent !== null && !predict(parent)) {
+            parent = parent.parentNode;
+        }
+        return parent;
+    }
+
     function truthy(val) {
         return !!val;
     }
@@ -94,6 +102,7 @@ define(function (require) {
         trigger: trigger,
         show: show,
         removeNode: removeNode,
+        closest: closest,
         hide: hide
     };
 });

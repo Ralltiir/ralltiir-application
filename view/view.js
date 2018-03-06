@@ -11,11 +11,12 @@ define(function (require) {
     var dom = require('../utils/dom');
     var rt = require('ralltiir');
     var _ = require('@searchfe/underscore');
+    var Promise = require('@searchfe/promise');
+    var assert = require('@searchfe/assert');
     var Render = require('./render');
     var logger = rt.logger;
     var http = rt.http;
     var action = rt.action;
-    var Promise = rt.promise;
     var html = [
         '<div class="rt-view active">',
         '  <div class="rt-head">',
@@ -35,28 +36,34 @@ define(function (require) {
     // eslint-disable-next-line
     function View(scope, viewEl) {
         this.renderer = new Render();
-        this.options = scope.options || {};
+        this.options = normalize(scope.options);
         this.performance = scope.performance;
         this.valid = true;
 
         if (viewEl) {
             this.initElement(viewEl);
             this.populated = true;
-            this.options = _.defaultsDeep(optionsFromDOM(viewEl), scope.options);
-            this.setData(normalize(this.options));
+            this.options = _.defaultsDeep(normalize(optionsFromDOM(viewEl)), this.options);
+            this.setData(this.options);
         }
         else {
             this.initElement(this.createContainer());
-            this.setData(normalize(this.options));
+            this.setData(this.options);
         }
         this.loading = new Loading(this.viewEl);
     }
 
     View.prototype.initElement = function (viewEl) {
+        assert(viewEl, '.rt-view not exist');
         this.viewEl = viewEl;
         this.viewEl.setAttribute('data-base', this.options.baseUrl || '');
+
         this.headEl = this.viewEl.querySelector('.rt-head');
+        assert(this.headEl, '.rt-view>.rt-head not exist');
+
         this.bodyEl = this.viewEl.querySelector('.rt-body');
+        assert(this.bodyEl, '.rt-view>rt-body not exist');
+
         this.viewEl.ralltiir = this;
     };
 
@@ -87,6 +94,10 @@ define(function (require) {
                         var opts = optionsFromDOM(dom.wrapElementFromString(html));
                         self.setData(normalize(opts));
                     }
+                })
+                .catch(function (err) {
+                    err.code = err.code || 910;
+                    throw err;
                 });
             })
             .then(function () {
@@ -96,15 +107,25 @@ define(function (require) {
                     onContentLoaded: function normalizeSSR() {
                         self.performance.domContentLoaded = Date.now();
                     }
+                })
+                .catch(function (err) {
+                    err.code = err.code || 911;
+                    throw err;
                 });
             });
         })
         .then(function () {
             self.populated = true;
+        })
+        .catch(function (err) {
+            err.code = err.code || 919;
+            throw err;
         });
     };
 
     View.prototype.partialUpdate = function (url, options) {
+        url = this.resolveUrl(url);
+
         var renderer = this.renderer;
         var body = this.bodyEl;
         var to = options.to ? body.querySelector(options.to) : body;
@@ -188,11 +209,17 @@ define(function (require) {
     };
 
     View.prototype.setAttached = function () {
-        this.resetStyle();
-        this.restoreStates();
-        this.attached = true;
-        this.performance.domInteractive = Date.now();
-        this.trigger('rt.attached');
+        var self = this;
+        return new Promise(function (resolve) {
+            self.resetStyle();
+            self.restoreStates();
+            self.attached = true;
+            self.performance.domInteractive = Date.now();
+            setTimeout(function () {
+                self.trigger('rt.attached');
+                resolve();
+            });
+        });
     };
 
     View.prototype.setActive = function () {
@@ -271,6 +298,10 @@ define(function (require) {
         return http.ajax(this.backendUrl, {
             headers: headers || {},
             xhrFields: {withCredentials: true}
+        })
+        .catch(function (err) {
+            err.code = err.status || 900;
+            throw err;
         });
     };
 
@@ -324,10 +355,10 @@ define(function (require) {
             ret.subtitle = {html: subtitleEl.innerHTML};
         }
 
-        var actionEls = headEl.querySelector('.rt-actions').children;
-        if (actionEls.length) {
+        var actionEl = headEl.querySelector('.rt-actions');
+        if (actionEl && actionEl.children.length) {
             ret.actions = [];
-            _.forEach(actionEls, function (el) {
+            _.forEach(actionEl.children, function (el) {
                 if (el && el.outerHTML) {
                     ret.actions.push({html: el.outerHTML});
                 }
@@ -368,6 +399,10 @@ define(function (require) {
             el.rtClickHandler = _.get(options, 'onClick');
         }
         return el;
+    };
+
+    View.prototype.resolveUrl = function (url) {
+        return this.options.baseUrl + url;
     };
 
     return View;

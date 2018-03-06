@@ -4,9 +4,9 @@
  * The Template Render, render templates in serial.
  */
 define(function (require) {
-    var superFrame = require('ralltiir');
-    var _ = superFrame._;
-    var Promise = superFrame.promise;
+    var assert = require('@searchfe/assert');
+    var _ = require('@searchfe/underscore');
+    var Promise = require('@searchfe/promise');
     // reference: https://github.com/jquery/jquery/blob/master/src/manipulation/var/rscriptType.js
     var rscriptType = /^$|\/(?:java|ecma)script/i;
     var rstylesheetType = /stylesheet/i;
@@ -27,10 +27,11 @@ define(function (require) {
 
     Render.prototype.render = function (parent, docfrag, options) {
         var renderid = Math.random().toString(36).substr(1);
-        var links = docfrag.querySelectorAll('link');
 
         return Promise.resolve()
             .then(function () {
+                assert(docfrag, 'root element not exist');
+                var links = docfrag.querySelectorAll('link');
                 markRenderID(links, renderid);
                 return enforceCSS(links, parent);
             })
