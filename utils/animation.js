@@ -71,7 +71,6 @@ define(function (require) {
     exports.exit = function (el, sx, sy) {
         return new Promise(function (resolve) {
             Spark.css3(el, {
-                'opacity': 0,
                 'left': '100%',
                 '-webkit-transform': translate3d(0, 0, 0),
                 'transform': translate3d(0, 0, 0)
