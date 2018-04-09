@@ -42,6 +42,7 @@
     text-align: center;
 }
 .rt-view .rt-head .rt-center {
+    font-size: 0;
     position: absolute;
     left: 90px;
     right: 90px;
@@ -100,7 +101,7 @@
     vertical-align: middle;
 }
 .rt-view .rt-loading .rt-loading-logo {
-    background: url(//m.baidu.com/se/static/img/iphone/tab_loading__bg_logo.png) no-repeat;
+    background: url(//m.baidu.com/se/static/img/iphone/tab_loading__bg_logo_small.png) no-repeat;
     background-size: 147px 48px;
     height: 48px;
     width: 147px;
