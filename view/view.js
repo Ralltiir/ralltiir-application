@@ -1,6 +1,19 @@
 /**
  * @file    view 一个 Ralltiir 页面的视图对象，可被缓存
- * @author  harttle<harttle@harttle.com>
+ * @author  harttle<yangjvn@126.com>
+ * @description 动画调度逻辑较为复杂，分4个生命周期完成。
+ *
+ * 入场动画过程：
+ *   1. beforeDetach: fix 当前页面，并恢复当前页的滚动
+ *   2. beforeAttach: 如果有缓存，加载目标页面并恢复其滚动；如果无缓存，直接加载空页面
+ *   3. detach:
+ *   4. attach：目标页面左滑入场
+ *
+ * 退场动画过程：
+ *   1. beforeDetach: fix 当前页面，并恢复当前页的滚动
+ *   2. beforeAttach: 加载目标页面（缓存的）并恢复其滚动
+ *   3. detach: 当前页右滑动画
+ *   4. attach：激活目标页面
  */
 
 define(function (require) {
