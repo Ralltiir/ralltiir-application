@@ -62,7 +62,7 @@ define(function (require) {
         docfrag.innerHTML = html;
 
         _.forEach(docfrag.querySelectorAll('[data-rt-omit]'), function (el) {
-            el.remove();
+            dom.removeNode(el);
         });
         return docfrag;
     };
@@ -206,7 +206,7 @@ define(function (require) {
         }
 
         function done() {
-            el.remove();
+            dom.removeNode(el);
             cb();
         }
     }

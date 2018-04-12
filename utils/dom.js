@@ -6,7 +6,9 @@ define(function (require) {
     var _ = require('ralltiir')._;
 
     function removeNode(node) {
-        node.remove();
+        if (node.parentNode) {
+            node.parentNode.removeChild(node);
+        }
     }
 
     function closest(element, predict) {
@@ -15,10 +17,6 @@ define(function (require) {
             parent = parent.parentNode;
         }
         return parent;
-    }
-
-    function truthy(val) {
-        return !!val;
     }
 
     function addClass(el, name) {
@@ -46,9 +44,7 @@ define(function (require) {
     function elementFromString(html) {
         return wrapElementFromString(html).childNodes[0];
     }
-    function createElement(name) {
-        return document.createElement(name);
-    }
+
     function wrapElementFromString(html) {
         var div = document.createElement('div');
         div.innerHTML = html || '';

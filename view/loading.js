@@ -13,6 +13,12 @@ define(function (require) {
         '</div>'
     ].join('\n');
 
+    /**
+     * Loading animation
+     *
+     * @class
+     * @param {HTMLElement} parent the element to attach loading dom to
+     */
     function Loading(parent) {
         this.container = parent;
         this.element = dom.elementFromString(html);
@@ -25,7 +31,7 @@ define(function (require) {
 
     Loading.prototype.hide = function () {
         dom.css(this.container, {'background-color': ''});
-        this.element.remove();
+        dom.removeNode(this.element);
     };
 
     return Loading;

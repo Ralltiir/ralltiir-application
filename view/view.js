@@ -246,7 +246,7 @@ define(function (require) {
 
     View.prototype.setDetached = function () {
         this.attached = false;
-        this.viewEl.remove();
+        dom.removeNode(this.viewEl);
         this.trigger('rt.detached');
     };
 
@@ -286,7 +286,7 @@ define(function (require) {
 
     View.prototype.destroy = function () {
         this.trigger('rt.destroyed');
-        this.viewEl.remove();
+        dom.removeNode(this.viewEl);
         delete this.viewEl;
         delete this.headEl;
         delete this.bodyEl;
