@@ -44,8 +44,6 @@ define(function (require) {
         '</div>'
     ].join('');
 
-    prepareEnvironment();
-
     // eslint-disable-next-line
     function View(scope, viewEl) {
         this.renderer = new Render();
@@ -339,14 +337,6 @@ define(function (require) {
             _.set(options, 'back.html', '<rt-back>' + View.backHtml + '</rt-back>');
         }
         return options;
-    }
-
-    function prepareEnvironment() {
-        // ios 设为 manual 时回退时页面不响应 1s
-        if (('scrollRestoration' in history) && !ua.isIOS) {
-            // Back off, browser, I got this...
-            history.scrollRestoration = 'manual';
-        }
     }
 
     function optionsFromDOM(el) {
