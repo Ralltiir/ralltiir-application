@@ -51,8 +51,9 @@ define(function (require) {
         return div;
     }
     function trigger(el, type, options) {
+        options = options || {};
         var event = new Event(type, {
-            bubbles: true
+            bubbles: !!options.bubbles
         });
         _.assign(event, options);
         el.dispatchEvent(event);

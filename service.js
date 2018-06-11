@@ -17,6 +17,7 @@ define(function (require) {
     function Service(url, options) {
         this.options = normalize(options);
         this.scope = {
+            name: this.options.name,
             performance: new Performance(),
             options: this.options
         };
@@ -126,6 +127,10 @@ define(function (require) {
         return this.view.destroy();
     };
 
+    Service.prototype.onMessage = function (msg) {
+        this.view.trigger('rt.message', {data: msg});
+    };
+
     Service.setBackHtml = function (html) {
         View.backHtml = html;
     };
@@ -136,7 +141,7 @@ define(function (require) {
 
     function normalize(options) {
         if (!options) {
-            return {};
+            return {baseUrl: ''};
         }
         options = _.cloneDeep(options);
         if (options.view || options.head) {

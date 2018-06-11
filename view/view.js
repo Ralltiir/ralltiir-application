@@ -18,7 +18,6 @@
 
 define(function (require) {
     var animation = require('../utils/animation');
-    var ua = require('../utils/ua');
     var URL = require('../utils/url');
     var Loading = require('./loading');
     var dom = require('../utils/dom');
@@ -47,6 +46,7 @@ define(function (require) {
     // eslint-disable-next-line
     function View(scope, viewEl) {
         this.renderer = new Render();
+        this.name = scope.name;
         this.options = normalize(scope.options);
         this.performance = scope.performance;
         this.valid = true;
@@ -134,13 +134,27 @@ define(function (require) {
         });
     };
 
+    /**
+     * 给其他页面实例发送消息
+     *
+     * @param {any} msg 消息体
+     * @param {string} [target] 目标 Service 名称，如果为空则发送当前同名的 Service。
+     */
+    View.prototype.postMessage = function (msg, target) {
+        if (arguments.length < 2) {
+            target = this.name;
+            assert(target, 'service name not set, cannot postMessage to itself');
+        }
+        rt.services.postMessage(msg, target);
+    };
+
     View.prototype.partialUpdate = function (url, options) {
         url = this.resolveUrl(url);
 
         var renderer = this.renderer;
         var body = this.bodyEl;
         var to = options.to ? body.querySelector(options.to) : body;
-        var data = {url: url, options: options};
+        var data = {url: url, options: options, bubbles: true};
         var loading = new Loading(to);
 
         if (url !== location.pathname + location.search) {
@@ -248,8 +262,8 @@ define(function (require) {
         this.trigger('rt.detached');
     };
 
-    View.prototype.trigger = function (event) {
-        return dom.trigger(this.viewEl, event);
+    View.prototype.trigger = function (event, options) {
+        return dom.trigger(this.viewEl, event, options);
     };
 
     View.prototype.enter = function (useEnterAnimation) {
