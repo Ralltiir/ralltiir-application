@@ -109,8 +109,12 @@ define(function (require) {
         });
     };
 
+    // 这是同步生命周期，即使返回 Promise 后续声明周期也不会等待。
     Service.prototype.beforeDetach = function (current, prev) {
-        return this.view.prepareExit(this.shouldExitAnimate(current, prev));
+        this.view.prepareExit(
+            this.shouldExitAnimate(current, prev),
+            this.shouldEnterAnimate(current)
+        );
     };
 
     Service.prototype.detach = function (current, prev, extra) {
@@ -136,7 +140,9 @@ define(function (require) {
 
     function normalize(options) {
         if (!options) {
-            return {};
+            return {
+                baseUrl: ''
+            };
         }
         options = _.cloneDeep(options);
         if (options.view || options.head) {

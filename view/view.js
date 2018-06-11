@@ -3,14 +3,20 @@
  * @author  harttle<yangjvn@126.com>
  * @description 动画调度逻辑较为复杂，分4个生命周期完成。
  *
- * 入场动画过程：
- *   1. beforeDetach: fix 当前页面，并恢复当前页的滚动
+ * 打开过程（有动画）：
+ *   1. beforeDetach: fix 当前页面，并记录当前页的滚动
  *   2. beforeAttach: 如果有缓存，加载目标页面并恢复其滚动；如果无缓存，直接加载空页面
  *   3. detach:
  *   4. attach：目标页面左滑入场
  *
- * 退场动画过程：
- *   1. beforeDetach: fix 当前页面，并恢复当前页的滚动
+ * 打开过程（无动画）：
+ *   1. beforeDetach: 移除当前页面并在当前 Tick 执行下一个生命周期（return false）
+ *   2. beforeAttach: 如果有缓存，加载目标页面并恢复其滚动；如果无缓存，直接加载空页面
+ *   3. detach:
+ *   4. attach:
+ *
+ * 返回过程（有动画）：
+ *   1. beforeDetach: fix 当前页面，并记录当前页的滚动
  *   2. beforeAttach: 加载目标页面（缓存的）并恢复其滚动
  *   3. detach: 当前页右滑动画
  *   4. attach：激活目标页面
@@ -18,7 +24,6 @@
 
 define(function (require) {
     var animation = require('../utils/animation');
-    var ua = require('../utils/ua');
     var URL = require('../utils/url');
     var Loading = require('./loading');
     var dom = require('../utils/dom');
@@ -266,14 +271,18 @@ define(function (require) {
         return animation.enter(el, this.scrollX, this.scrollY);
     };
 
-    View.prototype.prepareExit = function (useAnimation) {
+    View.prototype.prepareExit = function (useExitAnimation, useEnterAnimation) {
         this.trigger('rt.willDetach');
         this.scrollX = window.scrollX;
         this.scrollY = window.scrollY;
         logger.debug('[view.prepareExit] saving scrollX/scrollY', this.scrollX, this.scrollY);
         dom.removeClass(this.viewEl, 'active');
-        // need prepare regardless useAnimation, scrollTop will be effected otherwise
-        return animation.prepareExit(this.viewEl, this.scrollX, this.scrollY);
+        if (useExitAnimation || useEnterAnimation) {
+            animation.prepareExit(this.viewEl, this.scrollX, this.scrollY);
+        }
+        else {
+            this.exit(false);
+        }
     };
 
     View.prototype.exit = function (useAnimation) {
