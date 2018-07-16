@@ -11,6 +11,23 @@
     text-align: left;
     padding-top: 44px;
 }
+.rt-view-fade .rt-body {
+    position: relative;
+    z-index: 1;
+    -webkit-transition: opacity;
+            transition: opacity;
+    -webkit-transition-duration:0.25s;
+            transition-duration:0.25s;
+    opacity: 0;
+}
+.rt-view-fadein .rt-body {
+    opacity: 1;
+}
+.rt-view-fadein .rt-loading {
+    opacity: 0;
+    -webkit-transition-delay: 0.5s;
+            transition-delay: 0.5s;
+}
 .rt-view .rt-head {
     position: fixed;
     top: 0;

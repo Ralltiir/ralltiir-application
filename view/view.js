@@ -68,12 +68,18 @@ define(function (require) {
         assert(viewEl, '.rt-view not exist');
         this.viewEl = viewEl;
         this.viewEl.setAttribute('data-base', this.options.baseUrl || '');
-
+        if (this.options.background) {
+            this.viewEl.style.background = this.options.background;
+        }
+        
         this.headEl = this.viewEl.querySelector('.rt-head');
         assert(this.headEl, '.rt-view>.rt-head not exist');
 
         this.bodyEl = this.viewEl.querySelector('.rt-body');
         assert(this.bodyEl, '.rt-view>rt-body not exist');
+        if (this.options.fadeIn) {
+            dom.addClass(this.viewEl, 'rt-view-fade');
+        }
 
         this.viewEl.ralltiir = this;
     };
@@ -85,9 +91,9 @@ define(function (require) {
             self.performance.domLoading = Date.now();
             var html = xhr.data || '';
             var docfrag = Render.parse(html);
-
-            self.loading.hide();
-
+            if (!self.options.fadeIn) {
+                self.loading.hide();
+            }
             var view = docfrag.querySelector('.rt-view');
             if (!view) {
                 var message = '".rt-view" not found in retrieved HTML'
@@ -116,6 +122,9 @@ define(function (require) {
                 return self.renderer.render(self.bodyEl, docfrag.querySelector('.rt-body'), {
                     replace: true,
                     onContentLoaded: function normalizeSSR() {
+                        if (self.options.fadeIn) {
+                            dom.addClass(self.viewEl, 'rt-view-fadein');
+                        }
                         self.performance.domContentLoaded = Date.now();
                     }
                 })
