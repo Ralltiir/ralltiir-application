@@ -68,7 +68,7 @@ define(function (require) {
         assert(viewEl, '.rt-view not exist');
         this.viewEl = viewEl;
         this.viewEl.setAttribute('data-base', this.options.baseUrl || '');
-        if (this.options.background) {
+        if (this.options.background !== undefined) {
             this.viewEl.style.background = this.options.background;
         }
         
