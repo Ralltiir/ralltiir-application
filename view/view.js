@@ -348,7 +348,7 @@ define(function (require) {
         options = _.cloneDeep(options);
         if (_.get(options, 'back.html') === undefined
             && history.length > 1) {
-            _.set(options, 'back.html', '<rt-back>' + View.backHtml + '</rt-back>');
+            _.set(options, 'back.html', '<rt-empty>' + View.backHtml + '</rt-empty>');
         }
         return options;
     }
