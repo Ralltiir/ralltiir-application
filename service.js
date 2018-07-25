@@ -62,6 +62,11 @@ define(function (require) {
     };
 
     Service.prototype.shouldEnterAnimate = function (state) {
+        var useAnimate = _.get(state, 'options.view.useAnimate');
+        if (useAnimate === false) {
+            return false;
+        }
+
         if (isServerRendered(state)) {
             return false;
         }
