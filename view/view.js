@@ -269,6 +269,10 @@ define(function (require) {
         this.attached = false;
         dom.removeNode(this.viewEl);
         this.trigger('rt.detached');
+        // 兼容网盟广告rerfer方案，7.26沟通，临时方案复用SF 2.x参数，2月内下线
+        window._SF_ = window._SF_ || {};
+        window._SF_._global_ = window._SF_._global_ || {};
+        window._SF_._global_._ssp = null;
     };
 
     View.prototype.trigger = function (event, options) {
@@ -329,6 +333,10 @@ define(function (require) {
         this.backendUrl = this.getBackendUrl(url);
         this.backendUrl = URL.setQuery(this.backendUrl, 'rt', 'true');
         this.performance.requestStart = Date.now();
+        // 兼容网盟广告rerfer方案，7.26沟通，临时方案复用SF 2.x参数，2月内下线
+        window._SF_ = window._SF_ || {};
+        window._SF_._global_ = window._SF_._global_ || {};
+        window._SF_._global_._ssp = this.backendUrl;
         return http.ajax(this.backendUrl, {
             headers: headers || {},
             xhrFields: {withCredentials: true}
