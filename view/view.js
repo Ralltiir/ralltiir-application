@@ -270,10 +270,16 @@ define(function (require) {
         dom.removeNode(this.viewEl);
         this.trigger('rt.detached');
         // 兼容网盟广告rerfer方案，7.26沟通，临时方案复用SF 2.x参数，2月内下线
+        this.setSspHerf(null);
+    };
+
+    View.prototype.setSspHerf = function (href) {
         window._SF_ = window._SF_ || {};
         window._SF_._global_ = window._SF_._global_ || {};
-        window._SF_._global_._ssp = null;
-    };
+        window._SF_._global_._ssp = window._SF_._global_._ssp || {};
+        window._SF_._global_._ssp.location = window._SF_._global_._ssp.location || {};
+        window._SF_._global_._ssp.location.href = href || null;
+    }
 
     View.prototype.trigger = function (event, options) {
         return dom.trigger(this.viewEl, event, options);
@@ -334,9 +340,7 @@ define(function (require) {
         this.backendUrl = URL.setQuery(this.backendUrl, 'rt', 'true');
         this.performance.requestStart = Date.now();
         // 兼容网盟广告rerfer方案，7.26沟通，临时方案复用SF 2.x参数，2月内下线
-        window._SF_ = window._SF_ || {};
-        window._SF_._global_ = window._SF_._global_ || {};
-        window._SF_._global_._ssp = this.backendUrl;
+        this.setSspHerf(this.backendUrl);
         return http.ajax(this.backendUrl, {
             headers: headers || {},
             xhrFields: {withCredentials: true}
