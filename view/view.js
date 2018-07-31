@@ -47,11 +47,13 @@ define(function (require) {
     function View(scope, viewEl) {
         this.renderer = new Render();
         this.name = scope.name;
-        this.options = normalize(scope.options);
+        this.options = normalize(scope.options) || {};
         this.performance = scope.performance;
         this.valid = true;
 
         if (viewEl) {
+            // Do not fade in when view exits!
+            this.options.fadeIn = false;
             this.initElement(viewEl);
             this.populated = true;
             this.options = _.defaultsDeep(normalize(optionsFromDOM(viewEl)), this.options);
