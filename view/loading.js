@@ -24,13 +24,20 @@ define(function (require) {
         this.element = dom.elementFromString(html);
     }
 
-    Loading.prototype.show = function () {
-        dom.css(this.container, {'background-color': '#fff'});
+    Loading.prototype.show = function (options) {
+        options = options || {};
+        if (!options.disableBackground) {
+            this.backgroundSetted = true;
+            dom.css(this.container, {'background-color': '#fff'});
+        }
+        dom.addClass(this.element, options.loadingClass);
         this.container.appendChild(this.element);
     };
 
     Loading.prototype.hide = function () {
-        dom.css(this.container, {'background-color': ''});
+        if (this.backgroundSetted == true) {
+            dom.css(this.container, {'background-color': ''});
+        }
         dom.removeNode(this.element);
     };
 

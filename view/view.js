@@ -82,7 +82,9 @@ define(function (require) {
         if (this.options.fadeIn) {
             dom.addClass(this.viewEl, 'rt-view-fade');
         }
-
+        if (this.options.headClass) {
+            dom.addClass(this.headEl, this.options.headClass);
+        }
         this.viewEl.ralltiir = this;
     };
 
@@ -333,7 +335,10 @@ define(function (require) {
     };
 
     View.prototype.fetchUrl = function (url) {
-        this.loading.show();
+        this.loading.show({
+            loadingClass: this.options.loadingClass || '',
+            disableBackground: !!this.options.background
+        });
         this.pendingFetch = this.fetch(url);
     };
 
