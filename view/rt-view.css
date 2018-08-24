@@ -152,3 +152,16 @@
         left: 150px;
     }
 }
+
+.rt-view .rt-loading-no-highlight .rt-loading-bar{
+    display:none;
+}
+.rt-view .rt-loading-black .rt-loading-logo{
+    background: url(//m.baidu.com/static/index/plus/white_logo_shadow.png) no-repeat;
+    background-size: cover;
+    opacity: 0.15;
+}
+
+.rt-view .rt-head-transparent {
+    background-color: transparent;
+}
