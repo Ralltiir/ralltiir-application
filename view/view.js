@@ -329,6 +329,8 @@ define(function (require) {
         logger.debug('restoring states to', this.scrollX, this.scrollY);
         if (this.hasOwnProperty('scrollX')) {
             scrollTo(this.scrollX, this.scrollY);
+        } else {
+            scrollTo(0, 0);
         }
     };
 
