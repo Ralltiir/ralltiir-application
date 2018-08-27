@@ -162,6 +162,14 @@ define(function (require) {
         }
         var key = location.hash.replace('#', '');
         var anchor = this.viewEl.querySelector('[name="'+ key +'"]');
+        if (!anchor) {
+            // 可能hash utf8编码了 需要处理
+            try {
+                anchor = this.viewEl.querySelector('[name="' + decodeURIComponent(key) + '"]' );
+            }
+            catch (e) {
+            }
+        }
         if (anchor && anchor.getBoundingClientRect) {
             scrollTo(0, anchor.getBoundingClientRect().top - this.headEl.offsetHeight);
         }
