@@ -163,7 +163,7 @@ define(function (require) {
         var key = location.hash.replace('#', '');
         var anchor = this.viewEl.querySelector('[name="'+ key +'"]');
         if (anchor && anchor.getBoundingClientRect) {
-            scrollTo(0, anchor.getBoundingClientRect().top);
+            scrollTo(0, anchor.getBoundingClientRect().top - this.headEl.offsetHeight);
         }
     };
 
