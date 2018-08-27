@@ -141,10 +141,30 @@ define(function (require) {
         .then(function () {
             self.populated = true;
         })
+        .then(function () {
+            setTimeout(function() {
+                self.anchorScroll();
+            }, 0);
+        })
         .catch(function (err) {
             err.code = err.code || 919;
             throw err;
         });
+    };
+
+    /**
+     * 存在hash时定位到目标元素
+     *
+     */
+    View.prototype.anchorScroll = function () {
+        if (!location.hash) {
+            return;
+        }
+        var key = location.hash.replace('#', '');
+        var anchor = this.viewEl.querySelector('[name="'+ key +'"]');
+        if (anchor && anchor.getBoundingClientRect) {
+            scrollTo(0, anchor.getBoundingClientRect().top);
+        }
     };
 
     /**
