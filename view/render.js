@@ -45,6 +45,9 @@ define(function (require) {
                 options.onContentLoaded && options.onContentLoaded();
             })
             .then(function () {
+                options.onFixStyle && options.onFixStyle();
+            })
+            .then(function () {
                 return this.enforceJS(parent, options.boforeEvalScript);
             }.bind(this));
     };
