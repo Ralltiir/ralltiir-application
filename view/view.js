@@ -125,6 +125,9 @@ define(function (require) {
                 self.performance.headInteractive = Date.now();
                 return self.renderer.render(self.bodyEl, docfrag.querySelector('.rt-body'), {
                     replace: true,
+                    onFixStyle: function () {
+                        self.resetStyle();  // 执行时机提前
+                    },
                     onContentLoaded: function normalizeSSR() {
                         if (self.options.fadeIn) {
                             dom.addClass(self.viewEl, 'rt-view-fadein');
@@ -277,7 +280,7 @@ define(function (require) {
     View.prototype.setAttached = function () {
         var self = this;
         return new Promise(function (resolve) {
-            self.resetStyle();
+            // self.resetStyle();
             self.restoreStates();
             self.attached = true;
             self.performance.domInteractive = Date.now();
