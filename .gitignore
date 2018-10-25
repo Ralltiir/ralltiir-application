@@ -7,5 +7,4 @@ amd_modules/
 
 # gitbook生成文件
 docs/_book/
-docs/api/
-docs/node_modules
+docs/node_modules/
