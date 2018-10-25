@@ -73,7 +73,7 @@ define(function (require) {
         if (this.options.background !== undefined) {
             this.viewEl.style.background = this.options.background;
         }
-        
+
         this.headEl = this.viewEl.querySelector('.rt-head');
         assert(this.headEl, '.rt-view>.rt-head not exist');
 
@@ -122,6 +122,8 @@ define(function (require) {
                 });
             })
             .then(function () {
+                docfrag.querySelector('.rt-body').appendChild(dom.elementFromString('<rendermark></rendermark>'));
+
                 self.performance.headInteractive = Date.now();
                 return self.renderer.render(self.bodyEl, docfrag.querySelector('.rt-body'), {
                     replace: true,
