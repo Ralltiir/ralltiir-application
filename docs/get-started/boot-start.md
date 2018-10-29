@@ -1,4 +1,4 @@
-# 启动 Ralltiir 
+# 引导启动
 
 本文介绍如何使用 Ralltiir Application，启动一个简单的 Ralltiir 应用。
 在此之前你需要让你的 HTML 符合 [Ralltiir 页面结构][html]。

@@ -1,4 +1,4 @@
-# Ralltiir 链接
+# 跳转链接
 
 Ralltiir 可以劫持超链接的点击并进行异步跳转。
 为了不干扰正常的超链接，Ralltiir 跳转的超链接需要添加额外的属性 `data-sf-href`，
