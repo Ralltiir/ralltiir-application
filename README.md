@@ -2,19 +2,18 @@
 
 Ralltiir Application 是以 Ralltiir 为框架核心的的应用程序，是一种适合构建前端单页异步场景产品的一系列技术解决方案。通过 Ralltiir 引擎的能力，可以提高页面渲染速度，控制页面的入场、渲染和退场行为，并且拥有低成本的传统 Web 页面接入方式。
 
-使用方式请参考：[Ralltiir Application Wiki][rt-app-wiki]。
+Documentation：[Ralltiir Application Doc][rt-app-doc]。
 
-在线示例请参考 Live Demo: <https://ralltiir.github.io/ralltiir-application-demo/home>
+Live Demo: <https://ralltiir.github.io/ralltiir-application-demo/home>
 
 ## 安装
 
-推荐通过 apm 进行安装和使用。
+推荐通过 npm 进行安装和使用。
 ```bash
-npm install -g apmjs
-apmjs install --save ralltiir-application --registry=http://registry.npm.baidu-int.com
+npm install --save ralltiir-application
 ```
 
-## 最佳实践
+## 快速开始
 
 Ralltiir Application 可以将传统的 Web 页面稍加修改，再配合适当的服务器配置，就构建成为能够实现跨域的单页异步应用程序。
 
@@ -67,7 +66,7 @@ rt.action.start();
 
 点击该链接即可从 `/home` 页异步打开 `/profile` 页面。
 
-## 开发指南
+## 版本发布
 
 首先执行安装所有依赖：
 
@@ -111,14 +110,5 @@ API 使用方法请参考：[Ralltiir API][rt-api-wiki]。
 
 The Ralltiir Team
 
-## Roadmap
-
-- [x] 去 Zepto
-- [x] 去 Naboo
-- [x] 文档
-- [x] Plain Demo
-- [ ] 单元测试
-- [ ] 持续集成
-
-[rt-app-wiki]: https://ralltiir.github.io/ralltiir/get-started/html-structure.html
+[rt-app-doc]: https://ralltiir.github.io/ralltiir/get-started/html-structure.html
 [rt-api-wiki]: https://ralltiir.github.io/ralltiir/api/action.html
