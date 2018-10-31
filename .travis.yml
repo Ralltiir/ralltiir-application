@@ -6,8 +6,6 @@ branches:
   only:
   - master
 install:
-  - npm install
-  - apmjs install
   - travis_retry npm install
 script:
   - npm run lint
