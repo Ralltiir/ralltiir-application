@@ -1,6 +1,6 @@
 {
   "name": "ralltiir-application",
-  "version": "4.5.11",
+  "version": "4.5.12",
   "dependencies": {
     "@searchfe/assert": {
       "version": "1.0.0",
