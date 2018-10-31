@@ -8,4 +8,4 @@ branches:
 install:
   - travis_retry npm install
 script:
-  - npm run test
+  - npm run test:ci
