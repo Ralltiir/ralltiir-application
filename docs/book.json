@@ -1,0 +1,21 @@
+{
+  "title": "Ralltiir Application 项目文档",
+  "description": "Ralltiir Application 相关教程、设计和 API",
+  "author": "The Ralltiir Team",
+  "language": "zh-hans",
+  "plugins": [
+    "expandable-chapters",
+    "anchor-navigation-ex",
+    "splitter",
+    "atoc",
+    "editlink",
+    "-sharing"
+  ],
+  "pluginsConfig": {
+    "editlink": {
+      "base": "https://github.com/Ralltiir/ralltiir-application/edit/master/docs/",
+      "label": "编辑此页",
+      "multilingual": false
+    }
+  }
+}

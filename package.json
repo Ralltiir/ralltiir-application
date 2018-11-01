@@ -6,7 +6,10 @@
   "scripts": {
     "postversion": "git push --tags",
     "lint": "fecs check --level 2",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "doc:install": "gitbook install ./docs",
+    "doc:preview": "gitbook serve --port 8882 docs",
+    "doc:deploy": "cd docs && gitbook install && gitbook build && cd .. && cd docs/_book && git init && git add * && git commit -m 'doc publish' && git push -u git@github.com:Ralltiir/ralltiir-application.git master:gh-pages --force"
   },
   "repository": {
     "type": "git",
@@ -19,7 +22,8 @@
   },
   "homepage": "https://github.com/Ralltiir/ralltiir-application#readme",
   "devDependencies": {
-    "fecs": "^1.4.1"
+    "fecs": "^1.4.1",
+    "gitbook-cli": "^2.3.2"
   },
   "amdDependencies": {
     "@searchfe/underscore": "^1.0.1"
