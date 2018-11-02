@@ -4,7 +4,7 @@ node_js:
   - stable
 branches:
   only:
-  - master
+  - travis-ci
 install:
   - travis_retry npm install
 script:
