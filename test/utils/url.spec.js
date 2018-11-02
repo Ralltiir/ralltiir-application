@@ -4,20 +4,47 @@
  */
 
 var requirejs = require('requirejs');
-requirejs.config({nodeRequire: require});
+global.window = {
+    navigator: {
+        userAgent: 'fdasf'
+    },
+    location: {
+        href: 'fdas',
+        search: 'fd'
+    },
+    document: {
+        querySelector: function(){ return {} }
+    }
+};
+global.location = global.window.location;
 
-requirejs(['../../utils/url', 'chai'], function(URL, chai) {
-    describe('utils/url', function() {
-        describe('#setQuery()', function () {
-            it('key should be equal to object', function () {
-                chai.expect(URL.setQuery('https://m.baidu.com/', {
-                    'rt-partial': 'true',
-                    'rt-selector': 'false'
-                })).to.be.equal('https://m.baidu.com/?rt-partial=true&rt-selector=false');
-            });
-            it('key should not be equal to object', function () {
-                chai.expect(URL.setQuery('https://m.baidu.com/', 'rt', 'true')).to.be.equal('https://m.baidu.com/?rt=true');
-            });
-        });
+requirejs.config({
+    baseUrl: '',
+    paths: {
+        'ralltiir': 'amd_modules/ralltiir',
+        '@searchfe/underscore': 'amd_modules/@searchfe/underscore',
+        '@searchfe/assert': 'amd_modules/@searchfe/assert',
+        '@searchfe/promise': 'amd_modules/@searchfe/promise'
+    }
+});
+
+describe('utils/url', function() {
+    it("xx", () => {
+       return new Promise((resolve, reject) => {
+           requirejs(['utils/url', 'chai'], function(URL, chai) {
+               describe('#setQuery()', function () {
+                   it('key should be equal to object', function () {
+                       chai.expect(URL.setQuery('https://m.baidu.com/', {
+                           'rt-partial': 'true',
+                           'rt-selector': 'false'
+                       })).to.be.equal('https://m.baidu.com/?rt-partial=true&rt-selector=false');
+                   });
+                   it('key should not be equal to object', function () {
+                       chai.expect(URL.setQuery('https://m.baidu.com/', 'rt', 'true')).to.be.equal('https://m.baidu.com/?rt=true');
+                   });
+                   resolve();
+               });
+           });
+       });
     });
 });

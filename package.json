@@ -37,6 +37,7 @@
   },
   "amdDependencies": {
     "@searchfe/assert": "^1.0.0",
-    "@searchfe/underscore": "^1.0.1"
+    "@searchfe/underscore": "^1.0.1",
+    "ralltiir": "^2.13.3"
   }
 }
