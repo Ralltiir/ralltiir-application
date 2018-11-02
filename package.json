@@ -7,6 +7,7 @@
     "postversion": "git push --tags",
     "lint": "fecs check --level 2",
     "test": "mocha test/utils/url.spec.js",
+    "cover": "istanbul cover --report lcov node_modules/mocha/bin/_mocha -- -R spec test/utils/url.spec.js",
     "doc:install": "gitbook install ./docs",
     "doc:preview": "gitbook serve --port 8882 docs",
     "doc:deploy": "cd docs && gitbook install && gitbook build && cd .. && cd docs/_book && git init && git add * && git commit -m 'doc publish' && git push -u git@github.com:Ralltiir/ralltiir-application.git master:gh-pages --force"
@@ -25,8 +26,10 @@
     "amd-loader": "0.0.8",
     "apmjs": "^3.2.4",
     "chai": "^4.2.0",
+    "coveralls": "^3.0.2",
     "fecs": "^1.4.1",
     "gitbook-cli": "^2.3.2",
+    "istanbul": "^0.4.5",
     "mocha": "^5.2.0",
     "path": "^0.12.7",
     "ralltiir": "^2.13.3",

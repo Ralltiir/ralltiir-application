@@ -3,9 +3,12 @@ node_modules/
 amd_modules/
 package-lock.json
 
-# IDEA配置文件
+# IDEA 配置文件
 .idea/
 
-# gitbook生成文件
+# gitbook 生成文件
 docs/_book/
 docs/node_modules/
+
+# coveralls 生成文件
+coverage/
