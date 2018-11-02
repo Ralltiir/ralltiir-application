@@ -144,6 +144,7 @@ define(function (require) {
             });
         })
         .then(function () {
+            rt.action.emit('service-rendered', self.performance.navigationStart);
             self.populated = true;
         })
         .then(function () {
