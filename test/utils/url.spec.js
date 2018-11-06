@@ -3,6 +3,7 @@
  * @author duxiaonan(duxiaonan@baidu.com)
  */
 
+// 模拟浏览器环境
 var requirejs = require('requirejs');
 global.window = {
     navigator: {
@@ -29,22 +30,21 @@ requirejs.config({
 });
 
 describe('utils/url', function() {
-    it("xx", () => {
-       return new Promise((resolve, reject) => {
-           requirejs(['utils/url', 'chai'], function(URL, chai) {
-               describe('#setQuery()', function () {
-                   it('key should be equal to object', function () {
-                       chai.expect(URL.setQuery('https://m.baidu.com/', {
-                           'rt-partial': 'true',
-                           'rt-selector': 'false'
-                       })).to.be.equal('https://m.baidu.com/?rt-partial=true&rt-selector=false');
-                   });
-                   it('key should not be equal to object', function () {
-                       chai.expect(URL.setQuery('https://m.baidu.com/', 'rt', 'true')).to.be.equal('https://m.baidu.com/?rt=true');
-                   });
-                   resolve();
-               });
-           });
-       });
+    it('async load modules', function (done) {
+        requirejs(['utils/url', 'chai'], function(URL, chai) {
+            describe('#setQuery()', function () {
+                it('key should be equal to object', function () {
+                    chai.expect(URL.setQuery('https://m.baidu.com/', {
+                        'rt-partial': 'true',
+                        'rt-selector': 'false'
+                    })).to.be.equal('https://m.baidu.com/?rt-partial=true&rt-selector=false');
+                });
+                it('key should not be equal to object', function () {
+                    chai.expect(URL.setQuery('https://m.baidu.com/', 'rt', 'true')).to.be.equal('https://m.baidu.com/?rt=true');
+                });
+                done();
+            });
+        });
     });
 });
+
