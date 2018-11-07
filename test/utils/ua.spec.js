@@ -5,6 +5,7 @@
 
 // 模拟浏览器环境
 var requirejs = require('requirejs');
+requirejs.config({nodeRequire: require});
 // global.window = {
 //     navigator: {
 //         userAgent: 'fdasf'
@@ -18,7 +19,7 @@ var requirejs = require('requirejs');
 
 describe('utils/ua', function () {
     it('async load modules', function () {
-        requirejs(['utils/ua', 'chai'], function (UA, chai) {
+        requirejs(['../../utils/ua', 'chai'], function (UA, chai) {
             describe('ua', function () {
                 it('should return isIOS boolean value', function () {
                     var ua = navigator.userAgent;

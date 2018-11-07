@@ -5,6 +5,7 @@
 
 // 模拟浏览器环境
 var requirejs = require('requirejs');
+requirejs.config({nodeRequire: require});
 // global.window = {
 //     navigator: {
 //         userAgent: 'fdasf'
@@ -31,7 +32,7 @@ var requirejs = require('requirejs');
 
 describe('utils/url', function() {
     it('async load modules', function () {
-        requirejs(['utils/url', 'chai'], function(URL, chai) {
+        requirejs(['../../utils/url', 'chai'], function(URL, chai) {
             describe('#setQuery()', function () {
                 it('key should be equal to object', function () {
                     chai.expect(URL.setQuery('https://m.baidu.com/', {
