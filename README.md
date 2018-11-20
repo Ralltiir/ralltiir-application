@@ -1,7 +1,7 @@
 # Ralltiir Application
 
-[![Build Status](https://travis-ci.org/Ralltiir/ralltiir-application.svg?branch=travis-ci)](https://travis-ci.org/Ralltiir/ralltiir-application)
-[![Coverage Status](https://coveralls.io/repos/github/Ralltiir/ralltiir-application/badge.svg?branch=travis-ci)](https://coveralls.io/github/Ralltiir/ralltiir-application?branch=travis-ci)
+[![Build Status](https://travis-ci.org/Ralltiir/ralltiir-application.svg?branch=master)](https://travis-ci.org/Ralltiir/ralltiir-application)
+[![Coverage Status](https://coveralls.io/repos/github/Ralltiir/ralltiir-application/badge.svg?branch=master)](https://coveralls.io/github/Ralltiir/ralltiir-application?branch=master)
 [![npm](https://img.shields.io/npm/v/ralltiir-application.svg)](https://www.npmjs.com/package/ralltiir-application)
 [![npm](https://img.shields.io/npm/dm/ralltiir-application.svg)](https://www.npmjs.com/package/ralltiir-application)
 [![NpmLicense](https://img.shields.io/npm/l/ralltiir-application.svg)](https://www.npmjs.com/package/ralltiir-application)
