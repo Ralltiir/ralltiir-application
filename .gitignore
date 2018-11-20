@@ -1,14 +1,27 @@
-# 依赖模块
+# platform related
+.DS_Store
+._.DS_Store
+*.log
+
+# editor related
+.idea
+*.swp
+*.~
+.*.un~
+.vimrc
+
+# build related
+build/
+dist/
 node_modules/
+test-reports/
 amd_modules/
 package-lock.json
 
-# IDEA 配置文件
-.idea/
-
-# gitbook 生成文件
+# gitbook related
 docs/_book/
+docs/api/
 docs/node_modules/
 
-# coveralls 生成文件
+# coveralls related
 coverage/

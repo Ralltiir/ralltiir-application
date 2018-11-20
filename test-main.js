@@ -9,10 +9,11 @@ var TEST_FILES = Object.keys(window.__karma__.files).filter(isTestFile);
 
 // 依赖配置
 require.config({
-    baseUrl: '/base/utils',
+    baseUrl: '/base/',
     paths: {
         test: '/base/test',
-        '@searchfe': '/base/amd_modules/@searchfe'
+        '@searchfe': '/base/amd_modules/@searchfe',
+        'ralltiir': '/base/amd_modules/ralltiir'
     }
 });
 
