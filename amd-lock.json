@@ -1,14 +1,26 @@
 {
   "name": "ralltiir-application",
-  "version": "4.5.11",
+  "version": "4.5.15",
   "dependencies": {
     "@searchfe/assert": {
       "version": "1.0.0",
       "integrity": "sha512-INeZlzcMK1ainjU9FpBf8jrqq7wzFF0eDb5JCrHpp/fMzdIlbdDfhM3bprtzrSmOo/rA7AdP4Ch8p4RNxuj2jg=="
     },
+    "@searchfe/promise": {
+      "version": "1.0.6",
+      "integrity": "sha512-HAds3MkVMIVS9uMcT6wqOQitUePBQvB0dupcT2gbydrJBIDEl9LSpiXghqOmkjzSbFhcwxtF45r6IqlTUFhSRw=="
+    },
+    "@searchfe/sandbox": {
+      "version": "1.5.1",
+      "integrity": "sha512-I9xbR3kFF+D1Ry5rntAyekwqoQFv4aaSWP4ryk2VerHsIW8Zn7X22SLnr8Twf3IhnfnH/mVes2b73lCLRi9ErQ=="
+    },
     "@searchfe/underscore": {
       "version": "1.0.1",
       "integrity": "sha512-H4iktWJdRcG0XYOKkHOZoOvZH7Ag/FTwMTFhCH91ojy8dh2opcP36UUs3X8Jz7t6DKcKWLGpQJWmS5GMDymm/g=="
+    },
+    "ralltiir": {
+      "version": "2.13.3",
+      "integrity": "sha512-9/Y/3eZ0GVWjcQ0118K2+PFngchtaTZVQEJIZjET9xFhnciJQT477MLjvHXc83AJkjwr6ztDaak6hyetxvOtgg=="
     }
   }
 }

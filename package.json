@@ -5,11 +5,16 @@
   "main": "./service.js",
   "scripts": {
     "postversion": "git push --tags",
-    "lint": "fecs check --level 2",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "preversion": "npm run lint && npm test",
+    "test": "make test",
+    "test-watch": "make test-watch",
+    "test-reports": "make test-reports",
+    "cover": "istanbul cover --report lcov node_modules/mocha/bin/_mocha -- -R spec test/**/*.spec.js",
     "doc:install": "gitbook install ./docs",
     "doc:preview": "gitbook serve --port 8882 docs",
-    "doc:deploy": "cd docs && gitbook install && gitbook build && cd .. && cd docs/_book && git init && git add * && git commit -m 'doc publish' && git push -u git@github.com:Ralltiir/ralltiir-application.git master:gh-pages --force"
+    "doc:deploy": "cd docs && gitbook install && gitbook build && cd .. && cd docs/_book && git init && git add * && git commit -m 'doc publish' && git push -u git@github.com:Ralltiir/ralltiir-application.git master:gh-pages --force",
+    "clean": "make clean",
+    "lint": "eslint utils test"
   },
   "repository": {
     "type": "git",
@@ -22,10 +27,43 @@
   },
   "homepage": "https://github.com/Ralltiir/ralltiir-application#readme",
   "devDependencies": {
+    "apmjs": "^3.2.4",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "coveralls": "^3.0.2",
+    "eslint": "^5.9.0",
+    "eslint-plugin-babel": "^5.3.0",
+    "eslint-plugin-chai-friendly": "^0.4.1",
+    "eslint-plugin-html": "^5.0.0",
+    "eslint-plugin-mocha": "^5.2.0",
     "fecs": "^1.4.1",
-    "gitbook-cli": "^2.3.2"
+    "gitbook-cli": "^2.3.2",
+    "istanbul": "^0.4.5",
+    "karma": "^3.1.1",
+    "karma-chai": "^0.1.0",
+    "karma-chai-as-promised": "^0.1.2",
+    "karma-chai-sinon": "^0.1.5",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage": "^1.1.2",
+    "karma-coverage-istanbul-reporter": "^2.0.4",
+    "karma-coveralls": "^2.1.0",
+    "karma-global-preprocessor": "0.0.2",
+    "karma-html-reporter": "^0.2.7",
+    "karma-istanbul": "0.0.2",
+    "karma-mocha": "^1.3.0",
+    "karma-mocha-reporter": "^2.2.5",
+    "karma-requirejs": "^1.1.0",
+    "mocha": "^5.2.0",
+    "path": "^0.12.7",
+    "requirejs": "^2.3.6",
+    "sinon": "^6.3.5",
+    "sinon-chai": "^3.2.0"
   },
   "amdDependencies": {
-    "@searchfe/underscore": "^1.0.1"
+    "@searchfe/assert": "^1.0.0",
+    "@searchfe/promise": "^1.0.6",
+    "@searchfe/sandbox": "^1.5.1",
+    "@searchfe/underscore": "^1.0.1",
+    "ralltiir": "^2.13.3"
   }
 }

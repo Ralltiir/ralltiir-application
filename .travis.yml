@@ -1,0 +1,20 @@
+language: node_js
+sudo: required
+dist: trusty
+addons:
+  chrome: stable
+node_js:
+  - lts/*
+cache:
+  directories:
+    - "node_modules"
+before_install:
+    # start your web application and listen on `localhost`
+  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9223 http://localhost &
+install:
+  - travis_retry npm install
+script:
+  - npm install --save-dev pkg-dir@1.0.0
+  - ./node_modules/.bin/apmjs install --loglevel silly
+  - npm ls | cat
+  - make test-reports-ci
