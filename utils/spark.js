@@ -236,17 +236,19 @@
                     var cssProperty = [];
                     var transformCollection = '';
                     for (var key in property) {
-                        var value = property[key];
-                        if (!isNaN(Number(value)) && needPx(key)) {
-                            value += 'px';
-                        }
+                        if (property.hasOwnProperty(key)) {
+                            var value = property[key];
+                            if (!isNaN(Number(value)) && needPx(key)) {
+                                value += 'px';
+                            }
 
-                        if (supportedTransforms.test(key)) {
-                            transformCollection += key + '(' + value + ') ';
-                        }
-                        else {
-                            cssValues[key] = value;
-                            cssProperty.push(dasherize(key));
+                            if (supportedTransforms.test(key)) {
+                                transformCollection += key + '(' + value + ') ';
+                            }
+                            else {
+                                cssValues[key] = value;
+                                cssProperty.push(dasherize(key));
+                            }
                         }
                     }
                     if (transformCollection) {

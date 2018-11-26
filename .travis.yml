@@ -17,4 +17,5 @@ script:
   - npm install --save-dev pkg-dir@1.0.0
   - ./node_modules/.bin/apmjs install --loglevel silly
   - npm ls | cat
+  - npm run lint
   - make test-reports-ci
