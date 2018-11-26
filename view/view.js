@@ -128,7 +128,8 @@ define(function (require) {
                 return self.renderer.render(self.bodyEl, docfrag.querySelector('.rt-body'), {
                     replace: true,
                     onFixStyle: function () {
-                        self.resetStyle();  // 执行时机提前
+                        // 执行时机提前
+                        self.resetStyle();
                     },
                     onContentLoaded: function normalizeSSR() {
                         if (self.options.fadeIn) {
@@ -148,7 +149,7 @@ define(function (require) {
             self.populated = true;
         })
         .then(function () {
-            setTimeout(function() {
+            setTimeout(function () {
                 self.anchorScroll();
             }, 0);
         })
@@ -167,11 +168,11 @@ define(function (require) {
             return;
         }
         var key = location.hash.replace('#', '');
-        var anchor = this.viewEl.querySelector('[name="'+ key +'"]');
+        var anchor = this.viewEl.querySelector('[name="' + key + '"]');
         if (!anchor) {
             // 可能hash utf8编码了 需要处理
             try {
-                anchor = this.viewEl.querySelector('[name="' + decodeURIComponent(key) + '"]' );
+                anchor = this.viewEl.querySelector('[name="' + decodeURIComponent(key) + '"]');
             }
             catch (e) {
             }
@@ -317,7 +318,7 @@ define(function (require) {
         window._SF_._global_._ssp = window._SF_._global_._ssp || {};
         window._SF_._global_._ssp.location = window._SF_._global_._ssp.location || {};
         window._SF_._global_._ssp.location.href = href || null;
-    }
+    };
 
     View.prototype.trigger = function (event, options) {
         return dom.trigger(this.viewEl, event, options);
@@ -365,7 +366,8 @@ define(function (require) {
         logger.debug('restoring states to', this.scrollX, this.scrollY);
         if (this.hasOwnProperty('scrollX')) {
             scrollTo(this.scrollX, this.scrollY);
-        } else {
+        }
+        else {
             scrollTo(0, 0);
         }
     };

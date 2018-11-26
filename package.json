@@ -14,7 +14,7 @@
     "doc:preview": "gitbook serve --port 8882 docs",
     "doc:deploy": "cd docs && gitbook install && gitbook build && cd .. && cd docs/_book && git init && git add * && git commit -m 'doc publish' && git push -u git@github.com:Ralltiir/ralltiir-application.git master:gh-pages --force",
     "clean": "make clean",
-    "lint": "eslint utils test"
+    "lint": "eslint utils view"
   },
   "repository": {
     "type": "git",

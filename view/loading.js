@@ -35,7 +35,7 @@ define(function (require) {
     };
 
     Loading.prototype.hide = function () {
-        if (this.backgroundSetted == true) {
+        if (this.backgroundSetted === true) {
             dom.css(this.container, {'background-color': ''});
         }
         dom.removeNode(this.element);

@@ -4,7 +4,6 @@
  */
 define(function (require) {
     // TODO replace this with WHATWG URL
-    var exports = {};
     var _ = require('ralltiir')._;
 
     function setQuery(url, key, val) {
