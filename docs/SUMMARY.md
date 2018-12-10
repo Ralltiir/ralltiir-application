@@ -2,11 +2,11 @@
 
 * [概述](README.md)
 * [快速开始](/get-started/README.md)
-    *   [环境与工具准备](/get-started/environment-tools-prepare.md)
+    *   [环境搭建与工具准备](/get-started/environment-tools-prepare.md)
     *   [起步](/get-started/demo.md)
     *   [启动](/get-started/boot-start.md)
     *   [最佳实践](/get-started/best-practice.md)
-    *   [测试与发布](/get-started/test-publish.md)
+    *   [参与开源](/get-started/test-publish.md)
 * [基础指南](/basic-guide/README.md)
     *   [HTML 模板结构](/basic-guide/html-structure.md)
     *   [路由注册](/basic-guide/router.md)
