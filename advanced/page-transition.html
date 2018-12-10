@@ -1,0 +1,773 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-hans" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>动画过渡 · Ralltiir Application 项目文档</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        <meta name="author" content="The Ralltiir Team">
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-anchor-navigation-ex/style/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-atoc/atoc.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../styles/website.css">
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="performance.html" />
+    
+    
+    <link rel="prev" href="scoped-css.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="输入并搜索" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    概述
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../get-started/">
+            
+                <a href="../get-started/">
+            
+                    
+                    快速开始
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../get-started/environment-tools-prepare.html">
+            
+                <a href="../get-started/environment-tools-prepare.html">
+            
+                    
+                    环境搭建与工具准备
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../get-started/demo.html">
+            
+                <a href="../get-started/demo.html">
+            
+                    
+                    起步
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../get-started/boot-start.html">
+            
+                <a href="../get-started/boot-start.html">
+            
+                    
+                    启动
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../get-started/best-practice.html">
+            
+                <a href="../get-started/best-practice.html">
+            
+                    
+                    最佳实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="../get-started/test-publish.html">
+            
+                <a href="../get-started/test-publish.html">
+            
+                    
+                    参与开源
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../basic-guide/">
+            
+                <a href="../basic-guide/">
+            
+                    
+                    基础指南
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../basic-guide/html-structure.html">
+            
+                <a href="../basic-guide/html-structure.html">
+            
+                    
+                    HTML 模板结构
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../basic-guide/router.html">
+            
+                <a href="../basic-guide/router.html">
+            
+                    
+                    路由注册
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../basic-guide/rt-link.html">
+            
+                <a href="../basic-guide/rt-link.html">
+            
+                    
+                    跳转链接
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="../basic-guide/view-set-data.html">
+            
+                <a href="../basic-guide/view-set-data.html">
+            
+                    
+                    视图配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5" data-path="../basic-guide/view-options.html">
+            
+                <a href="../basic-guide/view-options.html">
+            
+                    
+                    视图参数
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.6" data-path="../basic-guide/partial-update.html">
+            
+                <a href="../basic-guide/partial-update.html">
+            
+                    
+                    局部更新
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    高级主题
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="architecture.html">
+            
+                <a href="architecture.html">
+            
+                    
+                    架构
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="head-rendering.html">
+            
+                <a href="head-rendering.html">
+            
+                    
+                    头部渲染策略
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="load-and-render.html">
+            
+                <a href="load-and-render.html">
+            
+                    
+                    页面加载和渲染
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="service.html">
+            
+                <a href="service.html">
+            
+                    
+                    Service
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="life-cycle.html">
+            
+                <a href="life-cycle.html">
+            
+                    
+                    生命周期
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="events.html">
+            
+                <a href="events.html">
+            
+                    
+                    事件
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="messaging.html">
+            
+                <a href="messaging.html">
+            
+                    
+                    页面通信
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.8" data-path="data-storage.html">
+            
+                <a href="data-storage.html">
+            
+                    
+                    数据存储
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.9" data-path="instance-cache.html">
+            
+                <a href="instance-cache.html">
+            
+                    
+                    实例缓存
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.10" data-path="server-messaging.html">
+            
+                <a href="server-messaging.html">
+            
+                    
+                    服务端通信
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.11" data-path="scoped-css.html">
+            
+                <a href="scoped-css.html">
+            
+                    
+                    样式局部化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4.12" data-path="page-transition.html">
+            
+                <a href="page-transition.html">
+            
+                    
+                    动画过渡
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.13" data-path="performance.html">
+            
+                <a href="performance.html">
+            
+                    
+                    性能数据
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.14" data-path="error-handling.html">
+            
+                <a href="error-handling.html">
+            
+                    
+                    错误处理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.15" data-path="debug.html">
+            
+                <a href="debug.html">
+            
+                    
+                    Debug
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../reference/">
+            
+                <a href="../reference/">
+            
+                    
+                    参考手册
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../reference/api.html">
+            
+                <a href="../reference/api.html">
+            
+                    
+                    API 手册
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" data-path="../reference/cli-command.html">
+            
+                <a href="../reference/cli-command.html">
+            
+                    
+                    CLI 命令手册
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="../reference/common-tool-lib.html">
+            
+                <a href="../reference/common-tool-lib.html">
+            
+                    
+                    常用工具库
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="../reference/common-problem.html">
+            
+                <a href="../reference/common-problem.html">
+            
+                    
+                    常见问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" >
+            
+                <a target="_blank" href="https://github.com/Ralltiir/ralltiir-application/releases">
+            
+                    
+                    版本
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            本书使用 GitBook 发布
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >动画过渡</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <div id="anchor-navigation-ex-navbar"><i class="fa fa-navicon"></i><ul><li><span class="title-icon "></span><a href="#&#x52A8;&#x753B;&#x8FC7;&#x6E21;"><b>1. </b>&#x52A8;&#x753B;&#x8FC7;&#x6E21;</a></li><ul><li><span class="title-icon "></span><a href="#&#x5B9E;&#x73B0;&#x65B9;&#x6848;"><b>1.1. </b>&#x5B9E;&#x73B0;&#x65B9;&#x6848;</a></li><li><span class="title-icon "></span><a href="#&#x517C;&#x5BB9;&#x6027;&#x4E0E;&#x964D;&#x7EA7;"><b>1.2. </b>&#x517C;&#x5BB9;&#x6027;&#x4E0E;&#x964D;&#x7EA7;</a></li><ul><li><span class="title-icon "></span><a href="#&#x4FDD;&#x6301;&#x6EDA;&#x52A8;&#x4F4D;&#x7F6E;"><b>1.2.1. </b>&#x4FDD;&#x6301;&#x6EDA;&#x52A8;&#x4F4D;&#x7F6E;</a></li><li><span class="title-icon "></span><a href="#&#x540E;&#x9000;&#x6309;&#x94AE;&#x5931;&#x6548;"><b>1.2.2. </b>&#x540E;&#x9000;&#x6309;&#x94AE;&#x5931;&#x6548;</a></li></ul></ul></ul></div><a href="#&#x52A8;&#x753B;&#x8FC7;&#x6E21;" id="anchorNavigationExGoTop"><i class="fa fa-arrow-up"></i></a><h1 id="&#x52A8;&#x753B;&#x8FC7;&#x6E21;"><a name="&#x52A8;&#x753B;&#x8FC7;&#x6E21;" class="anchor-navigation-ex-anchor" href="#&#x52A8;&#x753B;&#x8FC7;&#x6E21;"><i class="fa fa-link" aria-hidden="true"></i></a>1. &#x52A8;&#x753B;&#x8FC7;&#x6E21;</h1>
+<p>Ralltiir &#x7684;&#x4E00;&#x5927;&#x529F;&#x80FD;&#x5C31;&#x662F;&#x9875;&#x9762;&#x5207;&#x6362;&#x6548;&#x679C;&#xFF0C;&#x51CF;&#x5C11;&#x7528;&#x6237;&#x7B49;&#x5F85;&#x7684;&#x7126;&#x8651;&#x611F;&#x3002;
+&#x867D;&#x7136;&#x9762;&#x4E34;&#x7740;&#x4E0D;&#x5B8C;&#x5584;&#x7684;&#x5F02;&#x6B65; API&#xFF0C;&#x4EE5;&#x53CA;&#x5404;&#x79CD; <code>transition</code> &#x76F8;&#x5173;&#x7684;&#x517C;&#x5BB9;&#x6027;&#x95EE;&#x9898;&#xFF0C;
+&#x6211;&#x4EEC;&#x4ECD;&#x7136;&#x8981;&#x5728;&#x5C3D;&#x91CF;&#x591A;&#x7684;&#x6D4F;&#x89C8;&#x5668;&#x4E0A;&#x63D0;&#x4F9B;&#x4F53;&#x9A8C;&#x4E0D;&#x9519;&#x7684;&#x9875;&#x9762;&#x8FC7;&#x6E21;&#x6001;&#x3002;
+&#x672C;&#x6587;&#x4ECB;&#x7ECD;&#x8FC7;&#x6E21;&#x6001;&#x7684;&#x5B9E;&#x73B0;&#xFF0C;&#x517C;&#x5BB9;&#x6027;&#x95EE;&#x9898;&#xFF0C;&#x4EE5;&#x53CA;&#x5BF9;&#x5E94;&#x7684;&#x964D;&#x7EA7;&#x65B9;&#x5F0F;&#x3002;</p>
+<h2 id="&#x5B9E;&#x73B0;&#x65B9;&#x6848;"><a name="&#x5B9E;&#x73B0;&#x65B9;&#x6848;" class="anchor-navigation-ex-anchor" href="#&#x5B9E;&#x73B0;&#x65B9;&#x6848;"><i class="fa fa-link" aria-hidden="true"></i></a>1.1. &#x5B9E;&#x73B0;&#x65B9;&#x6848;</h2>
+<p>&#x9875;&#x9762;&#x5207;&#x6362;&#x52A8;&#x753B;&#x5206;&#x4E3A;&#x5165;&#x573A;&#x3001;&#x9000;&#x573A;&#x548C;&#x6CA1;&#x6709;&#x52A8;&#x753B;&#x4E09;&#x79CD;&#xFF1A;</p>
+<ul>
+<li>&#x5F53;&#x7528;&#x6237;&#x70B9;&#x51FB;&#x4E00;&#x4E2A;&#x94FE;&#x63A5;&#x65F6;&#x53D1;&#x751F;&#x9875;&#x9762;&#x5165;&#x573A;&#x3002;</li>
+<li>&#x5F53;&#x7528;&#x6237;&#x70B9;&#x51FB;&#x6211;&#x4EEC;&#x63D0;&#x4F9B;&#x7684;&#x8FD4;&#x56DE;&#x6309;&#x94AE;&#x65F6;&#x9875;&#x9762;&#x9000;&#x573A;&#x3002;</li>
+<li>&#x5F53;&#x7528;&#x6237;&#x4F7F;&#x7528;&#x6D4F;&#x89C8;&#x5668;&#x524D;&#x8FDB;&#x540E;&#x9000;&#xFF08;&#x5305;&#x62EC;&#x624B;&#x52BF;&#xFF09;&#xFF0C;&#x73B0;&#x5728; Ralltiir &#x8FD8;&#x4E0D;&#x80FD;&#x5F97;&#x77E5;&#x662F;&#x524D;&#x8FDB;&#x8FD8;&#x662F;&#x540E;&#x9000;&#xFF0C;&#x4E0D;&#x505A;&#x52A8;&#x753B;&#x6548;&#x679C;&#x3002;</li>
+</ul>
+<p>&#x5165;&#x573A;&#x4E3A;&#x4ECE;&#x53F3;&#x5411;&#x5DE6;&#x5212;&#x5165;&#xFF0C;&#x9000;&#x573A;&#x4E3A;&#x5165;&#x573A;&#x7684;&#x9006;&#x5411;&#x64CD;&#x4F5C;&#x3002;&#x4E0B;&#x6587;&#x90FD;&#x4EE5;&#x5165;&#x573A;&#x52A8;&#x753B;&#x4E3A;&#x4F8B;&#x3002;
+&#x5165;&#x573A;&#x52A8;&#x753B;&#x4F7F;&#x7528; CSS Transition &#x5B9E;&#x73B0;&#xFF0C;&#x6B65;&#x9AA4;&#x5982;&#x4E0B;&#xFF08;&#x4EE5;&#x4E0B;&#x6B65;&#x9AA4;&#x4E0E;&#x7F51;&#x7EDC;&#x8BF7;&#x6C42;&#x662F;&#x5E76;&#x53D1;&#x7684;&#xFF09;&#xFF1A;</p>
+<ol>
+<li>&#x6E32;&#x67D3;&#x65B0;&#x6D6E;&#x5C42;&#x3002;&#x4F7F;&#x7528; <a href="../get-started/router.md">&#x6CE8;&#x518C;&#x65F6;&#x63D0;&#x4F9B;&#x7684;&#x914D;&#x7F6E;</a> &#x6E32;&#x67D3;&#x4E00;&#x4E2A; <a href="../get-started/html-structure.md">view</a>&#xFF08;<code>position:fixed</code>&#xFF09;&#x3002;</li>
+<li>&#x4FDD;&#x6301;&#x6EDA;&#x52A8;&#x4F4D;&#x7F6E;&#x3002;&#x6EDA;&#x52A8;&#x65B0;&#x7684;&#x6D6E;&#x5C42;&#xFF0C;&#x4F7F;&#x5F97; <code>fixed</code> &#x524D;&#x540E;&#x89C6;&#x89C9;&#x4F4D;&#x7F6E;&#x4E00;&#x81F4;&#x3002;</li>
+<li>&#x5165;&#x573A;&#x52A8;&#x753B;&#x3002;&#x8BA9;&#x6D6E;&#x5C42;&#x4ECE;&#x53F3;&#x5411;&#x5DE6;&#x505A; <code>transition</code>&#x3002;</li>
+<li>&#x6E32;&#x67D3;&#x9875;&#x9762;&#x3002;&#x7B49;&#x5F85;&#x7F51;&#x7EDC;&#x8BF7;&#x6C42;&#x7ED3;&#x675F;&#x540E;&#xFF0C;&#x6E32;&#x67D3;&#x7ED3;&#x679C; HTML &#x81F3;&#x6D6E;&#x5C42;&#x4E0A;&#x3002;</li>
+<li>&#x9690;&#x85CF;&#x65E7;&#x9875;&#x9762;&#x3002;&#x9690;&#x85CF;&#x4E0A;&#x4E00;&#x4E2A;&#x9875;&#x9762;&#x7684; <a href="../get-started/html-structure.md">view</a>&#x3002;</li>
+<li>&#x6062;&#x590D;&#x6EDA;&#x52A8;&#x4F4D;&#x7F6E;&#x3002;&#x6062;&#x590D;&#x5F53;&#x524D; <a href="../get-started/html-structure.md">view</a> &#x7684; <code>position</code> &#x76F8;&#x5173;&#x5C5E;&#x6027;&#x3002;</li>
+</ol>
+<p>&#x9000;&#x573A;&#x52A8;&#x753B;&#x6709;&#x4E00;&#x4E2A;&#x989D;&#x5916;&#x7684;&#x5DE5;&#x4F5C;&#xFF1A;&#x79BB;&#x5F00;&#x65F6;&#x4FDD;&#x5B58;&#x6D4F;&#x89C8;&#x4F4D;&#x7F6E;&#xFF08;<code>scrollTop</code>, <code>scrollLeft</code>&#xFF09;&#xFF0C;&#x8FD4;&#x56DE;&#x5230;&#x65F6;&#x6062;&#x590D;&#x6D4F;&#x89C8;&#x4F4D;&#x7F6E;&#x3002;</p>
+<h2 id="&#x517C;&#x5BB9;&#x6027;&#x4E0E;&#x964D;&#x7EA7;"><a name="&#x517C;&#x5BB9;&#x6027;&#x4E0E;&#x964D;&#x7EA7;" class="anchor-navigation-ex-anchor" href="#&#x517C;&#x5BB9;&#x6027;&#x4E0E;&#x964D;&#x7EA7;"><i class="fa fa-link" aria-hidden="true"></i></a>1.2. &#x517C;&#x5BB9;&#x6027;&#x4E0E;&#x964D;&#x7EA7;</h2>
+<p>&#x5728;&#x6709;&#x4E9B;&#x6D4F;&#x89C8;&#x5668;&#x4E0B;&#x52A8;&#x753B;&#x7684;&#x5B9E;&#x73B0;&#x53EF;&#x80FD;&#x6709;&#x517C;&#x5BB9;&#x95EE;&#x9898;&#xFF0C;&#x8FD9;&#x65F6;&#x4F1A;&#x6839;&#x636E; UA &#x8FDB;&#x884C;&#x76F8;&#x5E94;&#x964D;&#x7EA7;&#x3002;</p>
+<h3 id="&#x4FDD;&#x6301;&#x6EDA;&#x52A8;&#x4F4D;&#x7F6E;"><a name="&#x4FDD;&#x6301;&#x6EDA;&#x52A8;&#x4F4D;&#x7F6E;" class="anchor-navigation-ex-anchor" href="#&#x4FDD;&#x6301;&#x6EDA;&#x52A8;&#x4F4D;&#x7F6E;"><i class="fa fa-link" aria-hidden="true"></i></a>1.2.1. &#x4FDD;&#x6301;&#x6EDA;&#x52A8;&#x4F4D;&#x7F6E;</h3>
+<p>&#x4E0B;&#x9762;&#x7684;&#x6D4F;&#x89C8;&#x5668;&#x4E2D;&#x4FDD;&#x6301;&#x6EDA;&#x52A8;&#x4F4D;&#x7F6E;&#x4F1A;&#x5BFC;&#x81F4;&#x9875;&#x9762;&#x8DF3;&#x52A8;&#xFF1A;</p>
+<ul>
+<li>iOS &#x4E0B;&#xFF0C;UIWebview &#x7684;&#x6D4F;&#x89C8;&#x5668;&#x4E2D;</li>
+</ul>
+<p>&#x89E3;&#x51B3;&#x65B9;&#x6848;&#xFF1A;Ralltiir &#x4E0D;&#x4FDD;&#x6301;&#x6EDA;&#x52A8;&#x4F4D;&#x7F6E;&#xFF0C;&#x89C6;&#x89C9;&#x4E0A;&#x8868;&#x73B0;&#x4E3A;&#x9875;&#x9762;&#x6EDA;&#x5230;&#x9876;&#x540E;&#x8FDB;&#x884C;&#x9000;&#x573A;&#x52A8;&#x753B;&#x3002;</p>
+<h3 id="&#x540E;&#x9000;&#x6309;&#x94AE;&#x5931;&#x6548;"><a name="&#x540E;&#x9000;&#x6309;&#x94AE;&#x5931;&#x6548;" class="anchor-navigation-ex-anchor" href="#&#x540E;&#x9000;&#x6309;&#x94AE;&#x5931;&#x6548;"><i class="fa fa-link" aria-hidden="true"></i></a>1.2.2. &#x540E;&#x9000;&#x6309;&#x94AE;&#x5931;&#x6548;</h3>
+<p>&#x5728; iOS 11&#xFF0C;Safari &#x5185;&#x6838;&#x7684;&#x6D4F;&#x89C8;&#x5668;&#x4E2D;&#xFF0C;&#x9875;&#x9762; <code>load</code> &#x4E8B;&#x4EF6;&#x4F1A;&#x963B;&#x585E; <code>popstate</code> &#x7684;&#x89E6;&#x53D1;&#x3002;
+&#x5BFC;&#x81F4;&#x9875;&#x9762;&#x672A;&#x5B8C;&#x5168;&#x8F7D;&#x5165;&#x65F6;&#xFF0C;&#x540E;&#x9000;&#x6309;&#x94AE;&#x65E0;&#x6548;&#x3002;</p>
+<p>&#x89E3;&#x51B3;&#x65B9;&#x6848;&#xFF1A;Ralltiir &#x6682;&#x65E0;&#x65B9;&#x6848;&#xFF0C;&#x5EFA;&#x8BAE;&#x76F8;&#x5173;&#x9875;&#x9762;&#x4F18;&#x5316;&#x9996;&#x5C4F;&#x65F6;&#x95F4;&#x3002;</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="scoped-css.html" class="navigation navigation-prev " aria-label="Previous page: 样式局部化">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="performance.html" class="navigation navigation-next " aria-label="Next page: 性能数据">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"动画过渡","level":"1.4.12","depth":2,"next":{"title":"性能数据","level":"1.4.13","depth":2,"path":"advanced/performance.md","ref":"advanced/performance.md","articles":[]},"previous":{"title":"样式局部化","level":"1.4.11","depth":2,"path":"advanced/scoped-css.md","ref":"advanced/scoped-css.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters","anchor-navigation-ex","splitter","atoc","editlink","-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"editlink":{"label":"编辑此页","multilingual":false,"base":"https://github.com/Ralltiir/ralltiir-application/edit/master/docs/"},"atoc":{},"splitter":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"anchor-navigation-ex":{"associatedWithSummary":true,"float":{"floatIcon":"fa fa-navicon","level1Icon":"","level2Icon":"","level3Icon":"","showLevelIcon":false},"mode":"float","multipleH1":true,"pageTop":{"level1Icon":"","level2Icon":"","level3Icon":"","showLevelIcon":false},"printLog":false,"showGoTop":true,"showLevel":true},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"expandable-chapters":{}},"theme":"default","author":"The Ralltiir Team","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Ralltiir Application 项目文档","language":"zh-hans","gitbook":"*","description":"Ralltiir Application 相关教程、设计和 API"},"file":{"path":"advanced/page-transition.md","mtime":"2018-11-26T11:33:03.622Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-12-10T07:52:16.169Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-atoc/atoc.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-editlink/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
