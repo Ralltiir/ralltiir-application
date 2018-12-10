@@ -1,1 +1,77 @@
-敬请期待～
+# 参与开源
+
+Ralltiir Application 以开放的心态接纳外部，欢迎按照如下方法参与开源。
+
+## 准备
+
+在开始书写代码前，请先确认如下事项：
+
+* 如果你还没有 GitHub 帐号，那么请先进行注册
+* 在 issue 列表中检查是否有人已经在进行该工作了
+* 提交一个 issue，简要描述你希望实现的功能或要修复的问题
+* 在你的开发环境中安装 `git`, `node.js`, `make`
+	* 强烈建议你使用 macOS / Linux 等 UNIX-Like 系统
+	* 对 Windows 系统开发者，我们推荐使用 Bash On Windows
+
+## 改动
+
+* **Fork** Ralltiir Application 仓库到你的个人命名空间中
+* 使用 `git clone` 将你的个人仓库拷贝克隆到本地
+* 使用 `git checkout -b` 创建一个新的分支以进行你的工作
+  * 通常而言，它是基于 master 分支的
+  * 建议使用 [GitHub Workflow](https://guides.github.com/introduction/flow/) 命名分支
+* 使用 `npm install` 安装相关依赖
+* 开发并编写测试、提交代码
+  * 模块的测试文件路径应当与其代码的相对路径保持一致：例如，`utils/url.js` 对应的测试应当在 `test/utils/url.spec.js` 中编写
+
+## 测试
+
+* 使用 `npm test` 运行测试
+* 使用 `npm run test-reports` 检查测试覆盖率
+  * 对于 bug 修复，覆盖率不得下降
+  * 对于新特性，建议覆盖 80% 以上代码
+* 使用 `npm run lint` 进行 ESLine 规范检验
+
+## 提交
+
+- 使用 `git rebase master` 将你的修改分支 rebase 到 master
+- 在 GitHub 上发起 Pull Request，描述你的修改，并使用 `#xx` 链接到你的 issue
+- 在 GitHub GUI 上检查你的 CI 报告和测试覆盖率报告
+  - 若 CI 不通过或覆盖率不满足要求，PR 可能被直接关闭
+
+## 文档发布
+
+文档目录位于 `/docs`，使用 Gitbook 生成。
+使用 npm 脚本进行文档预览：
+
+```bash
+npm run doc:preview
+```
+
+文档发布也使用 npm 脚本（文档托管于 Github Pages，10 分钟内生效）：
+
+```bash
+npm run doc:deploy
+```
+
+## 软件发布
+
+使用 `npm version` 发布软件版本，通过 Git Tag 与 Github 同步：
+
+```bash
+# Bugfix
+npm version patch
+# Feature
+npm version minor
+# Breaking Changes
+npm version major
+```
+
+发布后可以在 [Github Tags][tags] 页面添加 Release Notes。为方便编写 Release Notes，
+可以使用 `git log` 查看版本间差异，比如：
+
+```bash
+git log v4.5.11..v4.5.12
+```
+
+[tags]: https://github.com/Ralltiir/ralltiir-application/releases
