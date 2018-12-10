@@ -73,7 +73,10 @@ define(function (require) {
         if (this.options.background !== undefined) {
             this.viewEl.style.background = this.options.background;
         }
-
+        viewEl.className = viewEl.className.replace('rt-compressed', '');
+        if (this.options.compressedHead) {
+            viewEl.className += ' rt-compressed';
+        }
         this.headEl = this.viewEl.querySelector('.rt-head');
         assert(this.headEl, '.rt-view>.rt-head not exist');
 
