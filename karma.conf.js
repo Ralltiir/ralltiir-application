@@ -23,6 +23,7 @@ module.exports = function(config) {
         'karma-coveralls',
         'karma-global-preprocessor',
         'karma-html-reporter',
+        'karma-html2js-preprocessor',
         'karma-istanbul',
         'karma-mocha',
         'karma-mocha-reporter',
@@ -38,6 +39,8 @@ module.exports = function(config) {
     files: [
         'lib/esl.js',
         'test-main.js',
+        'test/utils/*.html',
+        'test/utils/*.js',
         { pattern: 'utils/*.js', included: false },
         { pattern: 'test/utils/*.spec.js', included: false },
         { pattern: 'amd_modules/**/*.js', included: false }
@@ -56,7 +59,8 @@ module.exports = function(config) {
         // source files, that you wanna generate coverage for
         // do not include tests or libraries
         // (these files will be instrumented by Istanbul)
-        'utils/*.js': ['coverage']
+        'utils/*.js': ['coverage'],
+        'test/utils/*.html': ['html2js']
     },
 
 
