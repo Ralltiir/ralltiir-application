@@ -112,6 +112,11 @@ define(function (require) {
                     DOM.removeClass(el, 'foo-bar');
                     expect(el.className).to.be.equal('foo bar');
                 });
+                it('should not remove class if element empty', function () {
+                    var el = {};
+                    DOM.removeClass(el, '');
+                    expect(el.className).to.be.equal('');
+                });
             });
             describe('#elementFromString()', function () {
                 it('should get first element from string', function () {
@@ -147,11 +152,26 @@ define(function (require) {
                         bubbles: true
                     };
                     var beverage = 'Coffee';
-                    document.addEventListener(type, function () {
+                    var change = function () {
                         beverage = 'Tea';
-                    });
+                    };
+                    document.addEventListener(type, change);
                     DOM.trigger(node, type, options);
+                    document.removeEventListener(type, change);
                     expect(beverage).to.be.equal('Tea');
+                });
+                it('should not trigger custom event if options not exist', function () {
+                    document.body.innerHTML = window.__html__['test/utils/template.html'];
+                    var node = document.getElementById('tpl-3');
+                    var type = 'drink';
+                    var beverage = 'Coffee';
+                    var change = function () {
+                        beverage = 'Tea';
+                    };
+                    document.addEventListener(type, change);
+                    DOM.trigger(node, type);
+                    document.removeEventListener(type, change);
+                    expect(beverage).to.be.equal('Coffee');
                 });
                 it('should not trigger uncorrect custom event', function () {
                     document.body.innerHTML = window.__html__['test/utils/template.html'];
@@ -162,10 +182,12 @@ define(function (require) {
                         bubbles: true
                     };
                     var beverage = 'Coffee';
-                    document.addEventListener('eat', function () {
+                    var change = function () {
                         beverage = 'Tea';
-                    });
+                    };
+                    document.addEventListener('eat', change);
                     DOM.trigger(node, type, options);
+                    document.removeEventListener('eat', change);
                     expect(beverage).to.be.equal('Coffee');
                 });
             });
@@ -192,6 +214,17 @@ define(function (require) {
                     };
                     DOM.css(node, obj);
                     expect(node.style.backgroundColor).to.not.equal('rgb(255, 255, 255)');
+                });
+                it('should not add style with obj value empty', function () {
+                    document.body.innerHTML = window.__html__['test/utils/template.html'];
+                    var node = document.getElementById('tpl-3');
+                    node.style.font = 'italic bold 20px arial,serif';
+                    node.style.color = '#000';
+                    var obj = {
+                        backgroundColor: ''
+                    };
+                    DOM.css(node, obj);
+                    expect(node.style.backgroundColor).to.be.equal('');
                 });
             });
             describe('#show()', function () {
