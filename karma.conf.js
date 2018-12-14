@@ -41,6 +41,7 @@ module.exports = function(config) {
         'test-main.js',
         'test/utils/*.html',
         'test/utils/*.js',
+        'config.js',
         { pattern: 'utils/*.js', included: false },
         { pattern: 'test/utils/*.spec.js', included: false },
         { pattern: 'amd_modules/**/*.js', included: false }
