@@ -12,11 +12,15 @@ define(function (require) {
                 it('should show enter animation', function (done) {
                     document.body.innerHTML = window.__html__['test/utils/template.html'];
                     var view = document.querySelector('.rt-view');
+                    var fixed = document.querySelectorAll('.rt-fixed');
                     var scrollX = 60;
                     var scrollY = 60;
                     var promise = Animation.enter(view, scrollX, scrollY);
                     promise.then(function () {
                         expect(view.style.opacity).to.be.equal('1');
+                        fixed.forEach(el => {
+                            expect(el.style.opacity).to.be.equal('0');
+                        });
                         done();
                     });
                 });
@@ -26,10 +30,32 @@ define(function (require) {
                     document.body.innerHTML = window.__html__['test/utils/template.html'];
                     var view = document.querySelector('.rt-view');
                     var head = view.querySelector('.rt-head');
+                    var fixed = document.querySelectorAll('.rt-fixed');
                     var scrollX = 80;
                     var scrollY = 80;
                     Animation.prepareExit(view, scrollX, scrollY);
                     expect(head.style.top).to.be.equal('80px');
+                    fixed.forEach(el => {
+                        expect(el.style.opacity).to.be.equal('0');
+                    });
+                });
+                it('should show prepareExit animation with UA', function () {
+                    document.body.innerHTML = window.__html__['test/utils/template.html'];
+                    var view = document.querySelector('.rt-view');
+                    var head = view.querySelector('.rt-head');
+                    var fixed = document.querySelectorAll('.rt-fixed');
+                    var scrollX = 80;
+                    var scrollY = 80;
+                    var UA = {
+                        isIOS: true,
+                        isWKWebView: true,
+                        isBaidu: false
+                    };
+                    Animation.prepareExit(view, scrollX, scrollY);
+                    expect(head.style.top).to.be.equal('80px');
+                    fixed.forEach(el => {
+                        expect(el.style.opacity).to.be.equal('0');
+                    });
                 });
             });
             describe('#exit()', function () {
