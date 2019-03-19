@@ -39,7 +39,7 @@ define(function (require) {
         return reason === 'back' || reason === 'history';
     };
 
-    Service.prototype.beforeAttach = function (current) {
+    Service.prototype.beforeAttach = function (current, prev) {
         this.scope.performance.startNavigation();
         _.assign(this.options, current.options);
         var useAnimation = this.shouldEnterAnimate(current);
@@ -55,7 +55,11 @@ define(function (require) {
         }
         else {
             this.view = new View(this.scope);
-            this.view.fetchUrl(current.url);
+            this.view.fetchUrl({
+                current: current,
+                prev: prev,
+                url: current.url
+            });
         }
 
         return this.view.enter(useAnimation);
