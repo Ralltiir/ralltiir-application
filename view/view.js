@@ -375,16 +375,16 @@ define(function (require) {
         }
     };
 
-    View.prototype.fetchUrl = function (url) {
+    View.prototype.fetchUrl = function (urlOrOption) {
         this.loading.show({
             loadingClass: this.options.loadingClass || '',
             disableBackground: !!this.options.background
         });
-        this.pendingFetch = this.fetch(url);
+        this.pendingFetch = this.fetch(urlOrOption);
     };
 
-    View.prototype.fetch = function (url, headers) {
-        this.backendUrl = this.getBackendUrl(url);
+    View.prototype.fetch = function (urlOrOption, headers) {
+        this.backendUrl = this.getBackendUrl(urlOrOption);
         this.backendUrl = URL.setQuery(this.backendUrl, 'rt', 'true');
         this.performance.requestStart = Date.now();
         // 兼容网盟广告rerfer方案，7.26沟通，临时方案复用SF 2.x参数，2月内下线
@@ -399,15 +399,19 @@ define(function (require) {
         });
     };
 
-    View.prototype.getBackendUrl = function (url) {
+    View.prototype.getBackendUrl = function (urlOrOption) {
+        if (typeof urlOrOption === 'string') {
+            urlOrOption = {url: urlOrOption};
+        }
+        urlOrOption = urlOrOption || {};
         if (_.isFunction(this.options.backendUrl)) {
-            return this.options.backendUrl(url);
+            return this.options.backendUrl(urlOrOption.url, urlOrOption.current, urlOrOption.prev);
         }
         if (_.isString(this.options.backendUrl)) {
             return this.options.backendUrl;
         }
         var root = rt.action.config().root.replace(/\/+$/, '');
-        return root + url;
+        return root + urlOrOption.url;
     };
 
     View.backHtml = '<i class="c-icon">&#xe750;</i>';
