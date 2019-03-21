@@ -1,0 +1,28 @@
+# platform related
+.DS_Store
+._.DS_Store
+*.log
+
+# editor related
+.idea
+*.swp
+*.~
+.*.un~
+.vimrc
+
+# build related
+build/
+dist/
+node_modules/
+test-reports/
+amd_modules/
+package-lock.json
+test/
+
+# gitbook related
+docs/_book/
+docs/api/
+docs/node_modules/
+
+# coveralls related
+coverage/
