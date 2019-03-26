@@ -1,6 +1,6 @@
 {
   "name": "ralltiir-application",
-  "version": "4.5.16",
+  "version": "4.5.17",
   "description": "A common service implement",
   "main": "./service.js",
   "scripts": {
@@ -67,5 +67,8 @@
     "@searchfe/sandbox": "^1.5.1",
     "@searchfe/underscore": "^1.0.1",
     "ralltiir": "^2.13.3"
-  }
+  },
+  "files": [
+    "lib", "utils", "view", "*.js", "*.json", "*.md"
+  ]
 }
