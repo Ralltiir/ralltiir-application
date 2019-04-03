@@ -69,6 +69,11 @@
     "ralltiir": "^2.13.3"
   },
   "files": [
-    "lib", "utils", "view", "*.js", "*.json", "*.md"
+    "lib",
+    "utils",
+    "view",
+    "*.js",
+    "*.json",
+    "*.md"
   ]
 }
