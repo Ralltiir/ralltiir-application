@@ -1,10 +1,9 @@
 {
   "name": "ralltiir-application",
-  "version": "4.5.15",
+  "version": "4.5.17",
   "dependencies": {
     "@searchfe/assert": {
-      "version": "1.0.0",
-      "integrity": "sha512-INeZlzcMK1ainjU9FpBf8jrqq7wzFF0eDb5JCrHpp/fMzdIlbdDfhM3bprtzrSmOo/rA7AdP4Ch8p4RNxuj2jg=="
+      "version": "1.0.0"
     },
     "@searchfe/promise": {
       "version": "1.0.6",

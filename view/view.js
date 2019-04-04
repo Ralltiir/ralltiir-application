@@ -405,7 +405,9 @@ define(function (require) {
         }
         urlOrOption = urlOrOption || {};
         if (_.isFunction(this.options.backendUrl)) {
-            return this.options.backendUrl(urlOrOption.url, urlOrOption.current, urlOrOption.prev);
+            return this.options.backendUrl(urlOrOption.url, urlOrOption.current, urlOrOption.prev, {
+                urlOptions: this.options.urlOptions
+            });
         }
         if (_.isString(this.options.backendUrl)) {
             return this.options.backendUrl;

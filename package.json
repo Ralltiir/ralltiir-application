@@ -1,6 +1,6 @@
 {
   "name": "ralltiir-application",
-  "version": "4.5.17",
+  "version": "4.5.18",
   "description": "A common service implement",
   "main": "./service.js",
   "scripts": {
@@ -69,6 +69,11 @@
     "ralltiir": "^2.13.3"
   },
   "files": [
-    "lib", "utils", "view", "*.js", "*.json", "*.md"
+    "lib",
+    "utils",
+    "view",
+    "*.js",
+    "*.json",
+    "*.md"
   ]
 }
