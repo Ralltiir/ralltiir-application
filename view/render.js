@@ -6,6 +6,7 @@
 define(function (require) {
     var assert = require('@searchfe/assert');
     var _ = require('@searchfe/underscore');
+    var Promise = require('@searchfe/promise');
     // reference: https://github.com/jquery/jquery/blob/master/src/manipulation/var/rscriptType.js
     var rscriptType = /^$|\/(?:java|ecma)script/i;
     var rstylesheetType = /stylesheet/i;

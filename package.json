@@ -1,6 +1,6 @@
 {
   "name": "ralltiir-application",
-  "version": "4.5.19",
+  "version": "4.5.20",
   "description": "A common service implement",
   "main": "./service.js",
   "scripts": {
@@ -63,6 +63,7 @@
   },
   "amdDependencies": {
     "@searchfe/assert": "^1.0.0",
+    "@searchfe/promise": "^1.0.6",
     "@searchfe/sandbox": "^1.5.1",
     "@searchfe/underscore": "^1.0.1",
     "ralltiir": "^2.13.3"

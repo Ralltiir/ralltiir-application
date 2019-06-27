@@ -23,6 +23,7 @@ define(function (require) {
     var dom = require('../utils/dom');
     var rt = require('ralltiir');
     var _ = require('@searchfe/underscore');
+    var Promise = require('@searchfe/promise');
     var assert = require('@searchfe/assert');
     var Render = require('./render');
     var logger = rt.logger;
