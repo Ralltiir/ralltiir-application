@@ -19,6 +19,7 @@
 define(function (require) {
     var animation = require('../utils/animation');
     var URL = require('../utils/url');
+    var UA = require('../utils/ua');
     var Loading = require('./loading');
     var dom = require('../utils/dom');
     var rt = require('ralltiir');
@@ -125,6 +126,10 @@ define(function (require) {
                 });
             })
             .then(function () {
+                if (UA.isWKWebView && history.length > 1) {
+                    // WKWebview 在部分回退场景下不引起重绘 
+                    window.scroll(0, 1);
+                }
                 docfrag.querySelector('.rt-body').appendChild(dom.elementFromString('<rendermark></rendermark>'));
 
                 self.performance.headInteractive = Date.now();
