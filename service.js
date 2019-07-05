@@ -9,6 +9,7 @@ define(function (require) {
     var Promise = rt.promise;
     var View = require('./view/view');
     var Performance = require('./utils/performance');
+    var UA = require('./utils/ua');
     var _ = require('@searchfe/underscore');
     var logger = rt.logger;
     var config = require('./config');
@@ -92,6 +93,10 @@ define(function (require) {
     };
 
     Service.prototype.attach = function (current) {
+        if (UA.isWKWebView && _.get(current, 'options.src') === 'history') {
+            // WKWebview 在部分回退场景下不引起重绘 
+            window.scroll(0, 1);
+        }
         var view = this.view;
         view.setActive();
 
