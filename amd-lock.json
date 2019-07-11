@@ -5,10 +5,6 @@
     "@searchfe/assert": {
       "version": "1.0.0"
     },
-    "@searchfe/promise": {
-      "version": "1.0.6",
-      "integrity": "sha512-HAds3MkVMIVS9uMcT6wqOQitUePBQvB0dupcT2gbydrJBIDEl9LSpiXghqOmkjzSbFhcwxtF45r6IqlTUFhSRw=="
-    },
     "@searchfe/sandbox": {
       "version": "1.5.1",
       "integrity": "sha512-I9xbR3kFF+D1Ry5rntAyekwqoQFv4aaSWP4ryk2VerHsIW8Zn7X22SLnr8Twf3IhnfnH/mVes2b73lCLRi9ErQ=="
