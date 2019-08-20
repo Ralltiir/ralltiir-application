@@ -6,7 +6,6 @@
  */
 define(function (require) {
     var rt = require('ralltiir');
-    var Promise = rt.promise;
     var View = require('./view/view');
     var Performance = require('./utils/performance');
     var UA = require('./utils/ua');
